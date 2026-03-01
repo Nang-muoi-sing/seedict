@@ -1,6 +1,6 @@
 <template>
   <div
-    class="text-rosybrown-800 mt-2 mb-5 flex flex-wrap gap-3 rounded-lg bg-white px-8 py-6"
+    class="mb-5 mt-2 flex flex-wrap gap-3 rounded-lg bg-white px-8 py-6 text-rosybrown-800"
   >
     <p v-if="processedData.phonologyTone">
       <Badge>音韵地位</Badge>{{ processedData.phonologyInitial
@@ -9,31 +9,29 @@
     <p v-if="processedData.banguace">
       <Badge>教会罗马字</Badge>{{ processedData.banguace }}
     </p>
-    <p v-if="processedData.ipa">
-      <Badge>国际音标</Badge>/{{ processedData.ipa }}/
-    </p>
-    <p v-if="processedData.yngping">
-      <Badge>榕拼键入</Badge
-      ><span v-html="makeYngpingsSup(processedData.yngping)"></span>
-    </p>
-    <p v-if="processedData.yngping">
-      <Badge>榕拼手写</Badge
-      ><span v-html="yngpingToCursive(processedData.yngping)"></span>
-    </p>
+    <template v-if="processedData.yngping">
+      <p><Badge>国际音标</Badge>/{{ processedData.utterance.toIPA() }}/</p>
+      <p>
+        <Badge>榕拼键入</Badge
+        ><span
+          ><YngpingSup :syllables="processedData.utterance.toSyllables()"
+        /></span>
+      </p>
+      <p>
+        <Badge>榕拼手写</Badge
+        ><span>{{ processedData.utterance.toCursive() }}</span>
+      </p></template
+    >
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { toneCikLingMap } from '../utils/mapping';
-import {
-  makeYngpingsSup,
-  phonologyToBanguace,
-  yngpingToCursive,
-  yngpingToIPA,
-} from '../utils/phonetics';
+import { Utterance, phonologyToBanguace } from '../utils/phonetics';
 import type { Phonetics } from '../utils/typing';
 import Badge from './common/Badge.vue';
+import YngpingSup from './common/YngpingSup.vue';
 
 const props = defineProps<{
   data: Phonetics;
@@ -44,7 +42,7 @@ const processedData = computed(() => {
     ? toneCikLingMap[props.data.phonologyTone]
     : props.data.phonologyTone;
 
-  const ipa = yngpingToIPA(props.data.yngping);
+  const utterance = Utterance.of(props.data.yngping);
   const banguace =
     props.data.phonologyInitial && props.data.phonologyFinal && toneHan
       ? phonologyToBanguace(
@@ -56,8 +54,8 @@ const processedData = computed(() => {
 
   return {
     ...props.data,
+    utterance: utterance,
     phonologyTone: toneHan,
-    ipa: ipa,
     banguace: banguace,
   };
 });
