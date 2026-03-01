@@ -5,8 +5,8 @@
         <MarkedText :text="props.data.text" />
       </span>
       <span class="text-xl text-rosybrown-500">
-        /{{ yngpingToIPA(props.data.pronLiteral, true) }}/→/{{
-          yngpingToIPA(props.data.pronSandhi, true)
+        /{{ Phrase.of(props.data.pronLiteral, true).toFengIPA() }}/→/{{
+          Phrase.of(props.data.pronSandhi, true).toFengIPA()
         }}/
       </span>
     </div>
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { yngpingToIPA } from '../utils/phonetics';
+import { Phrase } from '../utils/phonetics';
 import type { WordFeng } from '../utils/typing';
 import Explanations from './common/ExplanationList.vue';
 import SeeSymbol from './common/SeeSymbol.vue';

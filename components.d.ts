@@ -78,5 +78,6 @@ declare module 'vue' {
     WordPhoneticCard: typeof import('./src/components/WordPhoneticCard.vue')['default']
     WordsDeck: typeof import('./src/components/WordsDeck.vue')['default']
     WordSkeleton: typeof import('./src/components/WordSkeleton.vue')['default']
+    YngpingSup: typeof import('./src/components/common/YngpingSup.vue')['default']
   }
 }
