@@ -831,3 +831,45 @@ export const yngpingTypingCursiveFinalMap: Record<Final, [string, Vowels]> = {
   yoh: ['yoh', 'o'],
   yok: ['yok', 'o'],
 } as const;
+
+
+
+export const CURSIVE_TO_TYPING_RHYTHM_MAP: Record<string, { final: Final; tone: Tone }> = (() => {
+  const map: Record<string, { final: Final; tone: Tone }> = {};
+  const RU_TONES = ['5', '24'];
+
+  for (const [f, [base, vowel]] of Object.entries(yngpingTypingCursiveFinalMap)) {
+    const final = f as Final;
+    const isRu = final.endsWith('h') || final.endsWith('k');
+    const tones = yngpingVowelToneMap[vowel];
+
+    for (const [t, cursiveVowel] of Object.entries(tones)) {
+      const tone = t as Tone;
+
+      // 无定调不加入映射
+      if (tone === '') continue;
+      // 入声只有 "5" 和 "24" 两种调值
+      if (isRu) {
+        if (!RU_TONES.includes(tone)) continue;
+      } else {
+        // 非入声没有 "5" 调值
+        if (tone === '5') continue;
+      }
+
+      const fullCursiveFinal = base.replace(vowel, cursiveVowel);
+      map[fullCursiveFinal] = { final, tone };
+    }
+  }
+  return map;
+})();
+
+
+export const IPA_LOOKUPS = (() => {
+  const sortByKeyLen = (obj: Record<string, string>) =>
+    Object.entries(obj).sort((a, b) => b[1].length - a[1].length);
+  return {
+    initials: sortByKeyLen(yngpingIPAInitialMap),
+    finals: sortByKeyLen(yngpingIPAFinalMap),
+    tones: sortByKeyLen(yngpingIPAToneMap),
+  };
+})();
