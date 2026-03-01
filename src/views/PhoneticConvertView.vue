@@ -88,7 +88,11 @@
             }"
           >
             <template v-if="hasResultContent">
-              <template v-for="(token, index) in resultTokens" :key="index">
+              <span
+                v-for="(token, index) in resultTokens"
+                :key="index"
+                v-memo="[token.text, token.type, token.message, targetScheme]"
+              >
                 <span
                   :tabindex="
                     token.type === 'error' && token.message ? 0 : undefined
@@ -116,7 +120,7 @@
                   {{ token.message }}
                   <div class="tooltip-arrow" data-popper-arrow></div>
                 </div>
-              </template>
+              </span>
             </template>
             <span
               v-else
@@ -148,32 +152,22 @@ import { computed, ref, watch } from 'vue';
 import PageContent from '../components/PageContent.vue';
 import TextareaCard from '../components/TextareaCard.vue';
 import ToastTip from '../components/ToastTip.vue';
-import {
-  yngpingIPAFinalMap,
-  yngpingIPAInitialMap,
-  yngpingIPAToneMap,
-  yngpingTypingCursiveFinalToneMap,
-} from '../utils/mapping';
-import {
-  makeYngpingCursive,
-  parseYngping,
-  yngpingInitialPattern,
-  yngpingToIPA,
-} from '../utils/phonetics';
+import { Utterance } from '../utils/phonetics';
 
-type Scheme = 'typing' | 'cursive' | 'ipa';
+import type { Scheme } from '../utils/phonetics';
+
 type TokenType = 'normal' | 'error' | 'whitespace';
 
 interface DisplayToken {
   text: string;
-  raw: string;
   type: TokenType;
   message?: string;
 }
 
-interface ConversionResult {
-  tokens: DisplayToken[];
-}
+const sourceScheme = ref<Scheme>('typing');
+const targetScheme = ref<Scheme>('cursive');
+const inputArea = ref<InstanceType<typeof TextareaCard> | null>(null);
+const copyTip = ref<InstanceType<typeof ToastTip> | null>(null);
 
 const schemeOptions = [
   { label: '榕拼键入', value: 'typing' },
@@ -187,237 +181,74 @@ const placeholders: Record<Scheme, string> = {
   ipa: 'huʔ˨˩ t͡siu˥˧ ua˨˦˨',
 };
 
-const tonePattern = /\d+$/;
-const sourceScheme = ref<Scheme>('typing');
-const targetScheme = ref<Scheme>('cursive');
-const inputArea = ref<InstanceType<typeof TextareaCard> | null>(null);
-const copyTip = ref<InstanceType<typeof ToastTip> | null>(null);
+const inputText = computed(() => inputArea.value?.data?.() || '');
 
-const inputText = computed(() => {
-  return inputArea.value?.data?.() || '';
-});
-
-const cursiveToTypingMap = Object.entries(
-  yngpingTypingCursiveFinalToneMap
-).reduce<Record<string, string>>((acc, [typingKey, cursiveValue]) => {
-  if (!acc[cursiveValue]) {
-    acc[cursiveValue] = typingKey;
-  }
-  return acc;
-}, {});
-
-const ipaInitialEntries = Object.entries(yngpingIPAInitialMap)
-  .map(([typing, ipa]) => ({ typing, ipa }))
-  .sort((a, b) => b.ipa.length - a.ipa.length);
-
-const ipaFinalMap: Record<string, string> = {};
-Object.entries(yngpingIPAFinalMap).forEach(([typing, ipa]) => {
-  if (!ipaFinalMap[ipa]) {
-    ipaFinalMap[ipa] = typing;
-  }
-});
-
-const ipaToneEntries = Object.entries(yngpingIPAToneMap)
-  .map(([tone, ipa]) => ({ tone, ipa }))
-  .sort((a, b) => b.ipa.length - a.ipa.length);
-
-const tokenize = (text: string): string[] => text.match(/\s+|\S+/g) ?? [];
-
-const conversionResult = computed<ConversionResult>(() => {
-  if (!inputText.value) {
-    return { tokens: [] };
-  }
-
-  const fragments = tokenize(inputText.value);
-  const tokens: DisplayToken[] = fragments.map((fragment) => {
-    if (/^\s+$/.test(fragment)) {
-      return {
-        text: fragment,
-        raw: fragment,
-        type: 'whitespace',
-      };
-    }
-    return convertFragment(fragment, sourceScheme.value, targetScheme.value);
-  });
-
-  return { tokens };
-});
-
-const resultTokens = computed(() => conversionResult.value.tokens);
-const hasResultContent = computed(() =>
-  resultTokens.value.some((token) => token.type !== 'whitespace')
-);
-
-function convertFragment(
-  fragment: string,
-  source: Scheme,
-  target: Scheme
-): DisplayToken {
-  const trimmed = fragment.trim();
-  if (!trimmed) {
-    return { text: fragment, raw: fragment, type: 'whitespace' };
-  }
-
-  const typingResult = convertToTyping(trimmed, source);
-
-  if (!typingResult.success) {
-    return {
-      text: fragment,
-      raw: fragment,
-      type: 'error',
-      message: typingResult.message,
-    };
-  }
-
-  const converted = convertFromTyping(typingResult.value, target);
-  if (!converted) {
-    return {
-      text: fragment,
-      raw: fragment,
-      type: 'error',
-      message: '未识别音节',
-    };
-  }
-
-  return {
-    text: converted,
-    raw: fragment,
-    type: 'normal',
-  };
-}
-
-function convertFromTyping(syllable: string, target: Scheme): string {
-  if (target === 'typing') {
-    return syllable;
-  }
-  if (target === 'cursive') {
-    return makeYngpingCursive(syllable);
-  }
-  return yngpingToIPA(syllable);
-}
-
-type ConvertResult =
-  | { success: true; value: string }
-  | { success: false; message: string };
-
-function convertToTyping(syllable: string, source: Scheme): ConvertResult {
-  if (source === 'typing') {
-    return validateTypingSyllable(syllable);
-  }
-  if (source === 'cursive') {
-    return convertCursiveToTyping(syllable);
-  }
-  return convertIPAToTyping(syllable);
-}
-
-function validateTypingSyllable(syllable: string): ConvertResult {
-  const toneMatch = syllable.match(tonePattern);
-  if (!toneMatch) {
-    return { success: false, message: '缺少声调' };
-  }
-
-  const letterPart = syllable.slice(0, syllable.length - toneMatch[0].length);
-  if (!letterPart) {
-    return { success: false, message: '缺少韵母' };
-  }
-
-  const [initial, final, tone] = parseYngping(syllable);
-
-  if (initial === null) {
-    return { success: false, message: '声母不合法' };
-  }
-
-  if (final === null) {
-    return { success: false, message: '韵母不合法' };
-  }
-
-  if (tone === null) {
-    return { success: false, message: '声调不合法' };
-  }
-
-  return { success: true, value: `${initial}${final}${tone}` };
-}
-
-function convertCursiveToTyping(syllable: string): ConvertResult {
-  const initialMatch = syllable.match(yngpingInitialPattern);
-  let initial = initialMatch ? initialMatch[0] : '';
-  let finalPart = syllable.slice(initial.length);
-
-  if (initial === 'ng' && !finalPart) {
-    initial = '';
-    finalPart = 'ng';
-  }
-
-  if (!finalPart) {
-    return { success: false, message: '缺少韵母' };
-  }
-
-  const typingFinalTone = cursiveToTypingMap[finalPart];
-  if (!typingFinalTone) {
-    return { success: false, message: '未识别韵母' };
-  }
-
-  const toneMatch = typingFinalTone.match(tonePattern);
-  if (!toneMatch) {
-    return { success: false, message: '未识别声调' };
-  }
-
-  const tone = toneMatch[0];
-  const final = typingFinalTone.slice(0, typingFinalTone.length - tone.length);
-
-  if (!(initial in yngpingIPAInitialMap)) {
-    return { success: false, message: '声母不合法' };
-  }
-
-  return { success: true, value: `${initial}${final}${tone}` };
-}
-
-function convertIPAToTyping(syllable: string): ConvertResult {
-  const sanitized = syllable.replace(/\//g, '').trim();
-  if (!sanitized) {
-    return { success: false, message: '音节为空' };
-  }
-
-  const toneEntry = ipaToneEntries.find((entry) =>
-    sanitized.endsWith(entry.ipa)
-  );
-  if (!toneEntry) {
-    return { success: false, message: '未识别声调' };
-  }
-
-  const tone = toneEntry.tone;
-  let remaining = sanitized.slice(0, sanitized.length - toneEntry.ipa.length);
-
-  let initial = '';
-  let finalBody = remaining;
-
-  const initialEntry = ipaInitialEntries.find(
-    (entry) => entry.ipa && remaining.startsWith(entry.ipa)
-  );
-
-  if (initialEntry) {
-    initial = initialEntry.typing;
-    finalBody = remaining.slice(initialEntry.ipa.length);
-  }
-
-  if (!initialEntry && finalBody === remaining) {
-    initial = '';
-  }
-
-  const finalTyping = ipaFinalMap[finalBody];
-  if (!finalTyping) {
-    return { success: false, message: '未识别韵母' };
-  }
-
-  return { success: true, value: `${initial}${finalTyping}${tone}` };
-}
-
-const handleDeleteClick = () => {
-  inputArea.value?.clear();
+const formatRaw = (raw: string | undefined) => {
+  if (!raw) return '';
+  return raw.length > 10 ? `${raw.slice(0, 10)}...` : raw;
 };
 
+const resultTokens = computed<DisplayToken[]>(() => {
+  if (!inputText.value) return [];
+
+  const utterance = Utterance.of(inputText.value, sourceScheme.value);
+  const tokens: DisplayToken[] = [];
+
+  utterance.phrases.forEach((phrase, index) => {
+    const allValid = phrase.syllables.every((s) => s.isValid());
+
+    if (!allValid) {
+      // 找出第一个错误的音节并获取其错误信息
+      const firstInvalid = phrase.syllables.find((s) => !s.isValid());
+      const rawText = formatRaw(firstInvalid?.toRaw());
+      const message = !firstInvalid?.isValid('tone')
+        ? `${rawText} 声调不符合规则`
+        : `${rawText} 的音节不符合规则`;
+
+      tokens.push({
+        text: phrase.toRaw(),
+        type: 'error',
+        message: message,
+      });
+    } else {
+      let targetText = '';
+      switch (targetScheme.value) {
+        case 'typing':
+          targetText = phrase.toString();
+          break;
+        case 'cursive':
+          targetText = phrase.toCursive();
+          break;
+        case 'ipa':
+          targetText = phrase.toIPA();
+          break;
+      }
+
+      tokens.push({
+        text: targetText,
+        type: 'normal',
+      });
+    }
+
+    if (index < utterance.phrases.length - 1) {
+      tokens.push({
+        text: ' ',
+        type: 'whitespace',
+      });
+    }
+  });
+
+  return tokens;
+});
+
+const hasResultContent = computed(() =>
+  resultTokens.value.some((t) => t.type !== 'whitespace')
+);
+
+const handleDeleteClick = () => inputArea.value?.clear();
+
 const handleCopyClick = async () => {
-  const content = resultTokens.value.map((token) => token.text).join('');
+  const content = resultTokens.value.map((t) => t.text).join('');
   if (!content) return;
   try {
     await navigator.clipboard.writeText(content);
@@ -428,11 +259,9 @@ const handleCopyClick = async () => {
 };
 
 watch(
-  () => resultTokens.value,
+  resultTokens,
   () => {
-    setTimeout(() => {
-      initTooltips();
-    }, 0);
+    setTimeout(() => initTooltips(), 0);
   },
   { deep: true }
 );
