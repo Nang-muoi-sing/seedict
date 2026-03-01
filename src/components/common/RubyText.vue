@@ -16,7 +16,7 @@
     <span v-else class="rb"></span>
     <rp>(</rp
     ><rt class="relative top-[0.5em] text-rosybrown-700">{{
-      makeYngpingsCursive(props.yngping) ?? ''
+      utterance.toCursive()
     }}</rt
     ><rp>)</rp>
   </ruby>
@@ -36,9 +36,9 @@
       ><rt
         v-if="baldChars.length > 1"
         class="relative top-[0.5em] text-rosybrown-700"
-        >&thinsp;{{ makeYngpingCursive(syllables[index]) }}&thinsp;</rt
+        >&thinsp;{{ syllables[index].toCursive() }}&thinsp;</rt
       ><rt v-else class="relative top-[0.5em] text-rosybrown-700">{{
-        makeYngpingCursive(syllables[index])
+        syllables[index].toCursive()
       }}</rt>
       <rp>)</rp>
     </template>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { makeYngpingCursive, makeYngpingsCursive } from '../../utils/phonetics';
+import { Utterance } from '../../utils/phonetics';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -55,7 +55,6 @@ const props = defineProps<{
 }>();
 
 const rawText = computed(() => props.text.trim());
-const rawYngping = computed(() => props.yngping.trim());
 
 const markedChars = computed<boolean[]>(() => {
   const chars = rawText.value.split(/(?:)/u);
@@ -82,7 +81,8 @@ const markedChars = computed<boolean[]>(() => {
 
 const baldText = computed(() => rawText.value.replace(/\*/g, ''));
 const baldChars = computed(() => baldText.value.split(/(?:)/u));
-const syllables = computed(() => rawYngping.value.split(' '));
+const utterance = computed(() => Utterance.of(props.yngping));
+const syllables = computed(() => utterance.value.toSyllables());
 
 const isMatchedTextSyllable = computed(() => {
   return baldChars.value.length === syllables.value.length;
