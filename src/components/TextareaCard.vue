@@ -8,6 +8,7 @@
       @keyup="handleKeyUp"
       @blur="handleInput"
       @cut="handleInput"
+      @paste.prevent="handlePaste"
     ></div>
     <span
       :class="[
@@ -47,7 +48,7 @@ const inputText = ref('');
 
 const updateInputText = () => {
   if (!inputArea.value) return;
-  let text = inputArea.value.textContent?.trim() || '';
+  let text = inputArea.value.innerText?.trim() || '';
   inputText.value = text;
 };
 
@@ -60,6 +61,12 @@ const handleKeyUp = (e: KeyboardEvent) => {
   if (keyCodes.includes(e.key) || (e.ctrlKey && e.key === 'a')) {
     setTimeout(updateInputText, 0);
   }
+};
+
+const handlePaste = (e: ClipboardEvent) => {
+  const text = e.clipboardData?.getData('text/plain') || '';
+  document.execCommand('insertText', false, text);
+  updateInputText();
 };
 
 const clear = () => {
