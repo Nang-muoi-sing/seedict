@@ -62,12 +62,13 @@
         "
       >
         <Subtitle text="辞书释义"></Subtitle>
-        <WordFengBlock
-          v-if="wordResponse.data.result.fengs.length > 0"
-          v-for="(feng, index) in wordResponse.data.result.fengs"
-          :data="feng"
-          :key="index"
-        ></WordFengBlock>
+        <template v-if="wordResponse.data.result.fengs.length > 0">
+          <WordFengBlock
+            v-for="(feng, index) in wordResponse.data.result.fengs"
+            :data="feng"
+            :key="index"
+          ></WordFengBlock
+        ></template>
 
         <WordCikLingCard
           :data="wordResponse.data.result.ciklings"
@@ -102,7 +103,7 @@
                 v-for="(pron, index) in wordResponse.data.result.seedict.prons"
                 :key="index"
               >
-                <td class="py-1.5">{{ yngpingToIPA(pron.pron) }}</td>
+                <td class="py-1.5">{{ Utterance.of(pron.pron).toIPA() }}</td>
                 <td class="flex items-center justify-center py-2 md:hidden">
                   <Badge v-if="pron.isSandhi">连</Badge>
                   <Badge v-else>本</Badge>
@@ -235,7 +236,7 @@ import WordHead from '../components/WordHead.vue';
 import WordPhoneticCard from '../components/WordPhoneticCard.vue';
 import WordSkeleton from '../components/WordSkeleton.vue';
 import { apiV1Url } from '../utils/api';
-import { yngpingToIPA } from '../utils/phonetics';
+import { Utterance } from '../utils/phonetics';
 import type { AudioResponse, WordResponse, WordSeeDict } from '../utils/typing';
 import { correctText } from '../utils/typography';
 
