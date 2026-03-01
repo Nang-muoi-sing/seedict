@@ -15,6 +15,8 @@ import {
   yngpingIPAToneMap,
   yngpingTypingCursiveFinalMap,
   yngpingVowelToneMap,
+  CURSIVE_TO_TYPING_RHYTHM_MAP,
+  IPA_LOOKUPS,
 } from './mapping';
 
 import type { Final, Initial, Tone } from './mapping';
@@ -34,6 +36,26 @@ export const isFinal = (value: unknown): value is Final => {
 export const isTone = (value: unknown): value is Tone => {
   if (typeof value !== 'string') return false;
   return (TONES as readonly string[]).includes(value);
+};
+
+export type Scheme = 'typing' | 'cursive' | 'ipa';
+
+export const parseSyllable = (
+  input: string,
+  scheme: Scheme = 'typing'
+): [Initial | null, Final | null, Tone | null] => {
+  const text = input.trim();
+  if (!text) return [null, null, null];
+
+  switch (scheme) {
+    case 'cursive':
+      return parseCursiveSyllable(text);
+    case 'ipa':
+      return parseIPASyllable(text);
+    case 'typing':
+    default:
+      return parseTypingSyllable(text);
+  }
 };
 
 const parseTone = (
@@ -62,7 +84,7 @@ const parseTone = (
   return isTone(tone) ? { tone, remaining } : { tone: null, remaining };
 };
 
-export const parseSyllable = (
+export const parseTypingSyllable = (
   yngping: string
 ): [Initial | null, Final | null, Tone | null] => {
   const input = yngping.trim();
@@ -71,7 +93,7 @@ export const parseSyllable = (
 
   const initialMatch = remaining.match(yngpingInitialPattern);
   const initial =
-    initialMatch && isInitial(initialMatch[0]) ? initialMatch[0] : null;
+    initialMatch && isInitial(initialMatch[0]) ? initialMatch[0] : '';
 
   const finalStr = initial ? remaining.slice(initial.length) : remaining;
   let final: Final | null = null;
@@ -89,7 +111,63 @@ export const parseSyllable = (
   return [initialResult, finalResult, tone];
 };
 
+const parseCursiveSyllable = (
+  input: string
+): [Initial | null, Final | null, Tone | null] => {
+  if (input.startsWith('{') && input.endsWith('}')) {
+    const inner = input.slice(1, -1);
+    const initialMatch = inner.match(yngpingInitialPattern);
+    const initial = initialMatch ? (initialMatch[0] as Initial) : null;
+    const final = (initial ? inner.slice(initial.length) : inner) as Final;
+    return [initial, final, '']; // 无定调
+  }
+
+  const initialMatch = input.match(yngpingInitialPattern);
+  const initial =
+    initialMatch && isInitial(initialMatch[0]) ? initialMatch[0] : null;
+  const rest = initial ? input.slice(initial.length) : input;
+
+  const match = CURSIVE_TO_TYPING_RHYTHM_MAP[rest];
+  if (match) {
+    return [initial, match.final, match.tone];
+  }
+
+  return [initial, null, null];
+};
+
+const parseIPASyllable = (
+  input: string
+): [Initial | null, Final | null, Tone | null] => {
+  let remaining = input;
+  let tone: Tone | null = null;
+  let initial: Initial | null = null;
+  let final: Final | null = null;
+
+  // 从末尾贪婪匹配匹配声调
+  const tEntry = IPA_LOOKUPS.tones.find(([, ipa]) => remaining.endsWith(ipa));
+  if (tEntry) {
+    tone = tEntry[0] as Tone;
+    remaining = remaining.slice(0, -tEntry[1].length);
+  }
+
+  // 从开头贪婪匹配匹配声母
+  const iEntry = IPA_LOOKUPS.initials.find(([, ipa]) =>
+    remaining.startsWith(ipa)
+  );
+  if (iEntry) {
+    initial = iEntry[0] as Initial;
+    remaining = remaining.slice(iEntry[1].length);
+  }
+
+  // 匹配韵母
+  const fEntry = IPA_LOOKUPS.finals.find(([, ipa]) => remaining === ipa);
+  if (fEntry) final = fEntry[0] as Final;
+
+  return [initial, final, tone];
+};
+
 export type SyllableData = {
+  readonly raw: string;
   readonly initialRaw: Initial | null;
   readonly finalRaw: Final | null;
   readonly toneRaw: Tone | null;
@@ -105,9 +183,10 @@ export class Syllable {
     this.value = Object.freeze(syllable);
   }
 
-  static of(yngping: string): Syllable {
-    const [initial, final, tone] = parseSyllable(yngping);
+  static of(input: string, scheme: Scheme = 'typing'): Syllable {
+    const [initial, final, tone] = parseSyllable(input, scheme);
     return new Syllable({
+      raw: input.trim(),
       initialRaw: initial,
       finalRaw: final,
       toneRaw: tone,
@@ -176,6 +255,10 @@ export class Syllable {
     return this.value.tone !== null && this.value.tone !== '';
   }
 
+  toRaw(): string {
+    return this.value.raw;
+  }
+
   toString(): string {
     if (!this.isValid()) return '';
     if (this.hasFixedTone())
@@ -209,16 +292,32 @@ export class Syllable {
 }
 
 export class Phrase {
-  constructor(public readonly syllables: Syllable[]) {}
+  readonly isCompound: boolean;
 
-  static of(yngping: string, forceCompound?: boolean): Phrase {
-    const trimmed = yngping.trim();
+  constructor(
+    public readonly syllables: Syllable[],
+    useCompound: boolean = false
+  ) {
+    this.isCompound = useCompound && syllables.length > 1;
+  }
+
+  static of(
+    input: string,
+    scheme: Scheme = 'typing',
+    forceCompound?: boolean
+  ): Phrase {
+    const trimmed = input.trim();
     if (!trimmed) return new Phrase([]);
+
+    const hasHyphen = trimmed.includes('-');
     // 强制 compound 时将空格当连字符
     const splitPattern = forceCompound ? /[-\s]+/ : '-';
-    const syllables = trimmed.split(splitPattern).map((s) => Syllable.of(s));
 
-    return new Phrase(syllables);
+    const syllables = trimmed
+      .split(splitPattern)
+      .map((s) => Syllable.of(s, scheme));
+
+    return new Phrase(syllables, forceCompound ?? hasHyphen);
   }
 
   // applySandhi(): Phrase {
@@ -267,14 +366,21 @@ export class Phrase {
   //   });
   // }
 
-  toString(compound?: boolean): string {
-    if (compound) return this.syllables.map((s) => s.toString()).join('-');
-    return this.syllables.map((s) => s.toString()).join(' ');
+  toRaw(): string {
+    const separator = this.isCompound ? '-' : ' ';
+    return this.syllables.map((s) => s.toRaw()).join(separator);
   }
 
-  toCursive(compound?: boolean): string {
-    if (compound) return this.syllables.map((s) => s.toCursive()).join('-');
-    return this.syllables.map((s) => s.toCursive()).join(' ');
+  toString(useCompound?: boolean): string {
+    const activeCompound = useCompound ?? this.isCompound;
+    const separator = activeCompound ? '-' : ' ';
+    return this.syllables.map((s) => s.toString()).join(separator);
+  }
+
+  toCursive(useCompound?: boolean): string {
+    const activeCompound = useCompound ?? this.isCompound;
+    const separator = activeCompound ? '-' : ' ';
+    return this.syllables.map((s) => s.toCursive()).join(separator);
   }
 
   toIPA(): string {
@@ -297,18 +403,22 @@ export class Phrase {
 export class Utterance {
   constructor(public readonly phrases: Phrase[]) {}
 
-  static of(yngping: string): Utterance {
-    const trimmed = yngping.trim();
+  static of(input: string, scheme: Scheme = 'typing'): Utterance {
+    const trimmed = input.trim();
     if (!trimmed) return new Utterance([]);
-    return new Utterance(trimmed.split(/\s+/).map((p) => Phrase.of(p)));
+    return new Utterance(trimmed.split(/\s+/).map((p) => Phrase.of(p, scheme)));
   }
 
-  toString(compound?: boolean): string {
-    return this.phrases.map((p) => p.toString(compound)).join(' ');
+  toRaw(): string {
+    return this.phrases.map((p) => p.toRaw()).join(' ');
   }
 
-  toCursive(compound?: boolean): string {
-    return this.phrases.map((p) => p.toCursive(compound)).join(' ');
+  toString(useCompound?: boolean): string {
+    return this.phrases.map((p) => p.toString(useCompound)).join(' ');
+  }
+
+  toCursive(useCompound?: boolean): string {
+    return this.phrases.map((p) => p.toCursive(useCompound)).join(' ');
   }
 
   toIPA(): string {
