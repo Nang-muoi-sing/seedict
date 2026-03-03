@@ -60,6 +60,14 @@ const routes = [
   },
 ];
 
+if (import.meta.env.DEV) {
+  routes.push({
+    path: '/styleguide',
+    name: 'Styleguide',
+    component: () => import('../views/StyleguideView.vue'),
+  });
+}
+
 const base = import.meta.env.VITE_BASE_URL || '/';
 const router = createRouter({
   history: createWebHistory(base),
