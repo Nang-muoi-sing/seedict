@@ -235,7 +235,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Badge from '../components/common/Badge.vue';
 import RubyText from '../components/common/RubyText.vue';
-import InfoTooltip from '../components/InfoTooltip.vue';
+import InfoTooltip from '../components/tooltip/SeeTooltip.vue';
 import PageContent from '../components/PageContent.vue';
 import { getFuzhouTerms } from '../utils/relationshipMapping';
 
