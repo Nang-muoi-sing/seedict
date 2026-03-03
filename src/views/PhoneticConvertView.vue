@@ -65,14 +65,13 @@
             }"
           ></TextareaCard>
           <div class="bg-red mt-auto px-6 py-3">
-            <button
+            <SeeIconButton
               @click="handleDeleteClick"
-              class="origin-center rounded-lg bg-wheat-100 p-1.5 text-wheat-500 transition-transform duration-300 hover:bg-wheat-200 active:scale-95"
+              variant="secondary"
+              size="sm"
             >
-              <i-material-symbols-delete
-                class="scale-100 transition-transform duration-300 active:scale-95"
-              />
-            </button>
+              <IMaterialSymbolsDelete />
+            </SeeIconButton>
           </div>
         </div>
 
@@ -111,15 +110,11 @@
                 >
                   {{ token.text }}
                 </span>
-                <div
+                <SeeTooltip
                   v-if="token.type === 'error' && token.message"
                   :id="`tooltip-${index}`"
-                  role="tooltip"
-                  class="tooltip invisible absolute z-50 inline-block rounded-xl bg-rosybrown-900 px-3 py-2 text-sm text-wheat-50 opacity-0 transition-opacity duration-500"
+                  >{{ token.message }}</SeeTooltip
                 >
-                  {{ token.message }}
-                  <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
               </span>
             </template>
             <span
@@ -130,16 +125,15 @@
             </span>
           </div>
           <div class="mt-auto px-6 py-3">
-            <button
+            <SeeIconButton
               @click="handleCopyClick"
-              class="origin-center rounded-lg bg-wheat-100 p-1.5 text-wheat-500 transition-transform duration-300 hover:bg-wheat-200 active:scale-95"
+              variant="secondary"
+              size="sm"
             >
-              <i-material-symbols-content-copy
-                class="scale-100 transition-transform duration-300 active:scale-95"
-              />
-            </button>
+              <IMaterialSymbolsContentCopy />
+            </SeeIconButton>
           </div>
-          <ToastTip ref="copyTip">已复制结果</ToastTip>
+          <SeeToast ref="copyToast">已复制结果</SeeToast>
         </div>
       </div>
     </div>
@@ -147,14 +141,13 @@
 </template>
 
 <script setup lang="ts">
-import { initTooltips } from 'flowbite';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import PageContent from '../components/PageContent.vue';
 import TextareaCard from '../components/TextareaCard.vue';
-import ToastTip from '../components/ToastTip.vue';
 import { Utterance } from '../utils/phonetics';
-
+import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
 import type { Scheme } from '../utils/phonetics';
+import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 
 type TokenType = 'normal' | 'error' | 'whitespace';
 
@@ -167,7 +160,7 @@ interface DisplayToken {
 const sourceScheme = ref<Scheme>('typing');
 const targetScheme = ref<Scheme>('cursive');
 const inputArea = ref<InstanceType<typeof TextareaCard> | null>(null);
-const copyTip = ref<InstanceType<typeof ToastTip> | null>(null);
+const copyToast = ref();
 
 const schemeOptions = [
   { label: '榕拼键入', value: 'typing' },
@@ -252,17 +245,10 @@ const handleCopyClick = async () => {
   if (!content) return;
   try {
     await navigator.clipboard.writeText(content);
-    copyTip.value?.tip();
+    copyToast.value?.show();
   } catch (err) {
     console.error('复制失败:', err);
   }
 };
 
-watch(
-  resultTokens,
-  () => {
-    setTimeout(() => initTooltips(), 0);
-  },
-  { deep: true }
-);
 </script>
