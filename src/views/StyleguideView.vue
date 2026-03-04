@@ -74,12 +74,8 @@
           SeeSwitch
         </h2>
         <div class="space-y-6 p-4">
-          <SeeSwitch v-model="isChoiceAEnabled" id="choice-a">
-            选项 A
-          </SeeSwitch>
-          <SeeSwitch v-model="isChoiceBEnabled" id="choice-b">
-            选项 B
-          </SeeSwitch>
+          <SeeSwitch v-model="isChoiceAEnabled"> 选项 A </SeeSwitch>
+          <SeeSwitch v-model="isChoiceBEnabled"> 选项 B </SeeSwitch>
           <SeeSwitch v-model="isChoiceCEnabled" disabled> 选项 C </SeeSwitch>
           <SeeSwitch v-model="isChoiceDEnabled" disabled> 选项 C </SeeSwitch>
           <p class="font-mono text-rosybrown-500">
@@ -99,27 +95,23 @@
         <div class="w-96 space-y-6 p-4">
           <SeeSwitchCard
             v-model="cardChoices.choiceA"
-            id="card-choice-a"
             title="选项 A"
             description="Receive notifications when focus mode is enabled or disabled."
           />
           <SeeSwitchCard
             v-model="cardChoices.choiceB"
-            id="card-choice-b"
             title="选项 B"
             description="Focus is shared across devices, and turns off when you leave the
               app."
           />
           <SeeSwitchCard
             v-model="cardChoices.choiceC"
-            id="card-choice-c"
             title="选项 C"
             description="Receive notifications when focus mode is enabled or disabled."
             disabled
           />
           <SeeSwitchCard
             v-model="cardChoices.choiceD"
-            id="card-choice-d"
             title="选项 D"
             description="Focus is shared across devices, and turns off when you leave the
               app."

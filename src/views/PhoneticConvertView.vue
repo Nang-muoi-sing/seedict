@@ -70,7 +70,7 @@
               variant="secondary"
               size="sm"
             >
-              <IMaterialSymbolsDelete />
+              <IMaterialSymbolsDeleteRounded />
             </SeeIconButton>
           </div>
         </div>
@@ -90,7 +90,6 @@
               <span
                 v-for="(token, index) in resultTokens"
                 :key="index"
-                v-memo="[token.text, token.type, token.message, targetScheme]"
               >
                 <span
                   :tabindex="
@@ -124,16 +123,65 @@
               {{ placeholders[targetScheme] }}
             </span>
           </div>
-          <div class="mt-auto px-6 py-3">
+          <div class="mt-auto flex gap-2 px-6 py-3">
             <SeeIconButton
               @click="handleCopyClick"
               variant="secondary"
               size="sm"
             >
-              <IMaterialSymbolsContentCopy />
+              <IMaterialSymbolsContentCopyRounded />
+            </SeeIconButton>
+            <SeeIconButton
+              @click="handleOpenConfig"
+              variant="secondary"
+              size="sm"
+            >
+              <IMaterialSymbolsTuneRounded />
             </SeeIconButton>
           </div>
           <SeeToast ref="copyToast">已复制结果</SeeToast>
+          <SeeModal :show="isConfigOpen" @blur="handleCancelConfig">
+            <div
+              class="w-xs space-y-5 rounded-2xl bg-white p-6 shadow-xl md:w-lg"
+            >
+              <SeeSwitchCard
+                v-model="draftConfig.isProgAssimEnabled"
+                title="推导声母类化"
+                description="后字声母受前字韵尾影响而发生变化，如：花瓶 /hua bìng/ → /hua wìng/"
+              />
+              <SeeSwitchCard
+                v-model="draftConfig.isRegrAssimEnabled"
+                title="推导韵尾类化"
+                description="前字韵尾受后字声母影响而发生变化，如：公妈 /gung mā/ → /gùm mā/"
+              />
+              <SeeSwitchCard
+                v-model="draftConfig.isVowelShiftEnabled"
+                title="推导松紧变韵"
+                description="松韵韵母在特定单字调下发音不固定，连读会被还原为紧韵，如：裤 /kǒu/ → 裤头 /ku làu/"
+              />
+              <SeeSwitchCard
+                v-model="draftConfig.isToneSandhiEnabled"
+                title="推导连读变调"
+                description="福州话以声调多变而著称，在语流中普遍发生声调的变化，如：昨暝 /soh màng/ → /sōh màng/"
+              />
+              <p class="text-xs text-rosybrown-500">
+                *福州话的连读还会受句法和语义影响，本工具提供理论连读结果供学习参考
+              </p>
+              <div class="mt-8 flex flex-row justify-between gap-8">
+                <SeeButton
+                  class="flex-1"
+                  label="确定"
+                  @click="handleConfirmConfig"
+                />
+                <SeeButton
+                  class="flex-1"
+                  variant="outline"
+                  label="取消"
+                  @click="handleCancelConfig"
+                />
+              </div>
+            </div>
+          </SeeModal>
         </div>
       </div>
     </div>
@@ -143,11 +191,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import PageContent from '../components/PageContent.vue';
-import TextareaCard from '../components/TextareaCard.vue';
-import { Utterance } from '../utils/phonetics';
 import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
-import type { Scheme } from '../utils/phonetics';
+import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';
 import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
+import TextareaCard from '../components/TextareaCard.vue';
+import type { Scheme } from '../utils/phonetics';
+import { Utterance } from '../utils/phonetics';
 
 type TokenType = 'normal' | 'error' | 'whitespace';
 
@@ -157,8 +206,25 @@ interface DisplayToken {
   message?: string;
 }
 
+interface Config {
+  isProgAssimEnabled: boolean;
+  isRegrAssimEnabled: boolean;
+  isVowelShiftEnabled: boolean;
+  isToneSandhiEnabled: boolean;
+}
+
 const sourceScheme = ref<Scheme>('typing');
 const targetScheme = ref<Scheme>('cursive');
+
+const config = ref<Config>({
+  isProgAssimEnabled: true,
+  isRegrAssimEnabled: false,
+  isVowelShiftEnabled: true,
+  isToneSandhiEnabled: true,
+});
+const isConfigOpen = ref(false);
+const draftConfig = ref({ ...config.value });
+
 const inputArea = ref<InstanceType<typeof TextareaCard> | null>(null);
 const copyToast = ref();
 
@@ -250,5 +316,17 @@ const handleCopyClick = async () => {
     console.error('复制失败:', err);
   }
 };
+const handleOpenConfig = () => {
+  draftConfig.value = { ...config.value };
+  isConfigOpen.value = true;
+};
 
+const handleConfirmConfig = () => {
+  config.value = { ...draftConfig.value };
+  isConfigOpen.value = false;
+};
+
+const handleCancelConfig = () => {
+  isConfigOpen.value = false;
+};
 </script>
