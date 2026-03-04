@@ -21,6 +21,7 @@ declare module 'vue' {
     Footer: typeof import('./src/components/common/Footer.vue')['default']
     FormatText: typeof import('./src/components/common/FormatText.vue')['default']
     IIconParkOutlineFamily: typeof import('~icons/icon-park-outline/family')['default']
+    IIcRoundPhone: typeof import('~icons/ic/round-phone')['default']
     IIcRoundWechat: typeof import('~icons/ic/round-wechat')['default']
     ILucideToolCase: typeof import('~icons/lucide/tool-case')['default']
     IMaterialSymbolsAccessibilityNew: typeof import('~icons/material-symbols/accessibility-new')['default']
