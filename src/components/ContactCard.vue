@@ -9,7 +9,7 @@
   </p>
 
   <div
-    class="bg-wheat-100 flex flex-col items-center justify-between gap-x-6 gap-y-4 rounded-xl md:flex-row"
+    class="bg-wheat-100 flex flex-col items-start justify-between gap-x-6 gap-y-4 rounded-xl md:flex-row"
   >
     <div class="w-full flex-1 p-5">
       <p>通过其他方式与我们取得联系：</p>
@@ -54,6 +54,18 @@
             class="hover:text-wheat-700 underline underline-offset-4 transition-all"
             >seedict@163.com</a
           >
+        </li>
+
+        <li class="flex flex-row items-center">
+          <div
+            class="bg-wheat-50 mr-3 flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
+          >
+            <i-ic-round-phone
+              class="text-rosybrown-600"
+              style="font-size: 14px"
+            />
+          </div>
+          (+86) 13696831747
         </li>
 
         <li class="flex flex-row items-center">
