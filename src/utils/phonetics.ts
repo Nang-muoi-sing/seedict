@@ -3,19 +3,16 @@ import {
   INITIALS,
   phonologyBanguaceInitialMap,
   phonologyBanguaceRhythmMap,
-  ToneCategory,
-  toneCategoryMap,
+  // ToneCategory,
+  // TONE_DETAILS,
   TONES,
   yngpingFengIPAEndToneMap,
   yngpingFengIPAFinalMap,
   yngpingFengIPAInitialMap,
   yngpingFengIPAToneMap,
-  yngpingIPAFinalMap,
-  yngpingIPAInitialMap,
-  yngpingIPAToneMap,
-  yngpingTypingCursiveFinalMap,
-  yngpingVowelToneMap,
-  CURSIVE_TO_TYPING_RHYTHM_MAP,
+  renderCursive,
+  renderIPA,
+  CURSIVE_RHYTHM_LOOKUP,
   IPA_LOOKUPS,
 } from './mapping';
 
@@ -63,7 +60,7 @@ const parseTone = (
 ): { tone: Tone | null; remaining: string } => {
   if (yngping.startsWith('{') && yngping.endsWith('}')) {
     const inner = yngping.replace(/\{|\}/g, '');
-    if (!/\d+$/.test(inner))
+    if (/\d+$/.test(inner))
       return { tone: null, remaining: inner.replace(/\d+$/, '') };
     else return { tone: '', remaining: inner };
   }
@@ -85,49 +82,51 @@ const parseTone = (
 };
 
 export const parseTypingSyllable = (
-  yngping: string
+  input: string
 ): [Initial | null, Final | null, Tone | null] => {
-  const input = yngping.trim();
-  if (input.length === 0) return [null, null, null];
-  const { tone, remaining } = parseTone(input);
+  const text = input.trim();
+  if (text.length === 0) return [null, null, null];
+  const { tone, remaining } = parseTone(text);
+  console.debug(tone, remaining);
 
   const initialMatch = remaining.match(yngpingInitialPattern);
-  const initial =
+  let initial =
     initialMatch && isInitial(initialMatch[0]) ? initialMatch[0] : '';
 
   const finalStr = initial ? remaining.slice(initial.length) : remaining;
   let final: Final | null = null;
-  if (finalStr) {
+  if (initial === 'ng' && !finalStr) {
     // ng 既作声母也作韵母，当没有其他韵母时就是韵母
-    if (initial === 'ng' && finalStr === '') {
-      final = 'ng';
-    } else if (isFinal(finalStr)) {
-      final = finalStr;
-    }
+    initial = '';
+    final = 'ng';
+  } else if (finalStr && isFinal(finalStr)) {
+    final = finalStr;
   }
 
-  const finalResult = final === 'ng' && initial === 'ng' ? 'ng' : final;
-  const initialResult = final === 'ng' && initial === 'ng' ? null : initial;
-  return [initialResult, finalResult, tone];
+  return [initial, final, tone];
 };
 
 const parseCursiveSyllable = (
   input: string
 ): [Initial | null, Final | null, Tone | null] => {
-  if (input.startsWith('{') && input.endsWith('}')) {
-    const inner = input.slice(1, -1);
-    const initialMatch = inner.match(yngpingInitialPattern);
-    const initial = initialMatch ? (initialMatch[0] as Initial) : null;
+  const findInitial = (s: string) => {
+    const initialMatch = s.match(yngpingInitialPattern);
+    return initialMatch ? (initialMatch[0] as Initial) : '';
+  };
+
+  const text = input.trim().normalize('NFC');
+  if (text.length === 0) return [null, null, null];
+  if (text.startsWith('{') && text.endsWith('}')) {
+    const inner = text.slice(1, -1);
+    const initial = findInitial(inner);
     const final = (initial ? inner.slice(initial.length) : inner) as Final;
     return [initial, final, '']; // 无定调
   }
 
-  const initialMatch = input.match(yngpingInitialPattern);
-  const initial =
-    initialMatch && isInitial(initialMatch[0]) ? initialMatch[0] : null;
-  const rest = initial ? input.slice(initial.length) : input;
+  const initial = findInitial(text);
+  const rest = initial ? text.slice(initial.length) : text;
 
-  const match = CURSIVE_TO_TYPING_RHYTHM_MAP[rest];
+  const match = CURSIVE_RHYTHM_LOOKUP[rest];
   if (match) {
     return [initial, match.final, match.tone];
   }
@@ -138,7 +137,9 @@ const parseCursiveSyllable = (
 const parseIPASyllable = (
   input: string
 ): [Initial | null, Final | null, Tone | null] => {
-  let remaining = input;
+  let remaining = input.trim();
+  if (remaining.length === 0) return [null, null, null];
+
   let tone: Tone | null = null;
   let initial: Initial | null = null;
   let final: Final | null = null;
@@ -160,8 +161,13 @@ const parseIPASyllable = (
   }
 
   // 匹配韵母
-  const fEntry = IPA_LOOKUPS.finals.find(([, ipa]) => remaining === ipa);
-  if (fEntry) final = fEntry[0] as Final;
+  if (remaining === '\u030D' && initial === 'ng') {
+    initial = '';
+    final = 'ng';
+  } else {
+    const fEntry = IPA_LOOKUPS.finals.find(([, ipa]) => remaining === ipa);
+    if (fEntry) final = fEntry[0] as Final;
+  }
 
   return [initial, final, tone];
 };
@@ -208,17 +214,17 @@ export class Syllable {
     return new Syllable({ ...this.value, tone: newTone });
   }
 
-  getTone(): ToneCategory | null {
-    if (!this.isValid()) return null;
-    const category = toneCategoryMap[this.value.tone] ?? null;
-    if (category === null) return null;
+  // getTone(): ToneCategory | null {
+  //   if (!this.isValid()) return null;
+  //   const category = toneCategoryMap[this.value.tone] ?? null;
+  //   if (category === null) return null;
 
-    const end = this.value.final.charAt(this.value.final.length - 1);
-    if (category === ToneCategory.YinRu || category === ToneCategory.YangRu) {
-      if (end !== 'h' && end !== 'k') return null;
-    }
-    return category;
-  }
+  //   const end = this.value.final.charAt(this.value.final.length - 1);
+  //   if (category === ToneCategory.YinRu || category === ToneCategory.YangRu) {
+  //     if (end !== 'h' && end !== 'k') return null;
+  //   }
+  //   return category;
+  // }
 
   reset(): Syllable {
     return new Syllable({
@@ -268,16 +274,12 @@ export class Syllable {
 
   toCursive(): string {
     if (!this.isValid()) return '';
-    const [final, vowel] = yngpingTypingCursiveFinalMap[this.value.final];
-    const tonedVowel = yngpingVowelToneMap[vowel][this.value.tone];
-    const cursive = `${this.value.initial}${final.replace(vowel, tonedVowel)}`;
-    if (this.hasFixedTone()) return cursive;
-    return `{${cursive}}`;
+    return renderCursive(this.value);
   }
 
   toIPA(): string {
     if (!this.isValid()) return '';
-    return `${yngpingIPAInitialMap[this.value.initial]}${yngpingIPAFinalMap[this.value.final]}${yngpingIPAToneMap[this.value.tone]}`;
+    return renderIPA(this.value);
   }
 
   renderFeng(isLast: boolean): string {
