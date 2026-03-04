@@ -37,18 +37,32 @@ const props = defineProps<{
 
 const emit = defineEmits(['blur']);
 
+const lockScroll = () => {
+  // 计算滚动条宽度 (预防页面内容跳动)
+  const scrollBarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.paddingRight = `${scrollBarWidth}px`;
+  document.body.style.overflow = 'hidden';
+};
+
+const unlockScroll = () => {
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
+};
+
 // 弹窗打开时，禁用页面滚动
 watch(
   () => props.show,
   (val) => {
     if (val) {
-      document.body.style.overflow = 'hidden';
+      lockScroll();
     }
   }
 );
 
+// Transition 离开动画结束后的回调
 const handleAfterLeave = () => {
-  document.body.style.overflow = '';
+  unlockScroll();
 };
 
 // 监听 Esc 键
