@@ -5,7 +5,7 @@
     :target="isExternal ? '_blank' : undefined"
     :rel="isExternal ? 'noopener noreferrer' : undefined"
     :disabled="tag === 'button' ? disabled || loading : undefined"
-    class="relative inline-flex shrink-0 items-center justify-center no-underline transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+    class="group relative inline-flex shrink-0 items-center justify-center no-underline transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
     :class="[
       variants[variant],
       sizes[size],
@@ -21,7 +21,7 @@
       <component
         :is="icon"
         v-if="icon"
-        class="h-[1.2em] w-[1.2em] transition-transform group-active:scale-90"
+        class="h-[1.2em] w-[1.2em] transition-transform will-change-transform"
       />
     </slot>
   </component>

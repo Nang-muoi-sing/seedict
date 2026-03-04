@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center gap-3">
     <button
-      :id="id"
+      :id="uid"
       type="button"
       role="switch"
       :aria-checked="modelValue"
@@ -17,8 +17,8 @@
     </button>
 
     <label
-      v-if="$slots.default || id"
-      :for="id"
+      v-if="$slots.default || uid"
+      :for="uid"
       class="cursor-pointer text-sm font-medium leading-none text-rosybrown-800 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
     >
       <slot></slot>
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import { useId } from 'vue';
 interface Props {
   modelValue: boolean;
   id?: string;
@@ -35,6 +36,8 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits(['update:modelValue']);
+
+const uid = props.id || useId();
 
 const toggle = () => {
   if (!props.disabled) {
