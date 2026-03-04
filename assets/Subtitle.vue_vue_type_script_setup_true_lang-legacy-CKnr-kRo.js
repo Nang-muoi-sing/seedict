@@ -1,1 +1,0 @@
-System.register(["./index-legacy-v9bxeA-8.js"],function(t,e){"use strict";var r,s,n,o;return{setters:[t=>{r=t.a,s=t.c,n=t.f,o=t.y}],execute:function(){const e=["id"];t("_",r({__name:"Subtitle",props:{text:{}},setup(t){const r=t;return(t,c)=>(n(),s("h2",{id:r.text,class:"border-rosybrown-800 text-rosybrown-800 w-fit border-t-[6px] p-1 text-xl font-bold"},o(r.text),9,e))}}))}}});
