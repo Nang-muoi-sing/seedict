@@ -25,7 +25,7 @@ interface ToneSchema {
   ipa: string;
 }
 
-const TONE_DETAILS: Record<Tone, ToneSchema> = {
+export const TONE_DETAILS: Record<Tone, ToneSchema> = {
   '': { category: null, ipa: '' },
   '0': { category: null, ipa: '' },
   '55': { category: ToneCategory.Yinping, ipa: '˥˥' },
@@ -54,7 +54,7 @@ const GLIDE_DETAILS: Record<Glide, GlideSchema> = {
 // prettier-ignore
 export type Nucleus =
   | 'a'   | 'e'   | 'o'   | 'oo'  | 'i'   | 'u'  | 'y'  | 'eo' // 单元音
-  | 'au'  | 'eu'  | 'iu'  | 'ai'  | 'ui'  | 'ei' | 'ou' | 'eoy' | 'ooy' | 'uo'  | 'yo'  | 'oi' // 复合元音
+  | 'au'  | 'eu'  | 'iu'  | 'ai'  | 'ui'  | 'ei' | 'ou' | 'eoy' | 'ooy' | 'uo'  | 'yo'  | 'oi' | 'oou' // 复合元音
   | ''; // 声化韵
 
 export const VOWELS = ['a', 'e', 'o', 'oo', 'i', 'u', 'y', 'eo', 'ng'] as const;
@@ -67,29 +67,30 @@ interface NucleusSchema {
 }
 
 // prettier-ignore
-const NUCLEUS_DETAILS: Record<Nucleus, NucleusSchema> = {
-  a:   { peak: 'a',  cursive: '~',  ipa: 'a'  },
-  e:   { peak: 'e',  cursive: '~',  ipa: 'e'  },
-  o:   { peak: 'o',  cursive: '~',  ipa: 'o'  },
-  oo:  { peak: 'oo', cursive: '~',  ipa: 'ɒ'  },
-  i:   { peak: 'i',  cursive: '~',  ipa: 'i'  },
-  u:   { peak: 'u',  cursive: '~',  ipa: 'u'  },
-  y:   { peak: 'y',  cursive: '~',  ipa: 'y'  },
-  eo:  { peak: 'eo', cursive: '~',  ipa: 'ø'  },
-  au:  { peak: 'a',  cursive: '~u', ipa: 'au' },
-  eu:  { peak: 'e',  cursive: '~u', ipa: 'eu' },
-  iu:  { peak: 'i',  cursive: '~u', ipa: 'iu' },
-  ai:  { peak: 'a',  cursive: '~i', ipa: 'ai' },
-  ui:  { peak: 'u',  cursive: '~i', ipa: 'ui' },
-  ei:  { peak: 'e',  cursive: '~i', ipa: 'ei' },
-  ou:  { peak: 'o',  cursive: '~u', ipa: 'ou' },
-  eoy: { peak: 'eo', cursive: '~ü', ipa: 'øy' },
-  ooy: { peak: 'oo', cursive: '~ü', ipa: 'ɒy' },
-  uo:  { peak: 'u',  cursive: '~o', ipa: 'uo' },
-  yo:  { peak: 'y',  cursive: '~o', ipa: 'yo' },
-  oi:  { peak: 'o',  cursive: '~i', ipa: 'oi' },
-  '':  { peak: 'ng', cursive: '~',  ipa: 'ŋ̍'  }, // 声化韵是特例
-};
+export const NUCLEUS_DETAILS: Record<Nucleus, NucleusSchema> = {
+  a:   { peak: 'a',  cursive: '~',  ipa: 'a',  },
+  e:   { peak: 'e',  cursive: '~',  ipa: 'e',  },
+  o:   { peak: 'o',  cursive: '~',  ipa: 'o',  },
+  oo:  { peak: 'oo', cursive: '~',  ipa: 'ɒ',  },
+  i:   { peak: 'i',  cursive: '~',  ipa: 'i',  },
+  u:   { peak: 'u',  cursive: '~',  ipa: 'u',  },
+  y:   { peak: 'y',  cursive: '~',  ipa: 'y',  },
+  eo:  { peak: 'eo', cursive: '~',  ipa: 'ø',  },
+  au:  { peak: 'a',  cursive: '~u', ipa: 'au', },
+  eu:  { peak: 'e',  cursive: '~u', ipa: 'eu', },
+  iu:  { peak: 'i',  cursive: '~u', ipa: 'iu', },
+  ai:  { peak: 'a',  cursive: '~i', ipa: 'ai', },
+  ui:  { peak: 'u',  cursive: '~i', ipa: 'ui', },
+  ei:  { peak: 'e',  cursive: '~i', ipa: 'ei', },
+  ou:  { peak: 'o',  cursive: '~u', ipa: 'ou', },
+  eoy: { peak: 'eo', cursive: '~ü', ipa: 'øy', },
+  ooy: { peak: 'oo', cursive: '~ü', ipa: 'ɒy', },
+  uo:  { peak: 'u',  cursive: '~o', ipa: 'uo', },
+  yo:  { peak: 'y',  cursive: '~o', ipa: 'yo', },
+  oi:  { peak: 'o',  cursive: '~i', ipa: 'oi', },
+  oou: { peak: 'oo', cursive: '~y', ipa: 'ɒu', },
+  '':  { peak: 'ng', cursive: '~',  ipa: 'ŋ̍',  },  // 声化韵是特例
+} as const;
 
 type VowelToneKey = `${Vowels}_${Tone}`;
 // prettier-ignore
@@ -103,7 +104,7 @@ const VOWEL_CURSIVE_MAP: Record<VowelToneKey, string> = {
    u_: 'u',   u_0: 'ụ',   u_33: 'ū',   u_55: 'u',   u_21: 'ǔ',   u_24: 'ú',   u_53: 'ù',  u_242:  'û',   u_5: 'u',
    y_: 'ü',   y_0: 'ụ̈',   y_33: 'ǖ',   y_55: 'ü',   y_21: 'ǚ',   y_24: 'ǘ',   y_53: 'ǜ',  y_242:  'ü̂',   y_5: 'ü',
   ng_: 'ng', ng_0: 'ṇg', ng_33: 'n̄g', ng_55: 'ng', ng_21: 'ňg', ng_24: 'ńg', ng_53: 'ǹg', ng_242: 'n̂g', ng_5: 'ng',
-};
+} as const;
 
 type NucleusToneKey = `${Nucleus}_${Tone}`;
 
@@ -120,7 +121,7 @@ const NUCLEUS_CURSIVE_MAP: Record<NucleusToneKey, string> = (() => {
   return map;
 })();
 
-export type Coda = 'ng' | 'h' | 'k' | '';
+export type Coda = 'ng' | 'h' | 'k' | '' | 'n' | 'm' | 'p' | 't'; // n, m, p, t 类化产生
 
 interface CodaSchema {
   ipa: string;
@@ -131,142 +132,276 @@ const CODA_DETAILS: Record<Coda, CodaSchema> = {
   h: { ipa: 'ʔ' },
   k: { ipa: 'ʔ' },
   '': { ipa: '' },
-};
+  n: { ipa: 'n' },
+  m: { ipa: 'm' },
+  p: { ipa: 'p' },
+  t: { ipa: 't' },
+} as const;
 
-export interface FinalSchema {
-  readonly id: string;
+interface BaseFinalSchema {
   readonly glide: Glide; // 韵头
   readonly nucleus: Nucleus; // 韵腹
   readonly coda: Coda; // 韵尾
-  readonly isLoose: boolean;
-  readonly tightVersion?: string;
-  readonly looseVersion?: string;
 }
+
+interface TightFinalSchema extends BaseFinalSchema {
+  readonly isLoose: false;
+  readonly tightVersion?: never;
+}
+
+interface LooseFinalSchema<T extends string = string> extends BaseFinalSchema {
+  readonly isLoose: true;
+  readonly tightVersion: T;
+}
+
+type FinalSchema<T extends string = string> =
+  | TightFinalSchema
+  | LooseFinalSchema<T>;
+
 // prettier-ignore
-const _FINAL_DETAILS  = {
+const _META_FINAL_DETAILS  = {
   // a
   // 阴
-  'a':     { id: 'a',     glide: '',  nucleus: 'a',   coda: '',   isLoose: false },
-  'ia':    { id: 'ia',    glide: 'i', nucleus: 'a',   coda: '',   isLoose: false },
-  'ua':    { id: 'ua',    glide: 'u', nucleus: 'a',   coda: '',   isLoose: false },
+  'a':     { glide: '',  nucleus: 'a',   coda: '',   isLoose: true, tightVersion: 'e'    },
+  'ia':    { glide: 'i', nucleus: 'a',   coda: '',   isLoose: false },
+  'ua':    { glide: 'u', nucleus: 'a',   coda: '',   isLoose: false },
   // 阳
-  'ang':   { id: 'ang',   glide: '',  nucleus: 'a',   coda: 'ng', isLoose: false },
-  'iang':  { id: 'iang',  glide: 'i', nucleus: 'a',   coda: 'ng', isLoose: false },
-  'uang':  { id: 'uang',  glide: 'u', nucleus: 'a',   coda: 'ng', isLoose: false },
+  'ang':   { glide: '',  nucleus: 'a',   coda: 'ng', isLoose: false },
+  'iang':  { glide: 'i', nucleus: 'a',   coda: 'ng', isLoose: false },
+  'uang':  { glide: 'u', nucleus: 'a',   coda: 'ng', isLoose: false },
   // 入
-  'ah':    { id: 'ah',    glide: '',  nucleus: 'a',   coda: 'h',  isLoose: false },
-  'ak':    { id: 'ak',    glide: '',  nucleus: 'a',   coda: 'k',  isLoose: false },
-  'iah':   { id: 'iah',   glide: 'i', nucleus: 'a',   coda: 'h',  isLoose: false },
-  'iak':   { id: 'iak',   glide: 'i', nucleus: 'a',   coda: 'k',  isLoose: false },
-  'uah':   { id: 'uah',   glide: 'u', nucleus: 'a',   coda: 'h',  isLoose: false },
-  'uak':   { id: 'uak',   glide: 'u', nucleus: 'a',   coda: 'k',  isLoose: false },
+  'ah':    { glide: '',  nucleus: 'a',   coda: 'h',  isLoose: false },
+  'ak':    { glide: '',  nucleus: 'a',   coda: 'k',  isLoose: false },
+  'iah':   { glide: 'i', nucleus: 'a',   coda: 'h',  isLoose: false },
+  'iak':   { glide: 'i', nucleus: 'a',   coda: 'k',  isLoose: false },
+  'uah':   { glide: 'u', nucleus: 'a',   coda: 'h',  isLoose: false },
+  'uak':   { glide: 'u', nucleus: 'a',   coda: 'k',  isLoose: false },
 
   // e
   // 阴
-  'e':     { id: 'e',     glide: '',  nucleus: 'e',   coda: '',   isLoose: true, tightVersion: 'a' },
-  'ie':    { id: 'ie',    glide: 'i', nucleus: 'e',   coda: '',   isLoose: false },
+  'e':     { glide: '',  nucleus: 'e',   coda: '',   isLoose: false },
+  'ie':    { glide: 'i', nucleus: 'e',   coda: '',   isLoose: false },
   // 阳
-  'ieng':  { id: 'ieng',  glide: 'i', nucleus: 'e',   coda: 'ng', isLoose: false },
+  'ieng':  { glide: 'i', nucleus: 'e',   coda: 'ng', isLoose: false },
   // 入
-  'eh':    { id: 'eh',    glide: '',  nucleus: 'e',   coda: 'h',  isLoose: false },
-  'ieh':   { id: 'ieh',   glide: 'i', nucleus: 'e',   coda: 'h',  isLoose: false },
-  'iek':   { id: 'iek',   glide: 'i', nucleus: 'e',   coda: 'k',  isLoose: false },
+  'eh':    { glide: '',  nucleus: 'e',   coda: 'h',  isLoose: false },
+  'ieh':   { glide: 'i', nucleus: 'e',   coda: 'h',  isLoose: false },
+  'iek':   { glide: 'i', nucleus: 'e',   coda: 'k',  isLoose: false },
 
   // o
   // 阴
-  'o':     { id: 'o',     glide: '',  nucleus: 'o',   coda: '',   isLoose: true, tightVersion: 'oo' },
-  'uo':    { id: 'uo',    glide: 'u', nucleus: 'o',   coda: '',   isLoose: false },
-  'yo':    { id: 'yo',    glide: 'y', nucleus: 'o',   coda: '',   isLoose: false },
+  'o':     { glide: '',  nucleus: 'o',   coda: '',   isLoose: false },
+  'uo':    { glide: 'u', nucleus: 'o',   coda: '',   isLoose: false },
+  'yo':    { glide: 'y', nucleus: 'o',   coda: '',   isLoose: false },
   // 阳
-  'uong':  { id: 'uong',  glide: 'u', nucleus: 'o',   coda: 'ng', isLoose: false },
-  'yong':  { id: 'yong',  glide: 'y', nucleus: 'o',   coda: 'ng', isLoose: false },
+  'uong':  { glide: 'u', nucleus: 'o',   coda: 'ng', isLoose: false },
+  'yong':  { glide: 'y', nucleus: 'o',   coda: 'ng', isLoose: false },
   // 入
-  'oh':    { id: 'oh',    glide: '',  nucleus: 'o',   coda: 'h',  isLoose: true, tightVersion: 'ooh' },
-  'uoh':   { id: 'uoh',   glide: 'u', nucleus: 'o',   coda: 'h',  isLoose: false },
-  'uok':   { id: 'uok',   glide: 'u', nucleus: 'o',   coda: 'k',  isLoose: false },
-  'yoh':   { id: 'yoh',   glide: 'y', nucleus: 'o',   coda: 'h',  isLoose: false },
-  'yok':   { id: 'yok',   glide: 'y', nucleus: 'o',   coda: 'k',  isLoose: false },
-  // 紧
-  'oo':    { id: 'oo',    glide: '',  nucleus: 'oo',  coda: '',   isLoose: false },
-  'ooh':   { id: 'ooh',   glide: '',  nucleus: 'oo',  coda: 'h',  isLoose: false },
+  'oh':    { glide: '',  nucleus: 'o',   coda: 'h',  isLoose: false },
+  'uoh':   { glide: 'u', nucleus: 'o',   coda: 'h',  isLoose: false },
+  'uok':   { glide: 'u', nucleus: 'o',   coda: 'k',  isLoose: false },
+  'yoh':   { glide: 'y', nucleus: 'o',   coda: 'h',  isLoose: false },
+  'yok':   { glide: 'y', nucleus: 'o',   coda: 'k',  isLoose: false },
+  // 松
+  'oo':    { glide: '',  nucleus: 'oo',  coda: '',   isLoose: true, tightVersion: 'o'    }, // oo->o, oo-> eo
+  'ooh':   { glide: '',  nucleus: 'oo',  coda: 'h',  isLoose: true, tightVersion: 'oh'   },
 
   // eo
   // 阴
-  'eo':    { id: 'eo',    glide: '',  nucleus: 'eo',  coda: '',   isLoose: true, tightVersion: 'oo' },
+  'eo':    { glide: '',  nucleus: 'eo',  coda: '',   isLoose: false },
   // 入
-  'eoh':   { id: 'eoh',   glide: '',  nucleus: 'eo',  coda: 'h',  isLoose: false },
+  'eoh':   { glide: '',  nucleus: 'eo',  coda: 'h',  isLoose: false },
 
   // au
   // 阴
-  'au':    { id: 'au',    glide: '',  nucleus: 'au',  coda: '',   isLoose: false },
-  'eu':    { id: 'eu',    glide: '',  nucleus: 'eu',  coda: '',   isLoose: true, tightVersion: 'au' },
-  'iu':    { id: 'iu',    glide: '',  nucleus: 'iu',  coda: '',   isLoose: false },
+  'au':    { glide: '',  nucleus: 'au',  coda: '',   isLoose: true, tightVersion: 'eu'   },
+  'eu':    { glide: '',  nucleus: 'eu',  coda: '',   isLoose: false },
+  'iu':    { glide: '',  nucleus: 'iu',  coda: '',   isLoose: false },
 
   // ai
   // 阴
-  'ai':    { id: 'ai',    glide: '',  nucleus: 'ai',  coda: '',   isLoose: false },
-  'uai':   { id: 'uai',   glide: 'u', nucleus: 'ai',  coda: '',   isLoose: false },
-  'ui':    { id: 'ui',    glide: '',  nucleus: 'ui',  coda: '',   isLoose: false },
+  'ai':    { glide: '',  nucleus: 'ai',  coda: '',   isLoose: false },
+  'uai':   { glide: 'u', nucleus: 'ai',  coda: '',   isLoose: false },
+  'ui':    { glide: '',  nucleus: 'ui',  coda: '',   isLoose: false },
 
   // i/u/y
   // 阴
-  'i':     { id: 'i',     glide: '',  nucleus: 'i',   coda: '',   isLoose: true, tightVersion: 'ei' },
-  'u':     { id: 'u',     glide: '',  nucleus: 'u',   coda: '',   isLoose: true, tightVersion: 'ou' },
-  'y':     { id: 'y',     glide: '',  nucleus: 'y',   coda: '',   isLoose: true, tightVersion: 'eoy' },
+  'i':     { glide: '',  nucleus: 'i',   coda: '',   isLoose: false },
+  'u':     { glide: '',  nucleus: 'u',   coda: '',   isLoose: false },
+  'y':     { glide: '',  nucleus: 'y',   coda: '',   isLoose: false },
   // 阳
-  'ing':   { id: 'ing',   glide: '',  nucleus: 'i',   coda: 'ng', isLoose: true, tightVersion: 'eing' },
-  'ung':   { id: 'ung',   glide: '',  nucleus: 'u',   coda: 'ng', isLoose: true, tightVersion: 'oung'},
-  'yng':   { id: 'yng',   glide: '',  nucleus: 'y',   coda: 'ng', isLoose: true, tightVersion: 'eoyng' },
+  'ing':   { glide: '',  nucleus: 'i',   coda: 'ng', isLoose: false },
+  'ung':   { glide: '',  nucleus: 'u',   coda: 'ng', isLoose: false },
+  'yng':   { glide: '',  nucleus: 'y',   coda: 'ng', isLoose: false },
   // 入
-  'ih':    { id: 'ih',    glide: '',  nucleus: 'i',   coda: 'h',  isLoose: true, tightVersion: 'eih' },
-  'ik':    { id: 'ik',    glide: '',  nucleus: 'i',   coda: 'k',  isLoose: true, tightVersion: 'eik' },
-  'uh':    { id: 'uh',    glide: '',  nucleus: 'u',   coda: 'h',  isLoose: true, tightVersion: 'ouh' },
-  'uk':    { id: 'uk',    glide: '',  nucleus: 'u',   coda: 'k',  isLoose: true, tightVersion: 'ouk' },
-  'yh':    { id: 'yh',    glide: '',  nucleus: 'y',   coda: 'h',  isLoose: true, tightVersion: 'eoyh' },
-  'yk':    { id: 'yk',    glide: '',  nucleus: 'y',   coda: 'k',  isLoose: true, tightVersion: 'eoyk' },
-  // 紧
-  'ei':    { id: 'ei',    glide: '',  nucleus: 'ei',  coda: '',   isLoose: false },
-  'ou':    { id: 'ou',    glide: '',  nucleus: 'ou',  coda: '',   isLoose: false },
+  'ih':    { glide: '',  nucleus: 'i',   coda: 'h',  isLoose: false },
+  'ik':    { glide: '',  nucleus: 'i',   coda: 'k',  isLoose: false },
+  'uh':    { glide: '',  nucleus: 'u',   coda: 'h',  isLoose: false },
+  'uk':    { glide: '',  nucleus: 'u',   coda: 'k',  isLoose: false },
+  'yh':    { glide: '',  nucleus: 'y',   coda: 'h',  isLoose: false },
+  'yk':    { glide: '',  nucleus: 'y',   coda: 'k',  isLoose: false },
+  // 松
+  'ei':    { glide: '',  nucleus: 'ei',  coda: '',   isLoose: true, tightVersion: 'i'    },
+  'ou':    { glide: '',  nucleus: 'ou',  coda: '',   isLoose: true, tightVersion: 'u'    },
 
-  //eoy/eing/oung/eoyng
+  // eoy/eing/oung/eoyng
   // 阴
-  'eoy':   { id: 'eoy',   glide: '',  nucleus: 'eoy', coda: '',   isLoose: true, tightVersion: 'ooy' },
+  'eoy':   { glide: '',  nucleus: 'eoy', coda: '',   isLoose: false },
   // 阳
-  'eing':  { id: 'eing',  glide: '',  nucleus: 'ei',  coda: 'ng', isLoose: true, tightVersion: 'aing' },
-  'oung':  { id: 'oung',  glide: '',  nucleus: 'ou',  coda: 'ng', isLoose: true, tightVersion: 'ooung' },
-  'eoyng': { id: 'eoyng', glide: '',  nucleus: 'eoy', coda: 'ng', isLoose: true, tightVersion: 'ooyng' },
+  'eing':  { glide: '',  nucleus: 'ei',  coda: 'ng', isLoose: true, tightVersion: 'ing'  },
+  'oung':  { glide: '',  nucleus: 'ou',  coda: 'ng', isLoose: true, tightVersion: 'ung'  },
+  'eoyng': { glide: '',  nucleus: 'eoy', coda: 'ng', isLoose: true, tightVersion: 'yng'  },
   // 入
-  'eih':   { id: 'eih',   glide: '',  nucleus: 'ei',  coda: 'h',  isLoose: true, tightVersion: 'aik' },
-  'eik':   { id: 'eik',   glide: '',  nucleus: 'ei',  coda: 'k',  isLoose: true, tightVersion: 'aik' },
-  'ouh':   { id: 'ouh',   glide: '',  nucleus: 'ou',  coda: 'h',  isLoose: true, tightVersion: 'oouk' },
-  'ouk':   { id: 'ouk',   glide: '',  nucleus: 'ou',  coda: 'k',  isLoose: true, tightVersion: 'oouk' },
-  'eoyh':  { id: 'eoyh',  glide: '',  nucleus: 'eoy', coda: 'h',  isLoose: true, tightVersion: 'ooyk' },
-  'eoyk':  { id: 'eoyk',  glide: '',  nucleus: 'eoy', coda: 'k',  isLoose: true, tightVersion: 'ooyk' },
-  // 紧
-  'ooy':   { id: 'ooy',   glide: '',  nucleus: 'ooy', coda: '',   isLoose: false },
-  'aing':  { id: 'aing',  glide: '',  nucleus: 'ai',  coda: 'ng', isLoose: false },
-  'ooung': { id: 'ooung', glide: '',  nucleus: 'oo',  coda: 'ng', isLoose: false },
-  'ooyng': { id: 'ooyng', glide: '',  nucleus: 'ooy', coda: 'ng', isLoose: false },
-  'aik':   { id: 'aik',   glide: '',  nucleus: 'ai',  coda: 'k',  isLoose: false },
-  'oouk':  { id: 'oouk',  glide: '',  nucleus: 'oo',  coda: 'k',  isLoose: false },
-  'ooyk':  { id: 'ooyk',  glide: '',  nucleus: 'ooy', coda: 'k',  isLoose: false },
+  'eih':   { glide: '',  nucleus: 'ei',  coda: 'h',  isLoose: true, tightVersion: 'ih'   },
+  'eik':   { glide: '',  nucleus: 'ei',  coda: 'k',  isLoose: true, tightVersion: 'ik'   },
+  'ouh':   { glide: '',  nucleus: 'ou',  coda: 'h',  isLoose: true, tightVersion: 'uh'   },
+  'ouk':   { glide: '',  nucleus: 'ou',  coda: 'k',  isLoose: true, tightVersion: 'uk'   },
+  'eoyh':  { glide: '',  nucleus: 'eoy', coda: 'h',  isLoose: true, tightVersion: 'yh'   },
+  'eoyk':  { glide: '',  nucleus: 'eoy', coda: 'k',  isLoose: true, tightVersion: 'yk'   },
+  // 松
+  'ooy':   { glide: '',  nucleus: 'ooy', coda: '',   isLoose: true, tightVersion: 'eoy'  },
+  'aing':  { glide: '',  nucleus: 'ai',  coda: 'ng', isLoose: true, tightVersion: 'eing' },
+  'ooung': { glide: '',  nucleus: 'oo',  coda: 'ng', isLoose: true, tightVersion: 'oung' },
+  'ooyng': { glide: '',  nucleus: 'ooy', coda: 'ng', isLoose: true, tightVersion: 'eoyng'},
+  'aik':   { glide: '',  nucleus: 'ai',  coda: 'k',  isLoose: true, tightVersion: 'eik'  },
+  'oouk':  { glide: '',  nucleus: 'oo',  coda: 'k',  isLoose: true, tightVersion: 'ouk'  },
+  'ooyk':  { glide: '',  nucleus: 'ooy', coda: 'k',  isLoose: true, tightVersion: 'eoyk' },
 
   // 声化韵
-  'ng':    { id: 'ng',    glide: '',  nucleus: '',    coda: 'ng', isLoose: false },
+  'ng':    { glide: '',  nucleus: '',    coda: 'ng', isLoose: false },
 
-  // 额外补充
-  'ieu':   { id: 'ieu',   glide: 'i', nucleus: 'eu',  coda: '',   isLoose: false },
-  'uoi':   { id: 'uoi',   glide: 'u', nucleus: 'oi',  coda: '',   isLoose: false },
-  'iau':   { id: 'iau',   glide: 'i', nucleus: 'au',  coda: '',   isLoose: false },
-  'iauh':  { id: 'iauh',  glide: 'i', nucleus: 'au',  coda: 'h',  isLoose: false },
-} satisfies Record<string, FinalSchema>;
+  // 旧韵
+  'ieu':   { glide: 'i', nucleus: 'eu',  coda: '',   isLoose: false },
+  'uoi':   { glide: 'u', nucleus: 'oi',  coda: '',   isLoose: false },
 
-export type Final = keyof typeof _FINAL_DETAILS;
-export const FINAL_DETAILS = _FINAL_DETAILS as Record<
-  Final,
-  FinalSchema & { tightVersion?: Final; looseVersion?: Final }
+  // 补充音节
+  'iau':   { glide: 'i', nucleus: 'au',  coda: '',   isLoose: false },
+  'iauh':  { glide: 'i', nucleus: 'au',  coda: 'h',  isLoose: false },
+} as const;
+
+// 类化表中没有松紧韵数据，必须先松紧变韵再类化
+// prettier-ignore
+const _ASSIMILATED_FINAL_DETAILS = {
+  // a
+  // 阳声类化 ~ng -> ~m, ~n
+  'am':    { glide: '',  nucleus: 'a',   coda: 'm', isLoose: false },
+  'an':    { glide: '',  nucleus: 'a',   coda: 'n', isLoose: false },
+  'iam':   { glide: 'i', nucleus: 'a',   coda: 'm', isLoose: false },
+  'ian':   { glide: 'i', nucleus: 'a',   coda: 'n', isLoose: false },
+  'uam':   { glide: 'u', nucleus: 'a',   coda: 'm', isLoose: false },
+  'uan':   { glide: 'u', nucleus: 'a',   coda: 'n', isLoose: false },
+  // 入声类化 ~h, ~k -> ~p | ~h, ~k -> ~t | ~h -> ~k
+  'ap':    { glide: '',  nucleus: 'a',   coda: 'p', isLoose: false },
+  'at':    { glide: '',  nucleus: 'a',   coda: 't', isLoose: false },
+  'iap':   { glide: 'i', nucleus: 'a',   coda: 'p', isLoose: false },
+  'iat':   { glide: 'i', nucleus: 'a',   coda: 't', isLoose: false },
+  'uap':   { glide: 'u', nucleus: 'a',   coda: 'p', isLoose: false },
+  'uat':   { glide: 'u', nucleus: 'a',   coda: 't', isLoose: false },
+
+  // e
+  // 阳声类化 ~ng -> ~m, ~n
+  'iem':   { glide: 'i', nucleus: 'e',   coda: 'm', isLoose: false },
+  'ien':   { glide: 'i', nucleus: 'e',   coda: 'n', isLoose: false },
+  // 入声类化 ~h, ~k -> ~p | ~h, ~k -> ~t | ~h -> ~k
+  'ep':    { glide: '',  nucleus: 'e',   coda: 'p', isLoose: false },
+  'et':    { glide: '',  nucleus: 'e',   coda: 't', isLoose: false },
+  'ek':    { glide: '',  nucleus: 'e',   coda: 'k', isLoose: false },
+  'iep':   { glide: 'i', nucleus: 'e',   coda: 'p', isLoose: false },
+  'iet':   { glide: 'i', nucleus: 'e',   coda: 't', isLoose: false },
+
+  // o
+  // 阳声类化 ~ng -> ~m, ~n
+  'uom':   { glide: 'u', nucleus: 'o',   coda: 'm',  isLoose: false},
+  'uon':   { glide: 'u', nucleus: 'o',   coda: 'n',  isLoose: false},
+  'yom':   { glide: 'y', nucleus: 'o',   coda: 'm',  isLoose: false},
+  'yon':   { glide: 'y', nucleus: 'o',   coda: 'n',  isLoose: false},
+  // 入声类化 ~h, ~k -> ~p | ~h, ~k -> ~t | ~h -> ~k
+  'op':    { glide: '',  nucleus: 'o',   coda: 'p',  isLoose: false},
+  'ot':    { glide: '',  nucleus: 'o',   coda: 't',  isLoose: false},
+  'ok':    { glide: '',  nucleus: 'o',   coda: 'k',  isLoose: false},
+  'uop':   { glide: 'u', nucleus: 'o',   coda: 'p',  isLoose: false},
+  'uot':   { glide: 'u', nucleus: 'o',   coda: 't',  isLoose: false},
+  'yop':   { glide: 'y', nucleus: 'o',   coda: 'p',  isLoose: false},
+  'yot':   { glide: 'y', nucleus: 'o',   coda: 't',  isLoose: false},
+  // 入声类化产生的紧韵
+  'oop':   { glide: '',  nucleus: 'oo',  coda: 'p',  isLoose: false},
+  'oot':   { glide: '',  nucleus: 'oo',  coda: 't',  isLoose: false},
+  'ook':   { glide: '',  nucleus: 'oo',  coda: 'k',  isLoose: false},
+
+  // eo
+  // 入声类化 ~h, ~k -> ~p | ~h, ~k -> ~t | ~h -> ~k
+  'eop':   { glide: '',  nucleus: 'eo',  coda: 'p',  isLoose: false},
+  'eot':   { glide: '',  nucleus: 'eo',  coda: 't',  isLoose: false},
+  'eok':   { glide: '',  nucleus: 'eo',  coda: 'k',  isLoose: false},
+
+  // i/u/y
+  // 阳声类化 ~ng -> ~m, ~n
+  'im':    { glide: '',  nucleus: 'i',   coda: 'm',  isLoose: false},
+  'in':    { glide: '',  nucleus: 'i',   coda: 'n',  isLoose: false},
+  'um':    { glide: '',  nucleus: 'u',   coda: 'm',  isLoose: false},
+  'un':    { glide: '',  nucleus: 'u',   coda: 'n',  isLoose: false},
+  'ym':    { glide: '',  nucleus: 'y',   coda: 'm',  isLoose: false},
+  'yn':    { glide: '',  nucleus: 'y',   coda: 'n',  isLoose: false},
+  // 阳声类化产生的紧韵
+  'eim':   { glide: '',  nucleus: 'ei',  coda: 'm',  isLoose: false},
+  'ein':   { glide: '',  nucleus: 'ei',  coda: 'n',  isLoose: false},
+  'oum':   { glide: '',  nucleus: 'ou',  coda: 'm',  isLoose: false},
+  'oun':   { glide: '',  nucleus: 'ou',  coda: 'n',  isLoose: false},
+  'eoym':  { glide: '',  nucleus: 'eoy', coda: 'm',  isLoose: false},
+  'eoyn':  { glide: '',  nucleus: 'eoy', coda: 'n',  isLoose: false},
+  // 入声类化 ~h, ~k -> ~p | ~h, ~k -> ~t | ~h -> ~k
+  'ip':    { glide: '',  nucleus: 'i',   coda: 'p',  isLoose: false},
+  'it':    { glide: '',  nucleus: 'i',   coda: 't',  isLoose: false},
+  'up':    { glide: '',  nucleus: 'u',   coda: 'p',  isLoose: false},
+  'ut':    { glide: '',  nucleus: 'u',   coda: 't',  isLoose: false},
+  'yp':    { glide: '',  nucleus: 'y',   coda: 'p',  isLoose: false},
+  'yt':    { glide: '',  nucleus: 'y',   coda: 't',  isLoose: false},
+  // 入声类化产生的紧韵
+  'eip':   { glide: '',  nucleus: 'ei',  coda: 'p',  isLoose: false},
+  'eit':   { glide: '',  nucleus: 'ei',  coda: 't',  isLoose: false},
+  'oup':   { glide: '',  nucleus: 'ou',  coda: 'p',  isLoose: false},
+  'out':   { glide: '',  nucleus: 'ou',  coda: 't',  isLoose: false},
+  'eoyp':  { glide: '',  nucleus: 'eoy', coda: 'p',  isLoose: false},
+  'eoyt':  { glide: '',  nucleus: 'eoy', coda: 't',  isLoose: false},
+  // eoy/eing/oung/eoyng
+  // 阳声入声类化都已有
+} as const;
+
+export type MetaFinal = keyof typeof _META_FINAL_DETAILS;
+export const META_FINAL_DETAILS = _META_FINAL_DETAILS satisfies Record<
+  MetaFinal,
+  FinalSchema<MetaFinal>
 >;
-export const FINALS = Object.keys(FINAL_DETAILS) as Final[];
+export type AssimilatedFinal = keyof typeof _ASSIMILATED_FINAL_DETAILS;
+export const ASSIMILATED_FINAL_DETAILS =
+  _ASSIMILATED_FINAL_DETAILS satisfies Record<
+    AssimilatedFinal,
+    TightFinalSchema
+  >;
+
+export const META_FINALS = Object.keys(META_FINAL_DETAILS) as MetaFinal[];
+export const ASSIMILATED_FINALS = Object.keys(
+  ASSIMILATED_FINAL_DETAILS
+) as AssimilatedFinal[];
+
+type CheckNoOverlap<T, U> =
+  Extract<keyof T, keyof U> extends never
+    ? T & U
+    : `Duplicated Keys: ${Extract<keyof T, keyof U> & string}`;
+
+const _ALL_FINALS = {
+  ..._META_FINAL_DETAILS,
+  ..._ASSIMILATED_FINAL_DETAILS,
+};
+
+export const FINAL_DETAILS = _ALL_FINALS as CheckNoOverlap<
+  typeof _META_FINAL_DETAILS,
+  typeof _ASSIMILATED_FINAL_DETAILS
+> &
+  typeof _ALL_FINALS;
+
+export type Final = keyof typeof FINAL_DETAILS;
+export const FINALS = Object.keys(FINAL_DETAILS) as MetaFinal[];
 
 export const INITIALS = [
   '',
@@ -344,16 +479,24 @@ export const renderIPA = (syllable: Syllable) => {
   return `${initial}${finalDetail.glide}${nucleus}${coda}${tone}`;
 };
 
-export const CURSIVE_RHYTHM_LOOKUP: Record<
+const reverse_cursive_finals = <S extends 'meta' | 'all'>(
+  scope: S
+): Record<
   string,
-  { final: Final; tone: Tone }
-> = (() => {
+  { final: S extends 'meta' ? MetaFinal : Final; tone: Tone }
+> => {
+  type ReturnType = Record<
+    string,
+    { final: S extends 'meta' ? MetaFinal : Final; tone: Tone }
+  >;
+
   const map: Record<string, { final: Final; tone: Tone }> = {};
   const RU_TONES: Tone[] = ['5', '24', '21'];
 
-  FINALS.forEach((fId) => {
-    const isRu = fId.endsWith('h') || fId.endsWith('k');
+  const finals = (scope === 'meta' ? META_FINALS : FINALS) as Final[];
 
+  finals.forEach((fId) => {
+    const isRu = fId.endsWith('h') || fId.endsWith('k');
     TONES.forEach((tId) => {
       // 无定调不加入映射
       if (tId === '') return;
@@ -369,8 +512,34 @@ export const CURSIVE_RHYTHM_LOOKUP: Record<
       map[cursiveRhyme] = { final: fId, tone: tId };
     });
   });
-  return map;
-})();
+
+  return map as ReturnType;
+};
+
+export const CURSIVE_META_RHYTHM_LOOKUP = reverse_cursive_finals('meta');
+export const CURSIVE_RHYTHM_LOOKUP = reverse_cursive_finals('all');
+
+const reverseIPAFinals = <S extends 'meta' | 'all'>(
+  scope: S
+): Record<string, S extends 'meta' ? MetaFinal : Final> => {
+  type ReturnType = Record<string, S extends 'meta' ? MetaFinal : Final>;
+  const finals = (scope === 'meta' ? META_FINALS : FINALS) as Final[];
+
+  const map: Record<string, Final> = {};
+  finals.forEach((fId) => {
+    const ipa = renderIPA({ initial: '', final: fId, tone: '' });
+    // IPA 的 /ʔ/ 转入声如果重复，优先保留 -k 形态
+    if (map[ipa]) {
+      if (fId.endsWith('k')) {
+        map[ipa] = fId;
+      }
+    } else {
+      map[ipa] = fId;
+    }
+  });
+
+  return map as ReturnType;
+};
 
 export const IPA_LOOKUPS = (() => {
   const sortByIpaLen = <T>(list: [T, string][]) =>
@@ -380,21 +549,18 @@ export const IPA_LOOKUPS = (() => {
     Object.entries(INITIAL_IPA_MAP) as [Initial, string][]
   );
 
-  const finalMap: Record<string, Final> = {};
-  FINALS.forEach((fId) => {
-    const ipa = renderIPA({ initial: '', final: fId, tone: '' });
-    // IPA 的 /ʔ/ 转入声如果重复，优先保留 -k 形态
-    if (finalMap[ipa]) {
-      if (fId.endsWith('k')) {
-        finalMap[ipa] = fId;
-      }
-    } else {
-      finalMap[ipa] = fId;
-    }
-  });
+  const metaFinals = sortByIpaLen(
+    Object.entries(reverseIPAFinals('meta')).map(([ipa, fId]) => [
+      fId as Final,
+      ipa,
+    ])
+  );
 
   const finals = sortByIpaLen(
-    Object.entries(finalMap).map(([ipa, fId]) => [fId as Final, ipa])
+    Object.entries(reverseIPAFinals('all')).map(([ipa, fId]) => [
+      fId as Final,
+      ipa,
+    ])
   );
 
   const tones = sortByIpaLen(
@@ -403,7 +569,7 @@ export const IPA_LOOKUPS = (() => {
       .filter(([, ipa]) => ipa !== '') // 没声调视作无效的 IPA
   );
 
-  return { initials, finals, tones };
+  return { initials, metaFinals, finals, tones };
 })();
 
 export const sourceMap: Record<string, string> = {
@@ -451,7 +617,7 @@ export const yngpingFengIPAInitialMap: Record<Initial, string> = {
   nj: 'ʒ',
 };
 
-export const yngpingFengIPAFinalMap: Record<Final, string> = {
+export const yngpingFengIPAFinalMap: Record<MetaFinal, string> = {
   a: 'a',
   //   'a': 'ɑ',
   ai: 'ai',

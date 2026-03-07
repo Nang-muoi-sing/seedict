@@ -186,7 +186,7 @@ import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';
 import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 import TextareaCard from '../components/TextareaCard.vue';
-import type { Scheme } from '../utils/phonetics';
+import type { Phrase, Scheme } from '../utils/phonetics';
 import { Utterance } from '../utils/phonetics';
 import { toast } from '../utils/toast';
 
@@ -232,11 +232,31 @@ const placeholders: Record<Scheme, string> = {
   ipa: 'huʔ˨˩ t͡siu˥˧ ua˨˦˨',
 };
 
-const inputText = computed(() => inputArea.value?.data?.() || '');
+const inputText = computed(
+  () => inputArea.value?.data?.().normalize('NFC') || ''
+);
 
 const formatRaw = (raw: string | undefined) => {
   if (!raw) return '';
   return raw.length > 10 ? `${raw.slice(0, 10)}...` : raw;
+};
+
+const applySandhi = (phrase: Phrase, config: Config): Phrase => {
+  let result = phrase;
+
+  if (config.isToneSandhiEnabled) {
+    result = result.applyToneSandhi();
+  }
+  if (config.isVowelShiftEnabled) {
+    result = result.applyVowelSandhi();
+  }
+  if (config.isProgAssimEnabled) {
+    result = result.applyProgressAssimilation();
+  }
+  if (config.isRegrAssimEnabled) {
+    result = result.applyRegressAssimilation();
+  }
+  return result;
 };
 
 const updateResult = debounce(() => {
@@ -266,15 +286,16 @@ const updateResult = debounce(() => {
       });
     } else {
       let targetText = '';
+      const sandhiPhrase = applySandhi(phrase, config.value);
       switch (targetScheme.value) {
         case 'typing':
-          targetText = phrase.toString();
+          targetText = sandhiPhrase.toString();
           break;
         case 'cursive':
-          targetText = phrase.toCursive();
+          targetText = sandhiPhrase.toCursive();
           break;
         case 'ipa':
-          targetText = phrase.toIPA();
+          targetText = sandhiPhrase.toIPA();
           break;
       }
 
@@ -326,7 +347,7 @@ const handleCancelConfig = () => {
 };
 
 watch(
-  [inputText, sourceScheme, targetScheme],
+  [inputText, sourceScheme, targetScheme, config],
   () => {
     updateResult();
   },
