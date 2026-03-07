@@ -102,6 +102,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import ContactCard from '../components/ContactCard.vue';
 import DashboardCard from '../components/DashboardCard.vue';
 import LetterPaper from '../components/LetterPaper.vue';
@@ -111,8 +112,7 @@ import Timeline from '../components/Timeline.vue';
 import Link from '../components/common/Link.vue';
 import RubyText from '../components/common/RubyText.vue';
 import Subtitle from '../components/common/Subtitle.vue';
-import SeeModal from '../components/modal/SeeModal.vue';
-import SeeButton from '../components/button/SeeButton.vue';
-import { ref } from 'vue';
+import SeeButton from '../components/seeui/button/SeeButton.vue';
+import SeeModal from '../components/seeui/modal/SeeModal.vue';
 const isModalOpen = ref(false);
 </script>
