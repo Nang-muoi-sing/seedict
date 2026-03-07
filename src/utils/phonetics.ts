@@ -87,7 +87,6 @@ export const parseTypingSyllable = (
   const text = input.trim();
   if (text.length === 0) return [null, null, null];
   const { tone, remaining } = parseTone(text);
-  console.debug(tone, remaining);
 
   const initialMatch = remaining.match(yngpingInitialPattern);
   let initial =

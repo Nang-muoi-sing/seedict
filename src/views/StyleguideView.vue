@@ -127,7 +127,7 @@
         </p>
       </section>
 
-      <section class="space-y-4">
+      <!-- <section class="space-y-4">
         <h2 class="border-b pb-2 text-xl font-semibold text-rosybrown-600">
           SeeTooltip
         </h2>
@@ -152,28 +152,25 @@
           />
           <SeeTooltip id="tooltip-right" placement="right"> Right </SeeTooltip>
         </div>
-      </section>
+      </section> -->
 
       <section class="space-y-4">
         <h2 class="border-b pb-2 text-xl font-semibold text-rosybrown-600">
           SeeToast
         </h2>
         <div class="flex flex-wrap items-center gap-4">
-          <SeeButton label="成功提示" @click="successToast.show()" />
+          <SeeButton label="成功提示" @click="toast.success('操作已成功！')" />
           <SeeButton
             variant="secondary"
             label="错误提示"
-            @click="errorToast.show()"
+            @click="toast.error('系统开小差了...')"
           />
           <SeeButton
             variant="outline"
             label="信息提示"
-            @click="infoToast.show()"
+            @click="toast.info('操作信息')"
           />
         </div>
-        <SeeToast ref="successToast" message="操作已成功！" type="success" />
-        <SeeToast ref="errorToast" message="系统开小差了..." type="error" />
-        <SeeToast ref="infoToast" message="操作信息" type="info" />
       </section>
     </div>
   </div>
@@ -188,6 +185,7 @@ import SeeModal from '../components/seeui/modal/SeeModal.vue';
 import SeeSwitch from '../components/seeui/switch/SeeSwitch.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';
 import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
+import { toast } from '../utils/toast';
 
 const isModalOpen = ref(false);
 const isChoiceAEnabled = ref(true);
