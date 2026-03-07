@@ -87,18 +87,10 @@
             }"
           >
             <template v-if="hasResultContent">
-              <span
-                v-for="(token, index) in resultTokens"
-                :key="index"
-              >
+              <span v-for="(token, index) in resultTokens" :key="index">
                 <span
                   :tabindex="
                     token.type === 'error' && token.message ? 0 : undefined
-                  "
-                  :data-tooltip-target="
-                    token.type === 'error' && token.message
-                      ? `tooltip-${index}`
-                      : undefined
                   "
                   class="inline text-rosybrown-800"
                   :class="{
@@ -106,14 +98,12 @@
                       token.type === 'error',
                     'whitespace-pre-wrap': token.type === 'whitespace',
                   }"
+                  :data-tooltip-msg="
+                    token.type === 'error' ? token.message : undefined
+                  "
                 >
                   {{ token.text }}
                 </span>
-                <SeeTooltip
-                  v-if="token.type === 'error' && token.message"
-                  :id="`tooltip-${index}`"
-                  >{{ token.message }}</SeeTooltip
-                >
               </span>
             </template>
             <span
@@ -139,7 +129,6 @@
               <IMaterialSymbolsTuneRounded />
             </SeeIconButton>
           </div>
-          <SeeToast ref="copyToast">已复制结果</SeeToast>
           <SeeModal :show="isConfigOpen" @blur="handleCancelConfig">
             <div
               class="w-xs space-y-5 rounded-2xl bg-white p-6 shadow-xl md:w-lg"
@@ -186,10 +175,12 @@
       </div>
     </div>
   </PageContent>
+  <SeeTooltip />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { debounce } from 'lodash-es';
+import { computed, ref, shallowRef, watch } from 'vue';
 import PageContent from '../components/PageContent.vue';
 import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';
@@ -197,6 +188,7 @@ import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 import TextareaCard from '../components/TextareaCard.vue';
 import type { Scheme } from '../utils/phonetics';
 import { Utterance } from '../utils/phonetics';
+import { toast } from '../utils/toast';
 
 type TokenType = 'normal' | 'error' | 'whitespace';
 
@@ -226,7 +218,7 @@ const isConfigOpen = ref(false);
 const draftConfig = ref({ ...config.value });
 
 const inputArea = ref<InstanceType<typeof TextareaCard> | null>(null);
-const copyToast = ref();
+const resultTokens = shallowRef<DisplayToken[]>([]);
 
 const schemeOptions = [
   { label: '榕拼键入', value: 'typing' },
@@ -247,8 +239,11 @@ const formatRaw = (raw: string | undefined) => {
   return raw.length > 10 ? `${raw.slice(0, 10)}...` : raw;
 };
 
-const resultTokens = computed<DisplayToken[]>(() => {
-  if (!inputText.value) return [];
+const updateResult = debounce(() => {
+  if (!inputText.value) {
+    resultTokens.value = [];
+    return;
+  }
 
   const utterance = Utterance.of(inputText.value, sourceScheme.value);
   const tokens: DisplayToken[] = [];
@@ -297,8 +292,8 @@ const resultTokens = computed<DisplayToken[]>(() => {
     }
   });
 
-  return tokens;
-});
+  resultTokens.value = tokens;
+}, 300);
 
 const hasResultContent = computed(() =>
   resultTokens.value.some((t) => t.type !== 'whitespace')
@@ -311,7 +306,7 @@ const handleCopyClick = async () => {
   if (!content) return;
   try {
     await navigator.clipboard.writeText(content);
-    copyToast.value?.show();
+    toast.success('已复制结果');
   } catch (err) {
     console.error('复制失败:', err);
   }
@@ -329,4 +324,12 @@ const handleConfirmConfig = () => {
 const handleCancelConfig = () => {
   isConfigOpen.value = false;
 };
+
+watch(
+  [inputText, sourceScheme, targetScheme],
+  () => {
+    updateResult();
+  },
+  { immediate: true }
+);
 </script>
