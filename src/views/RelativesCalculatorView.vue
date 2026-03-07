@@ -171,28 +171,19 @@
                     <span
                       v-if="item.isOutdated"
                       class="cursor-pointer"
-                      :data-tooltip-target="`tooltip-${item.name}-${item.reading}-isOutdated`"
+                      data-tooltip-msg="旧称呼，如今已经很少使用"
                     >
                       〈旧〉
                     </span>
                     <span class="w-3" v-else></span>
-                    <InfoTooltip
-                      :id="`tooltip-${item.name}-${item.reading}-isOutdated`"
-                    >
-                      旧称呼，如今已经很少使用
-                    </InfoTooltip>
+
                     <template v-if="item.type != 'formal'">
                       <Badge
-                        :data-tooltip-target="`tooltip-${item.name}-${item.reading}-type`"
                         class="cursor-pointer"
+                        :data-tooltip-msg="getTermTypeTooltip(item.type)"
                         >{{ getTermTypeLabel(item.type) }}</Badge
                       >
-                      <InfoTooltip
-                        :id="`tooltip-${item.name}-${item.reading}-type`"
-                      >
-                        {{ getTermTypeTooltip(item.type) }}
-                      </InfoTooltip></template
-                    >
+                    </template>
 
                     <span v-if="item.region">（{{ item.region }}）</span>
                   </div>
@@ -226,6 +217,7 @@
       >
     </div>
   </PageContent>
+  <SeeTooltip> </SeeTooltip>
 </template>
 
 <script setup lang="ts">
@@ -235,8 +227,8 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Badge from '../components/common/Badge.vue';
 import RubyText from '../components/common/RubyText.vue';
-import InfoTooltip from '../components/tooltip/SeeTooltip.vue';
 import PageContent from '../components/PageContent.vue';
+import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 import { getFuzhouTerms } from '../utils/relationshipMapping';
 
 const relationText = ref('');

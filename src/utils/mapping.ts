@@ -39,6 +39,18 @@ const TONE_DETAILS: Record<Tone, ToneSchema> = {
 
 export type Glide = 'i' | 'u' | 'y' | '';
 
+interface GlideSchema {
+  cursive: string;
+  ipa: string;
+}
+
+const GLIDE_DETAILS: Record<Glide, GlideSchema> = {
+  i: { cursive: 'i', ipa: 'i' },
+  u: { cursive: 'u', ipa: 'u' },
+  y: { cursive: 'ü', ipa: 'y' },
+  '': { cursive: '', ipa: '' },
+};
+
 // prettier-ignore
 export type Nucleus =
   | 'a'   | 'e'   | 'o'   | 'oo'  | 'i'   | 'u'  | 'y'  | 'eo' // 单元音
@@ -93,7 +105,33 @@ const VOWEL_CURSIVE_MAP: Record<VowelToneKey, string> = {
   ng_: 'ng', ng_0: 'ṇg', ng_33: 'n̄g', ng_55: 'ng', ng_21: 'ňg', ng_24: 'ńg', ng_53: 'ǹg', ng_242: 'n̂g', ng_5: 'ng',
 };
 
+type NucleusToneKey = `${Nucleus}_${Tone}`;
+
+const NUCLEUS_CURSIVE_MAP: Record<NucleusToneKey, string> = (() => {
+  const map: Record<string, string> = {};
+  for (const nKey in NUCLEUS_DETAILS) {
+    const n = NUCLEUS_DETAILS[nKey as Nucleus];
+    for (const tId of TONES) {
+      const vKey: VowelToneKey = `${n.peak}_${tId}`;
+      const toneVowel = VOWEL_CURSIVE_MAP[vKey] ?? n.peak;
+      map[`${nKey}_${tId}`] = n.cursive.replace('~', toneVowel);
+    }
+  }
+  return map;
+})();
+
 export type Coda = 'ng' | 'h' | 'k' | '';
+
+interface CodaSchema {
+  ipa: string;
+}
+
+const CODA_DETAILS: Record<Coda, CodaSchema> = {
+  ng: { ipa: 'ŋ' },
+  h: { ipa: 'ʔ' },
+  k: { ipa: 'ʔ' },
+  '': { ipa: '' },
+};
 
 export interface FinalSchema {
   readonly id: string;
@@ -282,14 +320,10 @@ interface Syllable {
 
 export const renderCursive = (syllable: Syllable): string => {
   const finalDetail = FINAL_DETAILS[syllable.final];
-  const glide = finalDetail.glide === 'y' ? 'ü' : finalDetail.glide;
-  const nucleusDetail = NUCLEUS_DETAILS[finalDetail.nucleus];
-  const vowelToneKey: VowelToneKey = `${nucleusDetail.peak}_${syllable.tone}`;
-  const nucleusWithTone = nucleusDetail.cursive.replace(
-    '~',
-    VOWEL_CURSIVE_MAP[vowelToneKey] ?? nucleusDetail.peak
-  );
-  const coda = finalDetail.nucleus === "" ? "" : finalDetail.coda;
+  const glide = GLIDE_DETAILS[finalDetail.glide].cursive;
+  const nucleusWithTone =
+    NUCLEUS_CURSIVE_MAP[`${finalDetail.nucleus}_${syllable.tone}`];
+  const coda = finalDetail.nucleus === '' ? '' : finalDetail.coda;
 
   if (syllable.tone === '')
     return `{${syllable.initial}${glide}${nucleusWithTone}${coda}}`;
@@ -299,13 +333,10 @@ export const renderCursive = (syllable: Syllable): string => {
 
 export const renderIPA = (syllable: Syllable) => {
   const finalDetail = FINAL_DETAILS[syllable.final];
-  const coda = ((c) => {
-    // 声化韵
-    if (finalDetail.nucleus === '') return '';
-    if (c === 'ng') return 'ŋ';
-    if (c === 'h' || c === 'k') return 'ʔ';
-    return c;
-  })(finalDetail.coda);
+
+  // 声化韵
+  const coda =
+    finalDetail.nucleus === '' ? '' : CODA_DETAILS[finalDetail.coda].ipa;
   const nucleus = NUCLEUS_DETAILS[finalDetail.nucleus].ipa;
   const initial = INITIAL_IPA_MAP[syllable.initial];
   const tone = TONE_DETAILS[syllable.tone].ipa;
@@ -338,7 +369,6 @@ export const CURSIVE_RHYTHM_LOOKUP: Record<
       map[cursiveRhyme] = { final: fId, tone: tId };
     });
   });
-    console.debug(map);
   return map;
 })();
 
@@ -368,10 +398,9 @@ export const IPA_LOOKUPS = (() => {
   );
 
   const tones = sortByIpaLen(
-    (Object.keys(TONE_DETAILS) as Tone[]).map((t): [Tone, string] => [
-      t,
-      TONE_DETAILS[t].ipa,
-    ])
+    (Object.keys(TONE_DETAILS) as Tone[])
+      .map((t): [Tone, string] => [t, TONE_DETAILS[t].ipa])
+      .filter(([, ipa]) => ipa !== '') // 没声调视作无效的 IPA
   );
 
   return { initials, finals, tones };
