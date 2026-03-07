@@ -5,9 +5,9 @@
         <MarkedText :text="props.data.text" />
       </span>
       <span class="text-xl text-rosybrown-500">
-        /{{ Phrase.of(props.data.pronLiteral, true).toFengIPA() }}/→/{{
-          Phrase.of(props.data.pronSandhi, true).toFengIPA()
-        }}/
+        /{{
+          Phrase.of(props.data.pronLiteral, 'typing', true).toFengIPA()
+        }}/→/{{ Phrase.of(props.data.pronSandhi, 'typing', true).toFengIPA() }}/
       </span>
     </div>
 

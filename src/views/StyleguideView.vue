@@ -184,7 +184,7 @@ import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
 import SeeModal from '../components/seeui/modal/SeeModal.vue';
 import SeeSwitch from '../components/seeui/switch/SeeSwitch.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';
-import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
+// import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 import { toast } from '../utils/toast';
 
 const isModalOpen = ref(false);
@@ -198,7 +198,4 @@ const cardChoices = ref({
   choiceC: true,
   choiceD: false,
 });
-const successToast = ref();
-const errorToast = ref();
-const infoToast = ref();
 </script>
