@@ -87,8 +87,19 @@
             }"
           >
             <template v-if="hasResultContent">
-              <span v-for="(token, index) in resultTokens" :key="index">
+              <template v-for="(token, index) in resultTokens" :key="index">
                 <span
+                  v-if="token.options"
+                  class="cursor-pointer rounded-lg underline decoration-wavy hover:bg-wheat-50"
+                  :class="{
+                    'text-rosybrown-500': token.isAmbiguous,
+                    'text-rosybrown-800': !token.isAmbiguous,
+                  }"
+                  @click="handleTokenClick($event, token)"
+                  >{{ token.text }}</span
+                >
+                <span
+                  v-else
                   :tabindex="
                     token.type === 'error' && token.message ? 0 : undefined
                   "
@@ -104,7 +115,7 @@
                 >
                   {{ token.text }}
                 </span>
-              </span>
+              </template>
             </template>
             <span
               v-else
@@ -175,6 +186,7 @@
       </div>
     </div>
   </PageContent>
+  <SeeContextMenu ref="contextMenu" />
   <SeeTooltip />
 </template>
 
@@ -183,25 +195,31 @@ import { debounce } from 'lodash-es';
 import { computed, ref, shallowRef, watch } from 'vue';
 import PageContent from '../components/PageContent.vue';
 import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
+import SeeContextMenu from '../components/seeui/menu/SeeContextMenu.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';
 import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 import TextareaCard from '../components/TextareaCard.vue';
-import type { Phrase, Scheme } from '../utils/phonetics';
+import type { Final } from '../utils/mapping';
+import type { Scheme, Syllable } from '../utils/phonetics';
 import { Utterance } from '../utils/phonetics';
-import { toast } from '../utils/toast';
 import {
-  applyToneSandhi,
-  applyVowelSandhi,
   applyProgressAssimilation,
   applyRegressAssimilation,
+  applyToneSandhi,
+  applyVowelSandhi,
+  getVowelAmbiguities,
 } from '../utils/sandhi';
-
-type TokenType = 'normal' | 'error' | 'whitespace';
+import { toast } from '../utils/toast';
+import { Phrase } from '../utils/phonetics';
+type TokenType = 'normal' | 'error' | 'whitespace' | 'separator';
 
 interface DisplayToken {
+  idx: string;
   text: string;
   type: TokenType;
   message?: string;
+  options?: readonly string[];
+  isAmbiguous?: boolean;
 }
 
 interface Config {
@@ -225,6 +243,9 @@ const draftConfig = ref({ ...config.value });
 
 const inputArea = ref<InstanceType<typeof TextareaCard> | null>(null);
 const resultTokens = shallowRef<DisplayToken[]>([]);
+
+const tightSelections = ref<Record<string, string>>({});
+const contextMenu = ref<InstanceType<typeof SeeContextMenu> | null>(null);
 
 const schemeOptions = [
   { label: '榕拼键入', value: 'typing' },
@@ -268,63 +289,92 @@ const applySandhi = (phrase: Phrase, config: Config): Phrase => {
 const updateResult = debounce(() => {
   if (!inputText.value) {
     resultTokens.value = [];
+    tightSelections.value = {};
     return;
   }
 
   const utterance = Utterance.of(inputText.value, sourceScheme.value);
   const tokens: DisplayToken[] = [];
 
-  utterance.phrases.forEach((phrase, index) => {
-    const allValid = phrase.syllables.every((s) => s.isValid());
+  utterance.phrases.forEach((phrase, pIdx) => {
+    const phraseRaw = phrase.toRaw();
+    const syllablesWithTight = phrase.syllables.map((s, sIdx) => {
+      const savedTight = tightSelections.value[`${phraseRaw}-${sIdx}`];
+      return savedTight ? s.withTight(savedTight as Final) : s;
+    });
+    const phraseToProcess = new Phrase(syllablesWithTight, phrase.isCompound);
+    const sandhiPhrase = applySandhi(phraseToProcess, config.value);
+    const ambiguities = getVowelAmbiguities(phrase);
 
-    if (!allValid) {
-      // 找出第一个错误的音节并获取其错误信息
-      const firstInvalid = phrase.syllables.find((s) => !s.isValid());
-      const rawText = formatRaw(firstInvalid?.toRaw());
-      const message = !firstInvalid?.isValid('tone')
-        ? `${rawText} 声调不符合规则`
-        : `${rawText} 的音节不符合规则`;
+    sandhiPhrase.syllables.forEach((s, sIdx) => {
+      if (!s.isValid()) {
+        const rawText = formatRaw(s.toRaw());
+        const message = !s.isValid('tone')
+          ? `${rawText} 声调不符合规则`
+          : `${rawText} 的音节不符合规则`;
 
-      tokens.push({
-        text: phrase.toRaw(),
-        type: 'error',
-        message: message,
-      });
-    } else {
-      let targetText = '';
-      const sandhiPhrase = applySandhi(phrase, config.value);
-      switch (targetScheme.value) {
-        case 'typing':
-          targetText = sandhiPhrase.toString();
-          break;
-        case 'cursive':
-          targetText = sandhiPhrase.toCursive();
-          break;
-        case 'ipa':
-          targetText = sandhiPhrase.toIPA();
-          break;
+        tokens.push({
+          idx: `${phraseRaw}-${sIdx}`,
+          text: s.toRaw(),
+          type: 'error',
+          message: message,
+        });
+      } else {
+        const amb = ambiguities.find((a) => a.index === sIdx);
+        const options = config.value.isVowelShiftEnabled
+          ? amb?.options
+          : undefined;
+        const isAmbiguous = options
+          ? options.length > 1 && !tightSelections.value[`${phraseRaw}-${sIdx}`]
+          : undefined;
+
+        tokens.push({
+          idx: `${phraseRaw}-${sIdx}`,
+          text: renderTarget(s, targetScheme.value),
+          type: 'normal',
+          options,
+          isAmbiguous,
+        });
       }
 
-      tokens.push({
-        text: targetText,
-        type: 'normal',
-      });
-    }
+      if (phrase.isCompound && sIdx < sandhiPhrase.syllables.length - 1) {
+        tokens.push({ idx: '-1', text: '-', type: 'separator' });
+      }
+    });
 
-    if (index < utterance.phrases.length - 1) {
-      tokens.push({
-        text: ' ',
-        type: 'whitespace',
-      });
+    if (pIdx < utterance.phrases.length - 1) {
+      tokens.push({ idx: '-1', text: ' ', type: 'whitespace' });
     }
   });
 
   resultTokens.value = tokens;
 }, 300);
 
+const renderTarget = (s: Syllable, scheme: Scheme) => {
+  if (scheme === 'ipa') return s.toIPA();
+  if (scheme === 'cursive') return s.toCursive();
+  return s.toString();
+};
+
 const hasResultContent = computed(() =>
   resultTokens.value.some((t) => t.type !== 'whitespace')
 );
+
+const handleTokenClick = (event: MouseEvent, token: DisplayToken) => {
+  event.stopPropagation();
+
+  if (!token.options || token.options.length <= 1) return;
+
+  contextMenu.value?.open(event.currentTarget as HTMLElement, {
+    title: '指定紧韵',
+    options: token.options,
+
+    onSelect: (val: string) => {
+      tightSelections.value[token.idx] = val;
+      updateResult();
+    },
+  });
+};
 
 const handleDeleteClick = () => inputArea.value?.clear();
 

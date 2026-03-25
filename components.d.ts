@@ -83,6 +83,7 @@ declare module 'vue' {
     SearchModePicker: typeof import('./src/components/SearchModePicker.vue')['default']
     SearchSkeleton: typeof import('./src/components/SearchSkeleton.vue')['default']
     SeeButton: typeof import('./src/components/seeui/button/SeeButton.vue')['default']
+    SeeContextMenu: typeof import('./src/components/seeui/menu/SeeContextMenu.vue')['default']
     SeeIconButton: typeof import('./src/components/seeui/button/SeeIconButton.vue')['default']
     SeeModal: typeof import('./src/components/seeui/modal/SeeModal.vue')['default']
     SeeSwitch: typeof import('./src/components/seeui/switch/SeeSwitch.vue')['default']
