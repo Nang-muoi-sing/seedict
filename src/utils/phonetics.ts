@@ -199,6 +199,7 @@ export type SyllableData = {
   readonly initial: Initial | null;
   readonly final: Final | null;
   readonly tone: Tone | null;
+  readonly tight: Final | null;
 };
 
 export class Syllable {
@@ -224,6 +225,7 @@ export class Syllable {
       initial: initial,
       final: final,
       tone: tone,
+      tight: null,
     });
   }
 
@@ -247,6 +249,10 @@ export class Syllable {
       return this;
     }
     return new Syllable({ ...this.value, final: newFinal as Final });
+  }
+
+  withTight(newTight: Final): Syllable {
+    return new Syllable({ ...this.value, tight: newTight });
   }
 
   reset(): Syllable {
