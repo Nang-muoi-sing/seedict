@@ -189,6 +189,12 @@ import TextareaCard from '../components/TextareaCard.vue';
 import type { Phrase, Scheme } from '../utils/phonetics';
 import { Utterance } from '../utils/phonetics';
 import { toast } from '../utils/toast';
+import {
+  applyToneSandhi,
+  applyVowelSandhi,
+  applyProgressAssimilation,
+  applyRegressAssimilation,
+} from '../utils/sandhi';
 
 type TokenType = 'normal' | 'error' | 'whitespace';
 
@@ -245,16 +251,16 @@ const applySandhi = (phrase: Phrase, config: Config): Phrase => {
   let result = phrase;
 
   if (config.isToneSandhiEnabled) {
-    result = result.applyToneSandhi();
+    result = applyToneSandhi(result);
   }
   if (config.isVowelShiftEnabled) {
-    result = result.applyVowelSandhi();
+    result = applyVowelSandhi(result);
   }
   if (config.isProgAssimEnabled) {
-    result = result.applyProgressAssimilation();
+    result = applyProgressAssimilation(result);
   }
   if (config.isRegrAssimEnabled) {
-    result = result.applyRegressAssimilation();
+    result = applyRegressAssimilation(result);
   }
   return result;
 };
