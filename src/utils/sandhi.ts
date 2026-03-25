@@ -97,7 +97,7 @@ export const applyVowelSandhi = (phrase: Phrase): Phrase => {
     if (!next || !s.isValid()) return s;
     const final = FINAL_DETAILS[s.value.final];
     if (!final.isLoose) return s;
-    return s.withFinal(final.tightVersion[0]);
+    return s.withFinal(s.value.tight || final.tightVersion[0]);
   });
 
   return new Phrase(newSyllables, phrase.isCompound);
@@ -108,8 +108,10 @@ export const applyVowelSandhi = (phrase: Phrase): Phrase => {
  */
 export const getVowelAmbiguities = (phrase: Phrase) => {
   if (!phrase.isCompound) return [];
+  const lastIdx = phrase.syllables.length - 1;
 
   return phrase.syllables.flatMap((s, i) => {
+    if (i === lastIdx) return [];
     const rawFinal = s.value.finalRaw;
     if (!rawFinal) return [];
 
@@ -118,7 +120,6 @@ export const getVowelAmbiguities = (phrase: Phrase) => {
       return [
         {
           index: i,
-          current: s.value.final,
           options: detail.tightVersion,
         },
       ];

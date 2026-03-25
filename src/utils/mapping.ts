@@ -58,10 +58,10 @@ export type Nucleus =
   | ''; // 声化韵
 
 export const VOWELS = ['a', 'e', 'o', 'oo', 'i', 'u', 'y', 'eo', 'ng'] as const;
-export type Vowels = (typeof VOWELS)[number];
+export type Vowel = (typeof VOWELS)[number];
 
 interface NucleusSchema {
-  peak: Vowels;
+  peak: Vowel;
   cursive: string;
   ipa: string;
 }
@@ -92,7 +92,7 @@ export const NUCLEUS_DETAILS: Record<Nucleus, NucleusSchema> = {
   '':  { peak: 'ng', cursive: '~',  ipa: 'ŋ̍',  },  // 声化韵是特例
 } as const;
 
-type VowelToneKey = `${Vowels}_${Tone}`;
+type VowelToneKey = `${Vowel}_${Tone}`;
 // prettier-ignore
 const VOWEL_CURSIVE_MAP: Record<VowelToneKey, string> = {
    a_: 'a',   a_0: 'ạ',   a_33: 'ā',   a_55: 'a',   a_21: 'ǎ',   a_24: 'á',   a_53: 'à',  a_242:  'â',   a_5: 'a',
