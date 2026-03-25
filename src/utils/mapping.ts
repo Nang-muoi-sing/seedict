@@ -151,7 +151,7 @@ interface TightFinalSchema extends BaseFinalSchema {
 
 interface LooseFinalSchema<T extends string = string> extends BaseFinalSchema {
   readonly isLoose: true;
-  readonly tightVersion: T;
+  readonly tightVersion: readonly T[];
 }
 
 type FinalSchema<T extends string = string> =
@@ -162,7 +162,7 @@ type FinalSchema<T extends string = string> =
 const _META_FINAL_DETAILS  = {
   // a
   // 阴
-  'a':     { glide: '',  nucleus: 'a',   coda: '',   isLoose: true, tightVersion: 'e'    },
+  'a':     { glide: '',  nucleus: 'a',   coda: '',   isLoose: true, tightVersion: ['a', 'e']    }, // a->a, a->e
   'ia':    { glide: 'i', nucleus: 'a',   coda: '',   isLoose: false },
   'ua':    { glide: 'u', nucleus: 'a',   coda: '',   isLoose: false },
   // 阳
@@ -203,8 +203,8 @@ const _META_FINAL_DETAILS  = {
   'yoh':   { glide: 'y', nucleus: 'o',   coda: 'h',  isLoose: false },
   'yok':   { glide: 'y', nucleus: 'o',   coda: 'k',  isLoose: false },
   // 松
-  'oo':    { glide: '',  nucleus: 'oo',  coda: '',   isLoose: true, tightVersion: 'o'    }, // oo->o, oo-> eo
-  'ooh':   { glide: '',  nucleus: 'oo',  coda: 'h',  isLoose: true, tightVersion: 'oh'   },
+  'oo':    { glide: '',  nucleus: 'oo',  coda: '',   isLoose: true, tightVersion: ['o', 'eo']    }, // oo->o, oo-> eo
+  'ooh':   { glide: '',  nucleus: 'oo',  coda: 'h',  isLoose: true, tightVersion: ['oh']   },
 
   // eo
   // 阴
@@ -214,7 +214,7 @@ const _META_FINAL_DETAILS  = {
 
   // au
   // 阴
-  'au':    { glide: '',  nucleus: 'au',  coda: '',   isLoose: true, tightVersion: 'eu'   },
+  'au':    { glide: '',  nucleus: 'au',  coda: '',   isLoose: true, tightVersion: ['au', 'eu']   }, // au->au, au->eu
   'eu':    { glide: '',  nucleus: 'eu',  coda: '',   isLoose: false },
   'iu':    { glide: '',  nucleus: 'iu',  coda: '',   isLoose: false },
 
@@ -241,31 +241,31 @@ const _META_FINAL_DETAILS  = {
   'yh':    { glide: '',  nucleus: 'y',   coda: 'h',  isLoose: false },
   'yk':    { glide: '',  nucleus: 'y',   coda: 'k',  isLoose: false },
   // 松
-  'ei':    { glide: '',  nucleus: 'ei',  coda: '',   isLoose: true, tightVersion: 'i'    },
-  'ou':    { glide: '',  nucleus: 'ou',  coda: '',   isLoose: true, tightVersion: 'u'    },
+  'ei':    { glide: '',  nucleus: 'ei',  coda: '',   isLoose: true, tightVersion: ['i']    },
+  'ou':    { glide: '',  nucleus: 'ou',  coda: '',   isLoose: true, tightVersion: ['u']    },
 
   // eoy/eing/oung/eoyng
   // 阴
   'eoy':   { glide: '',  nucleus: 'eoy', coda: '',   isLoose: false },
   // 阳
-  'eing':  { glide: '',  nucleus: 'ei',  coda: 'ng', isLoose: true, tightVersion: 'ing'  },
-  'oung':  { glide: '',  nucleus: 'ou',  coda: 'ng', isLoose: true, tightVersion: 'ung'  },
-  'eoyng': { glide: '',  nucleus: 'eoy', coda: 'ng', isLoose: true, tightVersion: 'yng'  },
+  'eing':  { glide: '',  nucleus: 'ei',  coda: 'ng', isLoose: true, tightVersion: ['ing']  },
+  'oung':  { glide: '',  nucleus: 'ou',  coda: 'ng', isLoose: true, tightVersion: ['ung']  },
+  'eoyng': { glide: '',  nucleus: 'eoy', coda: 'ng', isLoose: true, tightVersion: ['yng']  },
   // 入
-  'eih':   { glide: '',  nucleus: 'ei',  coda: 'h',  isLoose: true, tightVersion: 'ih'   },
-  'eik':   { glide: '',  nucleus: 'ei',  coda: 'k',  isLoose: true, tightVersion: 'ik'   },
-  'ouh':   { glide: '',  nucleus: 'ou',  coda: 'h',  isLoose: true, tightVersion: 'uh'   },
-  'ouk':   { glide: '',  nucleus: 'ou',  coda: 'k',  isLoose: true, tightVersion: 'uk'   },
-  'eoyh':  { glide: '',  nucleus: 'eoy', coda: 'h',  isLoose: true, tightVersion: 'yh'   },
-  'eoyk':  { glide: '',  nucleus: 'eoy', coda: 'k',  isLoose: true, tightVersion: 'yk'   },
+  'eih':   { glide: '',  nucleus: 'ei',  coda: 'h',  isLoose: true, tightVersion: ['ih']   },
+  'eik':   { glide: '',  nucleus: 'ei',  coda: 'k',  isLoose: true, tightVersion: ['ik']   },
+  'ouh':   { glide: '',  nucleus: 'ou',  coda: 'h',  isLoose: true, tightVersion: ['uh']   },
+  'ouk':   { glide: '',  nucleus: 'ou',  coda: 'k',  isLoose: true, tightVersion: ['uk']   },
+  'eoyh':  { glide: '',  nucleus: 'eoy', coda: 'h',  isLoose: true, tightVersion: ['yh']   },
+  'eoyk':  { glide: '',  nucleus: 'eoy', coda: 'k',  isLoose: true, tightVersion: ['yk']   },
   // 松
-  'ooy':   { glide: '',  nucleus: 'ooy', coda: '',   isLoose: true, tightVersion: 'eoy'  },
-  'aing':  { glide: '',  nucleus: 'ai',  coda: 'ng', isLoose: true, tightVersion: 'eing' },
-  'ooung': { glide: '',  nucleus: 'oo',  coda: 'ng', isLoose: true, tightVersion: 'oung' },
-  'ooyng': { glide: '',  nucleus: 'ooy', coda: 'ng', isLoose: true, tightVersion: 'eoyng'},
-  'aik':   { glide: '',  nucleus: 'ai',  coda: 'k',  isLoose: true, tightVersion: 'eik'  },
-  'oouk':  { glide: '',  nucleus: 'oo',  coda: 'k',  isLoose: true, tightVersion: 'ouk'  },
-  'ooyk':  { glide: '',  nucleus: 'ooy', coda: 'k',  isLoose: true, tightVersion: 'eoyk' },
+  'ooy':   { glide: '',  nucleus: 'ooy', coda: '',   isLoose: true, tightVersion: ['eoy']  },
+  'aing':  { glide: '',  nucleus: 'ai',  coda: 'ng', isLoose: true, tightVersion: ['eing'] },
+  'ooung': { glide: '',  nucleus: 'oo',  coda: 'ng', isLoose: true, tightVersion: ['oung'] },
+  'ooyng': { glide: '',  nucleus: 'ooy', coda: 'ng', isLoose: true, tightVersion: ['eoyng']},
+  'aik':   { glide: '',  nucleus: 'ai',  coda: 'k',  isLoose: true, tightVersion: ['eik']  },
+  'oouk':  { glide: '',  nucleus: 'oo',  coda: 'k',  isLoose: true, tightVersion: ['ouk']  },
+  'ooyk':  { glide: '',  nucleus: 'ooy', coda: 'k',  isLoose: true, tightVersion: ['eoyk'] },
 
   // 声化韵
   'ng':    { glide: '',  nucleus: '',    coda: 'ng', isLoose: false },
