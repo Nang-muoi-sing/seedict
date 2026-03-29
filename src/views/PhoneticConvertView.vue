@@ -107,7 +107,7 @@
                   :class="{
                     'cursor-pointer rounded-md bg-rose-50 px-1 ring-1 ring-rose-100':
                       token.type === 'error',
-                    'whitespace-pre-wrap': token.type === 'whitespace',
+                    'whitespace-pre-wrap': token.type === 'punctuation',
                   }"
                   :data-tooltip-msg="
                     token.type === 'error' ? token.message : undefined
@@ -211,7 +211,7 @@ import {
 } from '../utils/sandhi';
 import { toast } from '../utils/toast';
 import { Phrase } from '../utils/phonetics';
-type TokenType = 'normal' | 'error' | 'whitespace' | 'separator';
+type TokenType = 'normal' | 'error' | 'punctuation' | 'separator';
 
 interface DisplayToken {
   idx: string;
@@ -293,60 +293,75 @@ const updateResult = debounce(() => {
     return;
   }
 
-  const utterance = Utterance.of(inputText.value, sourceScheme.value);
+  // 在标点处断裂
+  const chunks = inputText.value
+    .split(/([，。！？；：、“”（）,.!?;:()\s]+)/g)
+    .filter(Boolean);
   const tokens: DisplayToken[] = [];
-
-  utterance.phrases.forEach((phrase, pIdx) => {
-    const phraseRaw = phrase.toRaw();
-    const syllablesWithTight = phrase.syllables.map((s, sIdx) => {
-      const savedTight = tightSelections.value[`${phraseRaw}-${sIdx}`];
-      return savedTight ? s.withTight(savedTight as Final) : s;
-    });
-    const phraseToProcess = new Phrase(syllablesWithTight, phrase.isCompound);
-    const sandhiPhrase = applySandhi(phraseToProcess, config.value);
-    const ambiguities = getVowelAmbiguities(phrase);
-
-    sandhiPhrase.syllables.forEach((s, sIdx) => {
-      if (!s.isValid()) {
-        const rawText = formatRaw(s.toRaw());
-        const message = !s.isValid('tone')
-          ? `${rawText} 声调不符合规则`
-          : `${rawText} 的音节不符合规则`;
-
-        tokens.push({
-          idx: `${phraseRaw}-${sIdx}`,
-          text: s.toRaw(),
-          type: 'error',
-          message: message,
-        });
-      } else {
-        const amb = ambiguities.find((a) => a.index === sIdx);
-        const options = config.value.isVowelShiftEnabled
-          ? amb?.options
-          : undefined;
-        const isAmbiguous = options
-          ? options.length > 1 && !tightSelections.value[`${phraseRaw}-${sIdx}`]
-          : undefined;
-
-        tokens.push({
-          idx: `${phraseRaw}-${sIdx}`,
-          text: renderTarget(s, targetScheme.value),
-          type: 'normal',
-          options,
-          isAmbiguous,
-        });
-      }
-
-      if (phrase.isCompound && sIdx < sandhiPhrase.syllables.length - 1) {
-        tokens.push({ idx: '-1', text: '-', type: 'separator' });
-      }
-    });
-
-    if (pIdx < utterance.phrases.length - 1) {
-      tokens.push({ idx: '-1', text: ' ', type: 'whitespace' });
+  chunks.forEach((chunk) => {
+    if (/^[，。！？；：、“”（）,.!?;:()\s]+$/.test(chunk)) {
+      tokens.push({
+        idx: 'literal',
+        text: chunk,
+        type: 'punctuation',
+      });
+      return;
     }
-  });
 
+    const utterance = Utterance.of(chunk, sourceScheme.value);
+
+    utterance.phrases.forEach((phrase, pIdx) => {
+      const phraseRaw = phrase.toRaw();
+      const syllablesWithTight = phrase.syllables.map((s, sIdx) => {
+        const savedTight = tightSelections.value[`${phraseRaw}-${sIdx}`];
+        return savedTight ? s.withTight(savedTight as Final) : s;
+      });
+      const phraseToProcess = new Phrase(syllablesWithTight, phrase.isCompound);
+      const sandhiPhrase = applySandhi(phraseToProcess, config.value);
+      const ambiguities = getVowelAmbiguities(phrase);
+
+      sandhiPhrase.syllables.forEach((s, sIdx) => {
+        if (!s.isValid()) {
+          const rawText = formatRaw(s.toRaw());
+          const message = !s.isValid('tone')
+            ? `${rawText} 声调不符合规则`
+            : `${rawText} 的音节不符合规则`;
+
+          tokens.push({
+            idx: `${phraseRaw}-${sIdx}`,
+            text: s.toRaw(),
+            type: 'error',
+            message: message,
+          });
+        } else {
+          const amb = ambiguities.find((a) => a.index === sIdx);
+          const options = config.value.isVowelShiftEnabled
+            ? amb?.options
+            : undefined;
+          const isAmbiguous = options
+            ? options.length > 1 &&
+              !tightSelections.value[`${phraseRaw}-${sIdx}`]
+            : undefined;
+
+          tokens.push({
+            idx: `${phraseRaw}-${sIdx}`,
+            text: renderTarget(s, targetScheme.value),
+            type: 'normal',
+            options,
+            isAmbiguous,
+          });
+        }
+
+        if (phrase.isCompound && sIdx < sandhiPhrase.syllables.length - 1) {
+          tokens.push({ idx: '-1', text: '-', type: 'separator' });
+        }
+      });
+
+      if (pIdx < utterance.phrases.length - 1) {
+        tokens.push({ idx: '-1', text: ' ', type: 'punctuation' });
+      }
+    });
+  });
   resultTokens.value = tokens;
 }, 300);
 
@@ -357,7 +372,7 @@ const renderTarget = (s: Syllable, scheme: Scheme) => {
 };
 
 const hasResultContent = computed(() =>
-  resultTokens.value.some((t) => t.type !== 'whitespace')
+  resultTokens.value.some((t) => t.type !== 'punctuation')
 );
 
 const handleTokenClick = (event: MouseEvent, token: DisplayToken) => {
