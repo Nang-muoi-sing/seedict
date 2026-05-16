@@ -18,12 +18,18 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+
       - name: Install and Build 🔧
         env:
           VITE_ENV_NAME: github-ci
           VITE_BASE_URL: /SeeDict
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
-          VITE_OSS_URL: ${{ secrets.VITE_OSS_URL }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_OSS_URL: ${{ vars.VITE_OSS_URL }}
         run: |
           npm ci
           npm run build
