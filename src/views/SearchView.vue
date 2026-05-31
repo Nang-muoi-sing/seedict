@@ -8,24 +8,21 @@
         查询：{{ searchedResponse.data.queries }}
       </div>
 
-      <!-- on-demand smart re-rank (cross-encoder under the hood) -->
-      <div
-        v-if="allResults.length > 0"
-        class="mb-4 flex min-h-[2.25rem] items-center gap-3"
-      >
-        <button
-          v-if="!reranking"
-          @click="reranked ? restoreOrder() : startRerank()"
+      <!-- Sticky "AI 智能搜索" toggle: when ON, /search uses BM25 + 向量召回
+           and results are auto re-ranked by cross-encoder. When OFF, falls back
+           to the precision-only Postgres pipeline. -->
+      <div class="mb-4 flex min-h-[2.25rem] flex-wrap items-center gap-3">
+        <label
+          class="relative inline-flex shrink-0 cursor-pointer select-none items-center gap-2 rounded-lg bg-wheat-100 px-3 py-1.5 text-sm text-wheat-600 transition-all hover:bg-wheat-200"
           :title="
-            reranked
-              ? '切回默认顺序'
-              : 'AI 模型逐条比对查询和词条，给出更精准的排序（约 5–10 秒）'
+            smartMode
+              ? '已开启：使用向量召回 + AI 精排（首次查询约 5–10 秒）'
+              : '开启后使用向量召回 + AI 精排，结果更贴合自然语言查询'
           "
-          class="relative flex shrink-0 items-center gap-1 rounded-lg bg-wheat-300 px-3 py-1.5 text-sm text-white transition-all hover:bg-wheat-400"
         >
-          <!-- New-feature indicator: pulsing red dot + 「新」 badge, dismissed forever after first click -->
+          <!-- New-feature indicator: pulsing red dot + 「新」 badge, dismissed forever after first interaction -->
           <span
-            v-if="!rerankSeen && !reranked"
+            v-if="!smartSeen"
             class="absolute -right-2 -top-2 flex items-center gap-0.5"
             aria-hidden="true"
           >
@@ -42,11 +39,17 @@
               >新</span
             >
           </span>
-          <i-material-symbols-sort-rounded style="font-size: 16px" />
-          {{ reranked ? '恢复默认顺序' : '智能排序' }}
-        </button>
+          <input
+            type="checkbox"
+            class="h-4 w-4 cursor-pointer accent-wheat-400"
+            :checked="smartMode"
+            @change="onSmartToggle"
+          />
+          <i-material-symbols-auto-awesome style="font-size: 16px" />
+          AI 智能搜索
+        </label>
 
-        <div v-if="reranking" class="flex-1">
+        <div v-if="reranking" class="flex-1 min-w-[160px]">
           <div class="mb-1 text-xs text-wheat-500">
             智能排序中… {{ rerankDone }}/{{ rerankTotal }}（{{
               rerankPercent
@@ -60,8 +63,11 @@
           </div>
         </div>
 
-        <span v-else-if="reranked" class="text-xs text-wheat-500">
-          已按相关度重新排序
+        <span
+          v-else-if="smartMode && reranked && allResults.length > 0"
+          class="text-xs text-wheat-500"
+        >
+          已按 AI 精排排序
         </span>
       </div>
 
@@ -156,7 +162,19 @@ const allResults = ref<any[]>([]);
 const nextCursor = ref<string | null>(null);
 const hasMore = ref(false);
 
-// on-demand smart re-rank (cross-encoder under the hood)
+// AI 智能搜索 (vector recall + cross-encoder rerank) — sticky opt-in setting.
+// When ON: /search?smart=1 returns BM25 + vector candidates, then we auto-fire
+// /rerank_stream/ to reorder by cross-encoder. When OFF: precision-only /search
+// (the old upstream behaviour).
+const SMART_KEY = 'seedict.smartMode';
+const SMART_SEEN_KEY = 'seedict.smartSeen';
+const smartMode = ref(
+  typeof localStorage !== 'undefined' && localStorage.getItem(SMART_KEY) === '1'
+);
+const smartSeen = ref(
+  typeof localStorage !== 'undefined' && localStorage.getItem(SMART_SEEN_KEY) === '1'
+);
+
 const reranking = ref(false);
 const reranked = ref(false);
 const rerankDone = ref(0);
@@ -164,15 +182,7 @@ const rerankTotal = ref(0);
 const rerankPercent = computed(() =>
   rerankTotal.value ? Math.round((rerankDone.value / rerankTotal.value) * 100) : 0
 );
-let preRerankOrder: any[] = [];
-let rerankedOrder: any[] = []; // cache of last rerank result for the current query
 let es: EventSource | null = null;
-
-// "New feature" badge: dismissed forever once the user clicks the button once
-const RERANK_SEEN_KEY = 'seedict.smartRankSeen';
-const rerankSeen = ref(
-  typeof localStorage !== 'undefined' && localStorage.getItem(RERANK_SEEN_KEY) === '1'
-);
 
 const resetRerank = () => {
   if (es) {
@@ -183,38 +193,17 @@ const resetRerank = () => {
   reranked.value = false;
   rerankDone.value = 0;
   rerankTotal.value = 0;
-  preRerankOrder = [];
-  rerankedOrder = []; // new search invalidates the cache
-};
-
-const markRerankSeen = () => {
-  if (rerankSeen.value) return;
-  rerankSeen.value = true;
-  try {
-    localStorage.setItem(RERANK_SEEN_KEY, '1');
-  } catch {
-    /* private mode / SSR — ignore */
-  }
 };
 
 const startRerank = () => {
   if (reranking.value || allResults.value.length === 0) return;
-  markRerankSeen();
 
-  // Cache hit: re-apply the previously computed order instantly (no fetch, no
-  // cross-encoder work). Cache is cleared on every new search via resetRerank.
-  if (rerankedOrder.length > 0) {
-    allResults.value = [...rerankedOrder];
-    reranked.value = true;
-    return;
-  }
-
-  preRerankOrder = [...allResults.value];
   reranking.value = true;
   reranked.value = false;
   rerankDone.value = 0;
   rerankTotal.value = allResults.value.length;
 
+  const preOrder = [...allResults.value];
   const wids = allResults.value.map((r) => r.w).join(',');
   const url = `${apiUrl}/rerank_stream/?q=${encodeURIComponent(
     state.value.q
@@ -229,12 +218,13 @@ const startRerank = () => {
       rerankDone.value = msg.done;
       rerankTotal.value = msg.total;
     } else if (msg.type === 'result') {
-      const byId = new Map(preRerankOrder.map((r) => [String(r.w), r]));
+      const byId = new Map(preOrder.map((r) => [String(r.w), r]));
       const ordered = (msg.w as string[])
         .map((w) => byId.get(String(w)))
         .filter(Boolean);
-      rerankedOrder = ordered; // cache for "switch back & forth" without recompute
-      allResults.value = ordered;
+      if (ordered.length) {
+        allResults.value = ordered;
+      }
       reranked.value = true;
       reranking.value = false;
       es?.close();
@@ -252,10 +242,21 @@ const startRerank = () => {
   };
 };
 
-const restoreOrder = () => {
-  if (preRerankOrder.length) {
-    allResults.value = [...preRerankOrder];
-    reranked.value = false;
+const onSmartToggle = (ev: Event) => {
+  smartMode.value = (ev.target as HTMLInputElement).checked;
+  try {
+    localStorage.setItem(SMART_KEY, smartMode.value ? '1' : '0');
+    if (!smartSeen.value) {
+      smartSeen.value = true;
+      localStorage.setItem(SMART_SEEN_KEY, '1');
+    }
+  } catch {
+    /* private mode / SSR — ignore */
+  }
+  // Re-run the current query under the new mode so the user sees the effect
+  // immediately, including pagination/cursor resets.
+  if (state.value.q) {
+    performSearch();
   }
 };
 
@@ -289,6 +290,7 @@ const performSearch = async () => {
   try {
     const params = new URLSearchParams();
     params.append('q', state.value.q);
+    if (smartMode.value) params.append('smart', '1');
 
     const url = `${import.meta.env.VITE_API_URL || '/'}/search/?${params}`;
     const response = await fetch(url);
@@ -308,6 +310,11 @@ const performSearch = async () => {
   } finally {
     loading.value = false;
   }
+
+  // Smart mode: auto-fire cross-encoder rerank once recall results land.
+  if (smartMode.value && allResults.value.length > 0) {
+    startRerank();
+  }
 };
 
 const loadMore = async () => {
@@ -319,6 +326,7 @@ const loadMore = async () => {
     const params = new URLSearchParams();
     params.append('q', state.value.q);
     params.append('cursor', nextCursor.value!);
+    if (smartMode.value) params.append('smart', '1');
 
     const response = await fetch(`${apiUrl}/search/?${params}`);
 
