@@ -25,8 +25,9 @@ jobs:
       - name: Install and Build 🔧
         env:
           VITE_ENV_NAME: github-ci
-          VITE_BASE_URL: /SeeDict
+          VITE_BASE_URL: /seedict
           VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_API_V2_URL: ${{ vars.VITE_API_V2_URL }}
           VITE_OSS_URL: ${{ vars.VITE_OSS_URL }}
         run: |
           npm ci
