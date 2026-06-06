@@ -8,69 +8,6 @@
         查询：{{ searchedResponse.data.queries }}
       </div>
 
-      <!-- On-demand "智能排序" button (cross-encoder rerank).
-           Each query is reranked AT MOST ONCE — the result is cached and
-           applied instantly on subsequent toggles. "恢复默认顺序" switches
-           back to the pre-rerank ordering (also cached). -->
-      <div
-        v-if="allResults.length > 0"
-        class="mb-4 flex min-h-[2.25rem] items-center gap-3"
-      >
-        <button
-          v-if="!reranking"
-          @click="reranked ? restoreOrder() : runRerank()"
-          :title="
-            reranked
-              ? '切回默认顺序（即时）'
-              : 'AI 模型逐条比对查询和词条，给出更精准的排序（每查询约 5–10 秒，重复点击瞬间生效）'
-          "
-          class="relative flex shrink-0 items-center gap-1 rounded-lg bg-wheat-300 px-3 py-1.5 text-sm text-white transition-all hover:bg-wheat-400"
-        >
-          <!-- "新" badge: pulsing red dot, dismissed forever after first click -->
-          <span
-            v-if="!smartSeen && !reranked"
-            class="absolute -right-2 -top-2 flex items-center gap-0.5"
-            aria-hidden="true"
-          >
-            <span class="relative flex h-2 w-2">
-              <span
-                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
-              ></span>
-              <span
-                class="relative inline-flex h-2 w-2 rounded-full bg-red-500"
-              ></span>
-            </span>
-            <span
-              class="rounded-sm bg-red-500 px-1 text-[10px] font-bold leading-none text-white"
-              >新</span
-            >
-          </span>
-          <i-material-symbols-sort-rounded style="font-size: 16px" />
-          {{ reranked ? '恢复默认顺序' : '智能排序' }}
-        </button>
-
-        <div v-if="reranking" class="flex-1 min-w-[160px]">
-          <div class="mb-1 text-xs text-wheat-500">
-            智能排序中… {{ rerankDone }}/{{ rerankTotal }}（{{
-              rerankPercent
-            }}%）
-          </div>
-          <div class="h-2 w-full overflow-hidden rounded-full bg-wheat-100">
-            <div
-              class="h-full bg-wheat-400 transition-all duration-200"
-              :style="{ width: rerankPercent + '%' }"
-            ></div>
-          </div>
-        </div>
-
-        <span
-          v-else-if="reranked"
-          class="text-xs text-wheat-500"
-        >
-          已按 AI 精排排序
-        </span>
-      </div>
-
       <RouterLink
         class="block"
         v-for="result in searchedResponse.data.results"
@@ -162,119 +99,6 @@ const allResults = ref<any[]>([]);
 const nextCursor = ref<string | null>(null);
 const hasMore = ref(false);
 
-// 智能排序 (cross-encoder rerank) — on-demand button. Hybrid recall (BM25 +
-// vector RRF) is always on at the api side, so /search already returns the
-// semantic candidate set. The button reranks that set with the cross-encoder.
-//
-// Each query is reranked AT MOST ONCE: the pre-rerank ordering AND the
-// post-rerank ordering are both cached as per-query snapshots, so repeatedly
-// flipping between "智能排序" and "恢复默认顺序" for the same query is free.
-const SMART_SEEN_KEY = 'seedict.smartSeen';
-const smartSeen = ref(
-  typeof localStorage !== 'undefined' && localStorage.getItem(SMART_SEEN_KEY) === '1'
-);
-
-const reranking = ref(false);
-const reranked = ref(false);
-const rerankDone = ref(0);
-const rerankTotal = ref(0);
-const rerankPercent = computed(() =>
-  rerankTotal.value ? Math.round((rerankDone.value / rerankTotal.value) * 100) : 0
-);
-let es: EventSource | null = null;
-
-// Per-query rerank cache (cleared on every new query via clearRerankCache).
-let preRerankOrder: any[] = []; // results as fetched, pre-rerank
-let postRerankOrder: any[] = []; // results after cross-encoder reorder
-
-const clearRerankCache = () => {
-  preRerankOrder = [];
-  postRerankOrder = [];
-};
-
-const resetRerank = () => {
-  if (es) {
-    es.close();
-    es = null;
-  }
-  reranking.value = false;
-  reranked.value = false;
-  rerankDone.value = 0;
-  rerankTotal.value = 0;
-};
-
-const markSmartSeen = () => {
-  if (smartSeen.value) return;
-  smartSeen.value = true;
-  try {
-    localStorage.setItem(SMART_SEEN_KEY, '1');
-  } catch {
-    /* private mode / SSR — ignore */
-  }
-};
-
-const runRerank = () => {
-  if (reranking.value || allResults.value.length === 0) return;
-  markSmartSeen();
-
-  // Cache hit: re-apply the cached post-rerank order instantly. No /search
-  // call, no SSE, no GPU work. Cache is cleared on every new query.
-  if (postRerankOrder.length > 0) {
-    allResults.value = [...postRerankOrder];
-    reranked.value = true;
-    return;
-  }
-
-  preRerankOrder = [...allResults.value];
-  reranking.value = true;
-  reranked.value = false;
-  rerankDone.value = 0;
-  rerankTotal.value = allResults.value.length;
-
-  const wids = allResults.value.map((r) => r.w).join(',');
-  const url = `${apiUrl}/rerank_stream/?q=${encodeURIComponent(
-    state.value.q
-  )}&w=${encodeURIComponent(wids)}`;
-  es = new EventSource(url);
-  es.onmessage = (ev) => {
-    const msg = JSON.parse(ev.data);
-    if (msg.type === 'start') {
-      rerankTotal.value = msg.total;
-      rerankDone.value = 0;
-    } else if (msg.type === 'progress') {
-      rerankDone.value = msg.done;
-      rerankTotal.value = msg.total;
-    } else if (msg.type === 'result') {
-      const byId = new Map(preRerankOrder.map((r) => [String(r.w), r]));
-      const ordered = (msg.w as string[])
-        .map((w) => byId.get(String(w)))
-        .filter(Boolean);
-      postRerankOrder = ordered;
-      allResults.value = ordered;
-      reranked.value = true;
-      reranking.value = false;
-      es?.close();
-      es = null;
-    } else if (msg.type === 'error') {
-      reranking.value = false;
-      es?.close();
-      es = null;
-    }
-  };
-  es.onerror = () => {
-    reranking.value = false;
-    es?.close();
-    es = null;
-  };
-};
-
-const restoreOrder = () => {
-  if (preRerankOrder.length) {
-    allResults.value = [...preRerankOrder];
-    reranked.value = false;
-  }
-};
-
 const state = ref({
   q: (route.query.q as string) || '',
 });
@@ -300,7 +124,6 @@ const performSearch = async () => {
   allResults.value = [];
   nextCursor.value = null;
   hasMore.value = false;
-  resetRerank();
 
   try {
     const params = new URLSearchParams();
@@ -344,14 +167,10 @@ const loadMore = async () => {
 
     const data = (await response.json()) as SearchResponse;
 
-    // Append new results to the visible list. Note: pagination after the
-    // user has clicked 智能排序 invalidates the rerank cache for this query
-    // — the cached order doesn't include the newly fetched entries.
+    // 追加新结果到现有列表
     allResults.value = [...allResults.value, ...(data.data.results || [])];
     nextCursor.value = data.data.nextCursor || null;
     hasMore.value = data.data.hasMore || false;
-    clearRerankCache();
-    reranked.value = false;
   } catch (error) {
     console.error('加载更多失败:', error);
   } finally {
@@ -365,8 +184,6 @@ watch(
     if (typeof newQ === 'string') {
       state.value.q = newQ;
       updateTitle();
-      // New query — last rerank result is stale.
-      clearRerankCache();
       performSearch();
     }
   },

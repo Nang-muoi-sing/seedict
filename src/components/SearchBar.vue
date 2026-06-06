@@ -89,6 +89,18 @@ import { useRouter } from 'vue-router';
 import { Trie } from '../utils/trie';
 import { useDebounceFn } from '@vueuse/core';
 
+interface Props {
+  autoNavigate?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  autoNavigate: true,
+});
+
+const emit = defineEmits<{
+  submit: [query: string];
+}>();
+
 const router = useRouter();
 const searchQuery = ref('');
 const filteredHistory = ref<string[]>([]);
@@ -133,7 +145,11 @@ const handleSubmit = () => {
   selectedIndex.value = -1;
   isMouseHovering.value = false;
   searchQuery.value = '';
-  router.push({ name: 'search', query: { q: query } });
+  emit('submit', query);
+
+  if (props.autoNavigate) {
+    router.push({ name: 'search', query: { q: query } });
+  }
 
   queueMicrotask(() => {
     try {

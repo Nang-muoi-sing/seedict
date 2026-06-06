@@ -42,7 +42,7 @@ const searchBarFixed = ref(false);
 const navPanelFixed = ref(false);
 
 const handleSearchSubmit = (query: string) => {
-  router.push({ name: 'search', query: { q: query } });
+  router.push({ name: 'semantic-search', query: { q: query } });
 };
 
 const handleScroll = () => {
