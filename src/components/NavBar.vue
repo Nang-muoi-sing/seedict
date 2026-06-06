@@ -9,6 +9,8 @@
       <SearchBar
         v-if="props.showSearchBar"
         class="w-xs sm:w-sm md:w-md"
+        :auto-navigate="false"
+        @submit="props.onSearchSubmit"
       ></SearchBar>
       <div v-else class="w-xs sm:w-sm md:w-md"></div>
       <NavPanel class="z-30 hidden w-xs lg:flex"></NavPanel>
@@ -108,10 +110,14 @@ import SearchBar from './SearchBar.vue';
 
 interface Props {
   showSearchBar?: boolean;
+  onSearchSubmit?: (query: string) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showSearchBar: true,
+  onSearchSubmit: (query: string) => {
+    void query;
+  },
 });
 
 const isSidebarOpen = ref(false);

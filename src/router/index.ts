@@ -12,6 +12,16 @@ const routes = [
     component: () => import('../views/SearchView.vue'),
   },
   {
+    path: '/semantic',
+    name: 'semantic',
+    component: () => import('../views/HomeSemanticView.vue'),
+  },
+  {
+    path: '/semantic/search',
+    name: 'semantic-search',
+    component: () => import('../views/SearchSemanticView.vue'),
+  },
+  {
     path: '/word',
     name: 'word',
     component: () => import('../views/WordView.vue'),
