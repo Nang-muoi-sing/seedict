@@ -1,0 +1,1 @@
+System.register(["./index-legacy-Djtfmr_l.js"],function(t,e){"use strict";var r,s,n,o;return{setters:[t=>{r=t.d,s=t.c,n=t.g,o=t.t}],execute:function(){const e=["id"];t("_",r({__name:"Subtitle",props:{text:{}},setup(t){const r=t;return(t,c)=>(n(),s("h2",{id:r.text,class:"border-rosybrown-800 text-rosybrown-800 w-fit border-t-[6px] p-1 text-xl font-bold"},o(r.text),9,e))}}))}}});
