@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const isGhPages = env.VITE_ENV_NAME === "github-ci";
   const baseUrl = env.VITE_BASE_URL || "/";
+  const apiHost = env.VITE_API_HOST;
   const plugins = [
     vue(),
     Components({
@@ -34,12 +35,14 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      proxy: {
-        "/api": {
-          target: env.VITE_API_HOST,
-          changeOrigin: true,
-        },
-      },
+      proxy: apiHost
+        ? {
+            "/api": {
+              target: apiHost,
+              changeOrigin: true,
+            },
+          }
+        : undefined,
     },
   };
 });

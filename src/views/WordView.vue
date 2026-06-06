@@ -234,11 +234,11 @@ import WordFengBlock from '../components/WordFengCard.vue';
 import WordHead from '../components/WordHead.vue';
 import WordPhoneticCard from '../components/WordPhoneticCard.vue';
 import WordSkeleton from '../components/WordSkeleton.vue';
+import { apiV1Url } from '../utils/api';
 import { yngpingToIPA } from '../utils/phonetics';
 import type { AudioResponse, WordResponse, WordSeeDict } from '../utils/typing';
 import { correctText } from '../utils/typography';
 
-const apiUrl = import.meta.env.VITE_API_URL || '/';
 const ossUrl = import.meta.env.VITE_OSS_URL || '/';
 const route = useRoute();
 const router = useRouter();
@@ -317,9 +317,7 @@ const updateTitle = () => {
 const fetchWordResponse = async () => {
   loading.value = true;
   try {
-    const response = await fetch(
-      `${apiUrl}/word/?w=${encodeURIComponent(w.value)}`
-    );
+    const response = await fetch(apiV1Url('/word/', { w: w.value }));
     if (!response.ok) throw new Error('Response Error');
     wordResponse.value = await response.json();
     updateTitle();
@@ -340,9 +338,7 @@ const fetchWordResponse = async () => {
 
 const fetchAudioResponse = async (yngping: string) => {
   try {
-    const response = await fetch(
-      `${apiUrl}/audio/?yngping=${encodeURIComponent(yngping)}`
-    );
+    const response = await fetch(apiV1Url('/audio/', { yngping }));
     if (!response.ok) throw new Error('Response Error');
     audioResponse.value = await response.json();
     sortAudioBySpeaker();

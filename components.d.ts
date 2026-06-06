@@ -25,7 +25,6 @@ declare module 'vue' {
     IIcRoundWechat: typeof import('~icons/ic/round-wechat')['default']
     ILucideToolCase: typeof import('~icons/lucide/tool-case')['default']
     IMaterialSymbolsAccessibilityNew: typeof import('~icons/material-symbols/accessibility-new')['default']
-    IMaterialSymbolsAutoAwesome: typeof import('~icons/material-symbols/auto-awesome')['default']
     IMaterialSymbolsBook2Rounded: typeof import('~icons/material-symbols/book2-rounded')['default']
     IMaterialSymbolsCheckCircleRounded: typeof import('~icons/material-symbols/check-circle-rounded')['default']
     IMaterialSymbolsCircle: typeof import('~icons/material-symbols/circle')['default']
