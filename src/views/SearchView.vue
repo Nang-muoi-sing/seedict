@@ -84,10 +84,10 @@ import { useRoute } from 'vue-router';
 import RubyText from '../components/common/RubyText.vue';
 import PageContent from '../components/PageContent.vue';
 import SearchSkeleton from '../components/SearchSkeleton.vue';
+import { apiV1Url } from '../utils/api';
 import { sourceMap } from '../utils/mapping';
 import type { SearchResponse } from '../utils/typing';
 import FormatText from '../components/common/FormatText.vue';
-const apiUrl = import.meta.env.VITE_API_URL || '/';
 
 const route = useRoute();
 
@@ -126,10 +126,7 @@ const performSearch = async () => {
   hasMore.value = false;
 
   try {
-    const params = new URLSearchParams();
-    params.append('q', state.value.q);
-
-    const url = `${import.meta.env.VITE_API_URL || '/'}/search/?${params}`;
+    const url = apiV1Url('/search/', { q: state.value.q });
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -155,11 +152,9 @@ const loadMore = async () => {
   loadingMore.value = true;
 
   try {
-    const params = new URLSearchParams();
-    params.append('q', state.value.q);
-    params.append('cursor', nextCursor.value!);
-
-    const response = await fetch(`${apiUrl}/search/?${params}`);
+    const response = await fetch(
+      apiV1Url('/search/', { q: state.value.q, cursor: nextCursor.value })
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP错误: ${response.status}`);

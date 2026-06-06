@@ -31,9 +31,8 @@ jobs:
         env:
           VITE_ENV_NAME: production
           VITE_BASE_URL: ${{ vars.VITE_BASE_URL }}
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_OSS_URL: ${{ vars.VITE_OSS_URL }}
-          VITE_API_HOST: ${{ vars.VITE_API_HOST }}
+          VITE_API_BASE_PATH: ${{ vars.VITE_API_BASE_PATH }}
         run: npm run build
 
       - name: Pack artifact

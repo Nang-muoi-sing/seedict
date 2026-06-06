@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { apiV1Url } from '../utils/api';
 import { circleExplanations } from '../utils/typography';
 
 export type Word = {
@@ -33,9 +34,7 @@ export const useDeckStore = defineStore('deck', {
      * 获取单词数据
      */
     async fetchDeck() {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || '/'}/shuffle/`
-      );
+      const response = await fetch(apiV1Url('/shuffle/'));
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

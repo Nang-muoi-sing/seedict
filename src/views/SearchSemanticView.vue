@@ -147,10 +147,10 @@ import { useRoute, useRouter } from 'vue-router';
 import RubyText from '../components/common/RubyText.vue';
 import PageContent from '../components/PageContent.vue';
 import SearchSkeleton from '../components/SearchSkeleton.vue';
+import { apiV2Url } from '../utils/api';
 import { sourceMap } from '../utils/mapping';
 import type { SearchResponse } from '../utils/typing';
 import FormatText from '../components/common/FormatText.vue';
-const apiUrl = import.meta.env.VITE_API_V2_URL || '/';
 
 const route = useRoute();
 const router = useRouter();
@@ -237,9 +237,7 @@ const runRerank = () => {
   rerankTotal.value = allResults.value.length;
 
   const wids = allResults.value.map((r) => r.w).join(',');
-  const url = `${apiUrl}/rerank/?q=${encodeURIComponent(
-    state.value.q
-  )}&w=${encodeURIComponent(wids)}`;
+  const url = apiV2Url('/rerank/', { q: state.value.q, w: wids });
   es = new EventSource(url);
   es.onmessage = (ev) => {
     const msg = JSON.parse(ev.data);
@@ -308,9 +306,7 @@ const performSearch = async () => {
   resetRerank();
 
   try {
-    const params = new URLSearchParams();
-    params.append('q', state.value.q);
-    const url = `${apiUrl}/search/semantic/?${params}`;
+    const url = apiV2Url('/search/semantic/', { q: state.value.q });
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -336,11 +332,12 @@ const loadMore = async () => {
   loadingMore.value = true;
 
   try {
-    const params = new URLSearchParams();
-    params.append('q', state.value.q);
-    params.append('cursor', nextCursor.value!);
-
-    const response = await fetch(`${apiUrl}/search/?${params}`);
+    const response = await fetch(
+      apiV2Url('/search/semantic/', {
+        q: state.value.q,
+        cursor: nextCursor.value,
+      })
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP错误: ${response.status}`);

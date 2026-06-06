@@ -26,8 +26,8 @@ jobs:
         env:
           VITE_ENV_NAME: github-ci
           VITE_BASE_URL: /seedict
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
-          VITE_API_V2_URL: ${{ vars.VITE_API_V2_URL }}
+          VITE_API_HOST: ${{ vars.VITE_API_HOST }}
+          VITE_API_BASE_PATH: ${{ vars.VITE_API_BASE_PATH }}
           VITE_OSS_URL: ${{ vars.VITE_OSS_URL }}
         run: |
           npm ci
