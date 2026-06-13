@@ -8,7 +8,7 @@
         查询：{{ searchedResponse.data.queries }}
       </div>
 
-      <!-- On-demand "智能排序" button (cross-encoder rerank).
+      <!-- On-demand "排蜀下" button (cross-encoder rerank).
            Each query is reranked AT MOST ONCE — the result is cached and
            applied instantly on subsequent toggles. "恢复默认顺序" switches
            back to the pre-rerank ordering (also cached). -->
@@ -22,7 +22,7 @@
           :title="
             reranked
               ? '切回默认顺序（即时）'
-              : 'AI 模型逐条比对查询和词条，给出更精准的排序（每查询约 5–10 秒，重复点击瞬间生效）'
+              : '语义比对查询词与初步结果'
           "
           class="relative flex shrink-0 items-center gap-1 rounded-lg bg-wheat-300 px-3 py-1.5 text-sm text-white transition-all hover:bg-wheat-400"
         >
@@ -46,7 +46,7 @@
             >
           </span>
           <i-material-symbols-sort-rounded style="font-size: 16px" />
-          {{ reranked ? '恢复默认顺序' : '智能排序' }}
+          {{ reranked ? '恢复默认顺序' : '排蜀下' }}
         </button>
 
         <div v-if="reranking" class="flex-1 min-w-[160px]">
@@ -67,7 +67,7 @@
           v-else-if="reranked"
           class="text-xs text-wheat-500"
         >
-          已按 AI 精排排序
+          排序完成
         </span>
       </div>
 
@@ -167,13 +167,13 @@ const handleSearchSubmit = (query: string) => {
   router.push({ name: 'semantic-search', query: { q: query } });
 };
 
-// 智能排序 (cross-encoder rerank) — on-demand button. Hybrid recall (BM25 +
+// 排蜀下 (cross-encoder rerank) — on-demand button. Hybrid recall (BM25 +
 // vector RRF) is always on at the api side, so /search already returns the
 // semantic candidate set. The button reranks that set with the cross-encoder.
 //
 // Each query is reranked AT MOST ONCE: the pre-rerank ordering AND the
 // post-rerank ordering are both cached as per-query snapshots, so repeatedly
-// flipping between "智能排序" and "恢复默认顺序" for the same query is free.
+// flipping between "排蜀下" and "恢复默认顺序" for the same query is free.
 const SMART_SEEN_KEY = 'seedict.smartSeen';
 const smartSeen = ref(
   typeof localStorage !== 'undefined' && localStorage.getItem(SMART_SEEN_KEY) === '1'
@@ -346,7 +346,7 @@ const loadMore = async () => {
     const data = (await response.json()) as SearchResponse;
 
     // Append new results to the visible list. Note: pagination after the
-    // user has clicked 智能排序 invalidates the rerank cache for this query
+    // user has clicked 排蜀下 invalidates the rerank cache for this query
     // — the cached order doesn't include the newly fetched entries.
     allResults.value = [...allResults.value, ...(data.data.results || [])];
     nextCursor.value = data.data.nextCursor || null;
