@@ -1,0 +1,1 @@
+import{a as o,c as r,f as s,v as n}from"./index-Bu9aj8Pk.js";const a=["id"],x=o({__name:"Subtitle",props:{text:{}},setup(e){const t=e;return(c,p)=>(s(),r("h2",{id:t.text,class:"border-rosybrown-800 text-rosybrown-800 w-fit border-t-[6px] p-1 text-xl font-bold"},n(t.text),9,a))}});export{x as _};
