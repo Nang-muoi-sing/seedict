@@ -18,8 +18,6 @@
       </RouterLink>
       <SearchBar
         class="relative w-xs sm:w-sm md:w-md"
-        :auto-navigate="false"
-        @submit="handleSearchSubmit"
       ></SearchBar>
     </div>
      <WordsDeck></WordsDeck>
@@ -28,22 +26,20 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import Footer from '../components/common/Footer.vue';
 import NavPanel from '../components/NavPanel.vue';
 import SearchBar from '../components/SearchBar.vue';
 import WordsDeck from '../components/WordsDeck.vue';
+import { useSearchModeStore } from '../store/searchModeStore';
 
-const router = useRouter();
+const route = useRoute();
+const searchModeStore = useSearchModeStore();
 const scrollY = ref(0);
 const searchBarFixed = ref(false);
 const navPanelFixed = ref(false);
-
-const handleSearchSubmit = (query: string) => {
-  router.push({ name: 'search', query: { q: query } });
-};
 
 const handleScroll = () => {
   scrollY.value = window.scrollY;
@@ -59,4 +55,14 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
 });
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === 'semantic-home') {
+      searchModeStore.setMode('semantic');
+    }
+  },
+  { immediate: true }
+);
 </script>

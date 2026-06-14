@@ -16,12 +16,14 @@
         }
       "
     >
-      <i-material-symbols-search-rounded
-        width="36"
-        height="36"
-        class="text-rosybrown-400 hover:text-rosybrown-700 cursor-pointer pl-1 mr-2"
-        @click.stop="handleSubmit"
-      />
+      <button
+        type="submit"
+        class="mr-2 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors"
+        :class="submitButtonClass"
+        :disabled="!searchQuery"
+      >
+        <i-material-symbols-search-rounded width="20" height="20" />
+      </button>
       <input
         class="text-rosybrown-800 h-full w-full mr-2"
         v-model.trim="searchQuery"
@@ -31,6 +33,7 @@
         @keydown.up.prevent="handleKeyDown('up')"
         @keydown.enter.prevent="handleKeyEnter"
       />
+      <SearchModeSwitch />
       <ul
         v-show="isHistoryVisible && filteredHistory.length > 0"
         class="outline-rosybrown-300 absolute top-full right-0 left-0 rounded-b-md bg-white pt-2 outline outline-1"
@@ -88,6 +91,11 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Trie } from '../utils/trie';
 import { useDebounceFn } from '@vueuse/core';
+import SearchModeSwitch from './SearchModeSwitch.vue';
+import {
+  buildSearchRoute,
+  useSearchModeStore,
+} from '../store/searchModeStore';
 
 interface Props {
   autoNavigate?: boolean;
@@ -102,6 +110,7 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
+const searchModeStore = useSearchModeStore();
 const searchQuery = ref('');
 const filteredHistory = ref<string[]>([]);
 const isHistoryVisible = ref(false);
@@ -148,7 +157,7 @@ const handleSubmit = () => {
   emit('submit', query);
 
   if (props.autoNavigate) {
-    router.push({ name: 'search', query: { q: query } });
+    router.push(buildSearchRoute(searchModeStore.mode, query));
   }
 
   queueMicrotask(() => {
@@ -204,6 +213,12 @@ const clearHistory = () => {
   selectedIndex.value = -1;
   isMouseHovering.value = false;
 };
+
+const submitButtonClass = computed(() =>
+  searchQuery.value
+    ? 'bg-wheat-100 text-rosybrown-800 cursor-pointer'
+    : 'bg-wheat-50 text-wheat-200'
+);
 
 const onFormClick = (event: MouseEvent) => {
   if ((event.target as HTMLElement).tagName === 'INPUT') {
@@ -278,6 +293,7 @@ const toggleDimmer = computed(() => {
     ? ['backdrop-blur-xs', 'backdrop-brightness-90']
     : ['hidden'];
 });
+
 </script>
 
 <style scoped>
