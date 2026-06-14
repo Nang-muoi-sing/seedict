@@ -88,8 +88,10 @@ import { apiV1Url } from '../utils/api';
 import { sourceMap } from '../utils/mapping';
 import type { SearchResponse } from '../utils/typing';
 import FormatText from '../components/common/FormatText.vue';
+import { useSearchModeStore } from '../store/searchModeStore';
 
 const route = useRoute();
+const searchModeStore = useSearchModeStore();
 
 const loading = ref(false);
 const loadingMore = ref(false);
@@ -176,6 +178,7 @@ const loadMore = async () => {
 watch(
   () => route.query.q,
   (newQ) => {
+    searchModeStore.setMode('fuzzy');
     if (typeof newQ === 'string') {
       state.value.q = newQ;
       updateTitle();

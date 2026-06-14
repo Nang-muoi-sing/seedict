@@ -13,12 +13,13 @@ const routes = [
   },
   {
     path: '/semantic',
-    name: 'semantic',
-    component: () => import('../views/HomeSemanticView.vue'),
+    name: 'semantic-home',
+    component: () => import('../views/HomeView.vue'),
   },
   {
-    path: '/semantic/search',
+    path: '/search/semantic',
     name: 'semantic-search',
+    alias: ['/semantic/search'],
     component: () => import('../views/SearchSemanticView.vue'),
   },
   {

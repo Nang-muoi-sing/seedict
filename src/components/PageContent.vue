@@ -22,6 +22,10 @@
 import { useRouter } from 'vue-router';
 import NavBar from './NavBar.vue';
 import Footer from './common/Footer.vue';
+import {
+  buildSearchRoute,
+  useSearchModeStore,
+} from '../store/searchModeStore';
 
 interface Props {
   showSearchBar?: boolean;
@@ -34,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const router = useRouter();
+const searchModeStore = useSearchModeStore();
 
 const handleSearchSubmit = (query: string) => {
   if (props.onSearchSubmit) {
@@ -41,6 +46,6 @@ const handleSearchSubmit = (query: string) => {
     return;
   }
 
-  router.push({ name: 'search', query: { q: query } });
+  router.push(buildSearchRoute(searchModeStore.mode, query));
 };
 </script>
