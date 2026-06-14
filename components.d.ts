@@ -61,6 +61,7 @@ declare module 'vue' {
     ISimpleIconsBilibili: typeof import('~icons/simple-icons/bilibili')['default']
     ISimpleIconsXiaohongshu: typeof import('~icons/simple-icons/xiaohongshu')['default']
     ISimpleIconsZhihu: typeof import('~icons/simple-icons/zhihu')['default']
+    ISvgSpinners180RingWithBg: typeof import('~icons/svg-spinners/180-ring-with-bg')['default']
     ITypcnFlash: typeof import('~icons/typcn/flash')['default']
     LetterPaper: typeof import('./src/components/LetterPaper.vue')['default']
     Link: typeof import('./src/components/common/Link.vue')['default']

@@ -8,67 +8,27 @@
         查询：{{ searchedResponse.data.queries }}
       </div>
 
-      <!-- On-demand "排蜀下" button (cross-encoder rerank).
-           Each query is reranked AT MOST ONCE — the result is cached and
-           applied instantly on subsequent toggles. "恢复默认顺序" switches
-           back to the pre-rerank ordering (also cached). -->
       <div
         v-if="allResults.length > 0"
-        class="mb-4 flex min-h-[2.25rem] items-center gap-3"
+        class="mb-4 flex min-h-[2.25rem] items-center justify-end"
       >
         <button
-          v-if="!reranking"
           @click="reranked ? restoreOrder() : runRerank()"
-          :title="
-            reranked
-              ? '切回默认顺序（即时）'
-              : '语义比对查询词与初步结果'
-          "
-          class="relative flex shrink-0 items-center gap-1 rounded-lg bg-wheat-300 px-3 py-1.5 text-sm text-white transition-all hover:bg-wheat-400"
+          :disabled="reranking"
+          :title="reranked ? '切回默认顺序' : '根据语义列举最接近的结果'"
+          class="relative flex h-8 shrink-0 items-center justify-center rounded-lg px-3 text-sm text-rosybrown-600 transition-all hover:bg-wheat-100 disabled:cursor-wait disabled:bg-wheat-50"
         >
-          <!-- "新" badge: pulsing red dot, dismissed forever after first click -->
-          <span
-            v-if="!smartSeen && !reranked"
-            class="absolute -right-2 -top-2 flex items-center gap-0.5"
-            aria-hidden="true"
-          >
-            <span class="relative flex h-2 w-2">
-              <span
-                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
-              ></span>
-              <span
-                class="relative inline-flex h-2 w-2 rounded-full bg-red-500"
-              ></span>
-            </span>
-            <span
-              class="rounded-sm bg-red-500 px-1 text-[10px] font-bold leading-none text-white"
-              >新</span
-            >
-          </span>
-          <i-material-symbols-sort-rounded style="font-size: 16px" />
-          {{ reranked ? '恢复默认顺序' : '排蜀下' }}
+          <template v-if="reranking">
+            <i-svg-spinners-180-ring-with-bg
+              style="font-size: 16px"
+              class="text-rosybrown-600"
+            />
+          </template>
+          <template v-else>
+            <i-material-symbols-sort-rounded style="font-size: 16px" />
+          </template>
+          <span class="ml-1">{{ reranked ? '恢复默认顺序' : '排蜀下' }}</span>
         </button>
-
-        <div v-if="reranking" class="flex-1 min-w-[160px]">
-          <div class="mb-1 text-xs text-wheat-500">
-            智能排序中… {{ rerankDone }}/{{ rerankTotal }}（{{
-              rerankPercent
-            }}%）
-          </div>
-          <div class="h-2 w-full overflow-hidden rounded-full bg-wheat-100">
-            <div
-              class="h-full bg-wheat-400 transition-all duration-200"
-              :style="{ width: rerankPercent + '%' }"
-            ></div>
-          </div>
-        </div>
-
-        <span
-          v-else-if="reranked"
-          class="text-xs text-wheat-500"
-        >
-          排序完成
-        </span>
       </div>
 
       <RouterLink
@@ -151,10 +111,7 @@ import { apiV2Url } from '../utils/api';
 import { sourceMap } from '../utils/mapping';
 import type { SearchResponse } from '../utils/typing';
 import FormatText from '../components/common/FormatText.vue';
-import {
-  buildSearchRoute,
-  useSearchModeStore,
-} from '../store/searchModeStore';
+import { buildSearchRoute, useSearchModeStore } from '../store/searchModeStore';
 
 const route = useRoute();
 const router = useRouter();
@@ -181,16 +138,14 @@ const handleSearchSubmit = (query: string) => {
 // flipping between "排蜀下" and "恢复默认顺序" for the same query is free.
 const SMART_SEEN_KEY = 'seedict.smartSeen';
 const smartSeen = ref(
-  typeof localStorage !== 'undefined' && localStorage.getItem(SMART_SEEN_KEY) === '1'
+  typeof localStorage !== 'undefined' &&
+    localStorage.getItem(SMART_SEEN_KEY) === '1'
 );
 
 const reranking = ref(false);
 const reranked = ref(false);
 const rerankDone = ref(0);
 const rerankTotal = ref(0);
-const rerankPercent = computed(() =>
-  rerankTotal.value ? Math.round((rerankDone.value / rerankTotal.value) * 100) : 0
-);
 let es: EventSource | null = null;
 
 // Per-query rerank cache (cleared on every new query via clearRerankCache).
