@@ -64,12 +64,12 @@ const modeOptions: Array<{
 }> = [
   {
     mode: 'fuzzy',
-    label: '模糊搜索',
-    description: '由关键字模糊查询词汇',
+    label: '按字词查',
+    description: '由关键字匹配查询词汇',
   },
   {
     mode: 'semantic',
-    label: '语义搜索',
+    label: '按意思查',
     description: '由内容的语义查询词汇',
   },
 ];
