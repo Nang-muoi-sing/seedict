@@ -7,11 +7,11 @@ const STORAGE_KEY = 'seedict.searchMode';
 
 const readStoredMode = (): SearchMode => {
   if (typeof window === 'undefined') {
-    return 'fuzzy';
+    return 'semantic';
   }
 
   const value = window.localStorage.getItem(STORAGE_KEY);
-  return value === 'semantic' ? 'semantic' : 'fuzzy';
+  return value === 'fuzzy' ? 'fuzzy' : 'semantic';
 };
 
 export const searchRouteNameByMode: Record<SearchMode, 'search' | 'semantic-search'> = {
