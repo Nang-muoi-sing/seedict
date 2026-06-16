@@ -2,7 +2,7 @@ name: Deploy Vue3 with Github Pages
 
 on:
   push:
-    branches: ["master"]
+    branches: ["master", "experiment"]
 
 permissions:
   contents: write
