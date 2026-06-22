@@ -1,11 +1,11 @@
 <template>
   <div>
     <div
-      class="fixed top-0 left-0 z-20 h-screen w-screen"
+      class="fixed left-0 top-0 z-20 h-screen w-screen"
       :class="toggleDimmer"
     ></div>
     <form
-      class="outline-rosybrown-300 hover:outline-rosybrown-400 outline relative z-40 flex h-12 flex-row items-center bg-white px-3 outline-2 hover:outline-[3px]"
+      class="relative z-40 flex h-12 flex-row items-center bg-white px-3 outline outline-2 outline-rosybrown-300 hover:outline-[3px] hover:outline-rosybrown-400"
       :class="toggleInputFocusStyle"
       @submit.prevent="handleSubmit"
       @click="onFormClick"
@@ -13,35 +13,48 @@
         () => {
           isHistoryVisible = false;
           selectedIndex = -1;
+          isModeMenuOpen = false;
         }
       "
     >
+      <div class="relative mx-2 h-full flex-1">
+        <RotatingPlaceholder
+          :active="!searchQuery && !isComposing"
+          :items="currentPlaceholders"
+          :interval-ms="5000"
+          :paused="isInputFocused"
+          @change="currentPlaceholderText = $event"
+        />
+        <input
+          class="h-full w-full bg-transparent text-rosybrown-800"
+          v-model.trim="searchQuery"
+          @input="filterHistory"
+          @focus="handleInputFocus"
+          @blur="handleInputBlur"
+          @compositionstart="handleCompositionStart"
+          @compositionend="handleCompositionEnd"
+          @keydown.down.prevent="handleKeyDown('down')"
+          @keydown.up.prevent="handleKeyDown('up')"
+          @keydown.enter.prevent="handleKeyEnter"
+        />
+      </div>
+      <SearchModePicker v-model:open="isModeMenuOpen" />
       <button
         type="submit"
-        class="mr-2 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors"
+        class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors"
         :class="submitButtonClass"
         :disabled="!searchQuery"
       >
         <i-material-symbols-search-rounded width="20" height="20" />
       </button>
-      <input
-        class="text-rosybrown-800 h-full w-full mr-2"
-        v-model.trim="searchQuery"
-        @input="filterHistory"
-        @focus="filterHistory"
-        @keydown.down.prevent="handleKeyDown('down')"
-        @keydown.up.prevent="handleKeyDown('up')"
-        @keydown.enter.prevent="handleKeyEnter"
-      />
-      <SearchModeSwitch />
       <ul
         v-show="isHistoryVisible && filteredHistory.length > 0"
-        class="outline-rosybrown-300 absolute top-full right-0 left-0 rounded-b-md bg-white pt-2 outline outline-1"
+        class="absolute left-0 right-0 top-full rounded-b-md bg-white pt-2 outline outline-1 outline-rosybrown-300"
       >
         <li
           v-for="(history, index) in filteredHistory"
           :key="index"
-          class="hover:text-rosybrown-700 box-border flex flex-row items-center justify-between border-l-4 px-4 py-1 transition-colors duration-150"
+          class="box-border flex flex-row items-center justify-between border-l-4 px-4 py-1 transition-colors duration-150 hover:text-rosybrown-700"
           :class="[
             index === selectedIndex
               ? 'border-l-rosybrown-700 bg-rosybrown-50 text-rosybrown-700'
@@ -55,15 +68,15 @@
             @click.stop="selectHistory(index)"
           >
             <i-material-symbols-history-rounded
-              class="text-rosybrown-400 pr-4"
+              class="pr-4 text-rosybrown-400"
               style="width: 40px"
             />
-            <div class="text-rosybrown-600 overflow-hidden text-ellipsis">
+            <div class="overflow-hidden text-ellipsis text-rosybrown-600">
               {{ history }}
             </div>
           </div>
           <div
-            class="text-rosybrown-300 hover:text-rosybrown-500 cursor-pointer text-sm hover:underline"
+            class="cursor-pointer text-sm text-rosybrown-300 hover:text-rosybrown-500 hover:underline"
             @click.stop="deleteHistory(index)"
           >
             删除
@@ -74,7 +87,7 @@
           class="flex flex-row-reverse items-baseline px-4 py-1"
         >
           <div
-            class="text-rosybrown-300 hover:text-rosybrown-500 cursor-pointer text-xs"
+            class="cursor-pointer text-xs text-rosybrown-300 hover:text-rosybrown-500"
             @click.stop="clearHistory"
           >
             清空历史
@@ -87,15 +100,17 @@
 
 <script setup lang="ts">
 import { vOnClickOutside } from '@vueuse/components';
+import { useDebounceFn } from '@vueuse/core';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Trie } from '../utils/trie';
-import { useDebounceFn } from '@vueuse/core';
-import SearchModeSwitch from './SearchModeSwitch.vue';
+import RotatingPlaceholder from './RotatingPlaceholder.vue';
+import SearchModePicker from './SearchModePicker.vue';
 import {
   buildSearchRoute,
+  type SearchMode,
   useSearchModeStore,
 } from '../store/searchModeStore';
+import { Trie } from '../utils/trie';
 
 interface Props {
   autoNavigate?: boolean;
@@ -112,11 +127,19 @@ const emit = defineEmits<{
 const router = useRouter();
 const searchModeStore = useSearchModeStore();
 const searchQuery = ref('');
+const currentPlaceholderText = ref('');
 const filteredHistory = ref<string[]>([]);
 const isHistoryVisible = ref(false);
+const isModeMenuOpen = ref(false);
+const isComposing = ref(false);
 const isInputFocused = ref(false);
 const selectedIndex = ref(-1);
 const isMouseHovering = ref(false);
+
+const placeholderCandidates: Record<SearchMode, string[]> = {
+  fuzzy: ['天光', 'huk ziu', "𬖞", "蓝尾星"],
+  semantic: ['红色的水果', '到处乱跑的人', '无法处理复杂的状况', '秋天凉爽的感觉'],
+};
 
 let queryCache = '';
 
@@ -146,11 +169,16 @@ const deserializeTrie = (json: string | null) => {
 const trieHistory = deserializeTrie(localStorage.getItem('searchHistory'));
 
 const handleSubmit = () => {
-  const query = searchQuery.value;
+  const query = searchQuery.value || currentPlaceholderText.value;
   if (!query) return;
+
+  if (!searchQuery.value) {
+    searchQuery.value = query;
+  }
 
   isHistoryVisible.value = false;
   isInputFocused.value = false;
+  isModeMenuOpen.value = false;
   selectedIndex.value = -1;
   isMouseHovering.value = false;
   searchQuery.value = '';
@@ -163,8 +191,7 @@ const handleSubmit = () => {
   queueMicrotask(() => {
     try {
       trieHistory.insert(query);
-      const serializedTrie = trieHistory.serialize();
-      localStorage.setItem('searchHistory', serializedTrie);
+      localStorage.setItem('searchHistory', trieHistory.serialize());
     } catch (error) {
       console.error('存储搜索历史失败:', error);
     }
@@ -214,6 +241,10 @@ const clearHistory = () => {
   isMouseHovering.value = false;
 };
 
+const currentPlaceholders = computed(
+  () => placeholderCandidates[searchModeStore.mode]
+);
+
 const submitButtonClass = computed(() =>
   searchQuery.value
     ? 'bg-wheat-100 text-rosybrown-800 cursor-pointer'
@@ -225,6 +256,24 @@ const onFormClick = (event: MouseEvent) => {
     isHistoryVisible.value = true;
     isInputFocused.value = true;
   }
+};
+
+const handleInputFocus = () => {
+  isInputFocused.value = true;
+  filterHistory();
+};
+
+const handleInputBlur = () => {
+  isInputFocused.value = false;
+};
+
+const handleCompositionStart = () => {
+  isComposing.value = true;
+};
+
+const handleCompositionEnd = () => {
+  isComposing.value = false;
+  filterHistory();
 };
 
 const handleKeyDown = (direction: 'up' | 'down') => {
@@ -249,16 +298,16 @@ const handleKeyDown = (direction: 'up' | 'down') => {
   }
 
   searchQuery.value = filteredHistory.value[selectedIndex.value];
-
   scrollToSelectedItem();
 };
 
 const handleKeyEnter = () => {
   if (selectedIndex.value !== -1 && filteredHistory.value.length > 0) {
     selectHistory(selectedIndex.value);
-  } else {
-    handleSubmit();
+    return;
   }
+
+  handleSubmit();
 };
 
 const handleMouseEnter = (index: number) => {
@@ -289,15 +338,13 @@ const toggleInputFocusStyle = computed(() => {
 });
 
 const toggleDimmer = computed(() => {
-  return isHistoryVisible.value
+  return isHistoryVisible.value || isModeMenuOpen.value
     ? ['backdrop-blur-xs', 'backdrop-brightness-90']
     : ['hidden'];
 });
-
 </script>
 
 <style scoped>
-/* remove default style */
 input {
   border: none;
   outline: none;

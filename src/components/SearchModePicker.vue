@@ -2,17 +2,15 @@
   <div class="relative shrink-0" v-on-click-outside="closeMenu">
     <button
       type="button"
-      class="group inline-flex h-9 w-9 items-center justify-center rounded-full text-rosybrown-400 transition-colors hover:bg-wheat-100 hover:text-rosybrown-800"
-      :aria-expanded="isOpen"
-      aria-haspopup="menu"
+      class="mr-2 shrink-0 text-sm font-semibold text-rosybrown-500 transition-colors hover:text-rosybrown-800"
+      :class="{ 'text-rosybrown-800': isOpen }"
       @click.stop="toggleMenu"
     >
-      <i-typcn-flash
-        v-if="searchModeStore.mode === 'fuzzy'"
-        width="22"
-        height="22"
+      {{ currentModeLabel }}
+      <i-material-symbols-keyboard-arrow-down-rounded
+        class="inline transition-transform duration-200"
+        :class="{ 'rotate-180': isOpen }"
       />
-      <i-octicon-sparkle-fill-16 v-else width="20" height="20" />
     </button>
 
     <div
@@ -51,11 +49,22 @@
 
 <script setup lang="ts">
 import { vOnClickOutside } from '@vueuse/components';
-import { ref } from 'vue';
+import { computed } from 'vue';
 import { type SearchMode, useSearchModeStore } from '../store/searchModeStore';
 
+interface Props {
+  open?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  open: false,
+});
+
+const emit = defineEmits<{
+  'update:open': [value: boolean];
+}>();
+
 const searchModeStore = useSearchModeStore();
-const isOpen = ref(false);
 
 const modeOptions: Array<{
   mode: SearchMode;
@@ -74,12 +83,18 @@ const modeOptions: Array<{
   },
 ];
 
+const isOpen = computed(() => props.open);
+
+const currentModeLabel = computed(() =>
+  searchModeStore.mode === 'semantic' ? '语义' : '字词'
+);
+
 const closeMenu = () => {
-  isOpen.value = false;
+  emit('update:open', false);
 };
 
 const toggleMenu = () => {
-  isOpen.value = !isOpen.value;
+  emit('update:open', !props.open);
 };
 
 const selectMode = (mode: SearchMode) => {
