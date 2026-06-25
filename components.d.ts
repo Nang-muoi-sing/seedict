@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    '(feat(search)': 添加搜索框搜索模式文视与轮播 placeholder)
     AppIcon: typeof import('./src/components/AppIcon.vue')['default']
     Badge: typeof import('./src/components/common/Badge.vue')['default']
     BannerTitle: typeof import('./src/components/BannerTitle.vue')['default']
@@ -67,11 +68,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     RubyText: typeof import('./src/components/common/RubyText.vue')['default']
     SearchBar: typeof import('./src/components/SearchBar.vue')['default']
-<<<<<<< HEAD
-    SearchModeSwitch: typeof import('./src/components/SearchModeSwitch.vue')['default']
-=======
     SearchModePicker: typeof import('./src/components/SearchModePicker.vue')['default']
->>>>>>> 431e003 (feat(search): 添加搜索框搜索模式文视与轮播 placeholder)
+    SearchModeSwitch: typeof import('./src/components/SearchModeSwitch.vue')['default']
     SearchSkeleton: typeof import('./src/components/SearchSkeleton.vue')['default']
     SeeSymbol: typeof import('./src/components/common/SeeSymbol.vue')['default']
     SideBar: typeof import('./src/components/SideBar.vue')['default']

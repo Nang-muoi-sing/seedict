@@ -15,7 +15,7 @@
         <button
           @click="reranked ? restoreOrder() : runRerank()"
           :disabled="reranking"
-          :title="reranked ? '切回默认顺序' : '根据语义列举最接近的结果'"
+          :title="reranked ? '恢复旧版排序' : '根据语义列举最接近的结果'"
           class="relative flex h-8 shrink-0 items-center justify-center rounded-lg px-3 text-sm text-rosybrown-600 transition-all hover:bg-wheat-100 disabled:cursor-wait disabled:bg-wheat-50"
         >
           <template v-if="reranking">
@@ -27,7 +27,7 @@
           <template v-else>
             <i-material-symbols-sort-rounded style="font-size: 16px" />
           </template>
-          <span class="ml-1">{{ reranked ? '恢复默认顺序' : '排蜀下' }}</span>
+          <span class="ml-1">{{ reranked ? '恢复旧版排序' : '试用新版排序' }}</span>
         </button>
       </div>
 
