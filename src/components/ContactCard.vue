@@ -56,6 +56,7 @@
           >
         </li>
 
+        <!--
         <li class="flex flex-row items-center">
           <div
             class="bg-wheat-50 mr-3 flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
@@ -66,7 +67,8 @@
             />
           </div>
           (+86) 13696831747
-        </li>
+         </li>
+         -->
 
         <li class="flex flex-row items-center">
           <div
