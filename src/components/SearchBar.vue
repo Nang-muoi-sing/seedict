@@ -165,7 +165,7 @@ const placeholderCandidates: Record<SearchMode, string[]> = {
     '无法处理的复杂状况',
     '突然想起很久以前的事',
     '倒了大霉',
-    '愉悦舒畅的的心情',
+    '愉悦舒畅的心情',
     '秋高气爽',
     '中秋节',
     '事情的尾声',
