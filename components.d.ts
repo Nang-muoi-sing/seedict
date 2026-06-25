@@ -8,7 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    '(feat(search)': 添加搜索框搜索模式文视与轮播 placeholder)
     AppIcon: typeof import('./src/components/AppIcon.vue')['default']
     Badge: typeof import('./src/components/common/Badge.vue')['default']
     BannerTitle: typeof import('./src/components/BannerTitle.vue')['default']
@@ -22,7 +21,6 @@ declare module 'vue' {
     Footer: typeof import('./src/components/common/Footer.vue')['default']
     FormatText: typeof import('./src/components/common/FormatText.vue')['default']
     IIconParkOutlineFamily: typeof import('~icons/icon-park-outline/family')['default']
-    IIcRoundPhone: typeof import('~icons/ic/round-phone')['default']
     IIcRoundWechat: typeof import('~icons/ic/round-wechat')['default']
     ILucideToolCase: typeof import('~icons/lucide/tool-case')['default']
     IMaterialSymbolsAccessibilityNew: typeof import('~icons/material-symbols/accessibility-new')['default']
@@ -69,7 +67,6 @@ declare module 'vue' {
     RubyText: typeof import('./src/components/common/RubyText.vue')['default']
     SearchBar: typeof import('./src/components/SearchBar.vue')['default']
     SearchModePicker: typeof import('./src/components/SearchModePicker.vue')['default']
-    SearchModeSwitch: typeof import('./src/components/SearchModeSwitch.vue')['default']
     SearchSkeleton: typeof import('./src/components/SearchSkeleton.vue')['default']
     SeeSymbol: typeof import('./src/components/common/SeeSymbol.vue')['default']
     SideBar: typeof import('./src/components/SideBar.vue')['default']
