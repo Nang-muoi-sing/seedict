@@ -149,7 +149,7 @@ const protectTokens = (
     return placeholder;
   });
 
-  protectedText = protectedText.replace(/\{[\s\S]*?\}/gu, (match) => {
+  protectedText = protectedText.replace(/\{[^{}]*,[^{}]*\}/gu, (match) => {
     const placeholder = generatePlaceholder(toggleIndex++, 'toggle');
     tokenMap.set(placeholder, {
       type: 'toggle',
