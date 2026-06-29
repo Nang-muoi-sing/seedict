@@ -5,7 +5,7 @@
     @click.prevent="handleCopyClick"
   >
     <div
-      class="flex flex-row items-baseline gap-5 whitespace-normal break-all text-4xl font-bold text-rosybrown-800 md:text-5xl"
+      class="flex flex-row items-center gap-5 whitespace-normal break-all text-4xl font-bold text-rosybrown-800 md:text-5xl"
     >
       <RubyText :text="props.text" :yngping="props.yngping"></RubyText>
       <div

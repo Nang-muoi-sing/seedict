@@ -1,36 +1,38 @@
 <template>
-  <div class="flex flex-row items-end leading-none" :aria-label="ariaLabel">
-    <span
-      v-for="(item, index) in annotationItems"
-      :key="`${item.text}-${item.ruby}-${index}`"
-      class="inline-grid grid-rows-[auto_auto] justify-items-center gap-y-[0.1em] leading-none"
+  <ruby class="ruby-text-inline" :aria-label="ariaLabel">
+    <template
+      v-for="(item, itemIndex) in annotationItems"
+      :key="`${item.text}-${item.ruby}-${itemIndex}`"
     >
       <span
-        class="whitespace-nowrap px-[0.08em] text-[0.5em] leading-none text-rosybrown-700"
+        v-for="(char, charIndex) in item.chars"
+        :key="`${char}-${charIndex}`"
+        class="rb relative inline-block"
+        :class="{
+          'w-fit after:absolute after:-bottom-[0.2em] after:left-1/2 after:h-[0.15em] after:w-[0.15em] after:-translate-x-1/2 after:rounded-full after:bg-rosybrown-700 after:content-[\'\']':
+            item.marks[charIndex],
+        }"
       >
-        {{ item.ruby }}
+        {{ char }}
       </span>
 
-      <span class="inline-flex leading-none">
-        <span
-          v-for="(char, charIndex) in item.chars"
-          :key="`${char}-${charIndex}`"
-          class="relative inline-block leading-none"
-          :class="{
-            'w-fit after:absolute after:-bottom-[0.3em] after:left-1/2 after:h-[0.15em] after:w-[0.15em] after:-translate-x-1/2 after:rounded-full after:bg-rosybrown-700 after:content-[\'\']':
-              item.marks[charIndex],
-          }"
-        >
-          {{ char }}
-        </span>
-      </span>
-    </span>
-  </div>
+      <rp>(</rp>
+      <rt class="relative top-[0.5em] text-rosybrown-700">
+        <template v-if="shouldPadRuby(item)">
+          &thinsp;{{ item.ruby }}&thinsp;
+        </template>
+        <template v-else>
+          {{ item.ruby }}
+        </template>
+      </rt>
+      <rp>)</rp>
+    </template>
+  </ruby>
 </template>
 
 <script setup lang="ts">
-import { Utterance } from '@/utils/phonetics';
 import { computed } from 'vue';
+import { Utterance } from '../../utils/phonetics';
 
 const props = defineProps<{
   text: string;
@@ -41,7 +43,7 @@ const rawText = computed(() => props.text.trim());
 
 const markedChars = computed<boolean[]>(() => {
   const chars = rawText.value.split(/(?:)/u);
-  const marks = [];
+  const marks: boolean[] = [];
 
   for (let index = 0; index < chars.length; index++) {
     if (chars[index] === '*') {
@@ -79,6 +81,7 @@ const annotationItems = computed(() => {
       chars: [char],
       marks: [markedChars.value[index]],
       ruby: syllables.value[index].toCursive(),
+      perChar: true,
     }));
   }
 
@@ -88,6 +91,7 @@ const annotationItems = computed(() => {
       chars: props.text ? baldChars.value : [''],
       marks: props.text ? markedChars.value : [false],
       ruby: utterance.value.toCursive(),
+      perChar: false,
     },
   ];
 });
@@ -95,4 +99,30 @@ const annotationItems = computed(() => {
 const ariaLabel = computed(() => {
   return `${baldText.value} ${utterance.value.toCursive()}`;
 });
+
+const shouldPadRuby = (item: { perChar: boolean }) => {
+  return item.perChar && baldChars.value.length > 1;
+};
 </script>
+
+<style scoped>
+.ruby-text-inline {
+  ruby-position: over;
+  line-height: inherit;
+}
+
+rt::before {
+  /* 用于防止调号在 <rt> 中偏移 */
+  content: '';
+  display: inline-block;
+  width: 0;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  _::-webkit-full-page-media,
+  _:future,
+  ruby > rt {
+    top: 1em !important;
+  }
+}
+</style>

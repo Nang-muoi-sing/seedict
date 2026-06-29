@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => {
     base: baseUrl,
     resolve: {
       alias: {
+        "@": fileURLToPath(new URL('./src', import.meta.url)),
         "relationship.js": fileURLToPath(
           new URL("src/libs/relationship/src/relationship.js", import.meta.url)
         ),

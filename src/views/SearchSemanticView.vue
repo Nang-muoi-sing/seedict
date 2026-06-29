@@ -27,7 +27,9 @@
           <template v-else>
             <i-material-symbols-sort-rounded style="font-size: 16px" />
           </template>
-          <span class="ml-1">{{ reranked ? '恢复旧版排序' : '试用新版排序' }}</span>
+          <span class="ml-1">{{
+            reranked ? '恢复旧版排序' : '试用新版排序'
+          }}</span>
         </button>
       </div>
 
@@ -57,11 +59,11 @@
               {{ sourceMap[book] ?? '' }}</span
             >
           </div>
-          <div
-            class="xxl:text-4xl whitespace-normal break-all text-3xl font-bold text-rosybrown-800"
-          >
-            <RubyText :text="result.text" :yngping="result.pron"></RubyText>
-          </div>
+          <RubyText
+            class="xxl:text-4xl whitespace-normal text-3xl font-bold text-rosybrown-800"
+            :text="result.text"
+            :yngping="result.pron"
+          ></RubyText>
           <p class="mt-2 text-wheat-600">
             <FormatText :text="result.brief" />
           </p></div
