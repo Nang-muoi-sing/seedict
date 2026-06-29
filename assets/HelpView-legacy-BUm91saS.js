@@ -1,0 +1,1 @@
+System.register(["./PageContent.vue_vue_type_script_setup_true_lang-legacy-BCkpbFtY.js","./index-legacy-CyNR5mxa.js","./SearchBar-legacy-Da79lRmF.js"],function(e,t){"use strict";var s,u,a,n;return{setters:[e=>{s=e._},e=>{u=e.a,a=e.q,n=e.b},null],execute:function(){e("default",u({__name:"HelpView",setup:e=>(e,t)=>(n(),a(s))}))}}});
