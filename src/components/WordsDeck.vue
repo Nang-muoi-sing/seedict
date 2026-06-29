@@ -30,16 +30,19 @@
               class="block"
               :to="{ name: 'word', query: { w: card.w } }"
             >
-              <div
-                class="whitespace-normal break-all text-3xl font-bold text-rosybrown-800 md:text-4xl lg:text-5xl"
-              >
-                <RubyText :text="card.text" :yngping="card.pron"></RubyText>
-              </div>
+              <RubyText
+                class="text-3xl font-bold text-rosybrown-800 md:text-4xl lg:text-5xl"
+                :text="card.text"
+                :yngping="card.pron"
+              ></RubyText>
             </RouterLink>
             <p
               class="line-clamp-4 max-w-lg overflow-hidden text-ellipsis whitespace-normal text-base text-rosybrown-800 lg:line-clamp-2 lg:text-lg"
             >
-              释义：<FormatText :text="card.expl" :correction-rules="['punctuation']"/>
+              释义：<FormatText
+                :text="card.expl"
+                :correction-rules="['punctuation']"
+              />
             </p>
           </div>
         </div>

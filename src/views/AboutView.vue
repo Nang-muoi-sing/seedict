@@ -30,7 +30,7 @@
     </div>
     <div class="ml-2 bg-wheat-100 px-10 py-3 text-sm text-wheat-600 xl:hidden">
       *「
-      <RubyText :text="'平话'" :yngping="'bang21 ua242'"></RubyText>
+      <RubyTextInline :text="'平话'" :yngping="'bang21 ua242'"></RubyTextInline>
       」是闽东一带人们对于自己母语的称呼，意思是「听得懂」的语言。
     </div>
 
@@ -97,22 +97,17 @@
       <li>最后感谢所有关心、热心与支持平话保育事业的人们</li>
     </ul>
   </PageContent>
-  <SeeModal :show="isModalOpen" @blur="isModalOpen = false"></SeeModal>
-  <SeeButton @click="isModalOpen = true" variant="outline">内容</SeeButton>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import ContactCard from '../components/ContactCard.vue';
-import DashboardCard from '../components/DashboardCard.vue';
-import LetterPaper from '../components/LetterPaper.vue';
-import PageContent from '../components/PageContent.vue';
-import SpeechBubbles from '../components/SpeechBubbles.vue';
-import Timeline from '../components/Timeline.vue';
-import Link from '../components/common/Link.vue';
-import RubyText from '../components/common/RubyText.vue';
-import Subtitle from '../components/common/Subtitle.vue';
-import SeeButton from '../components/seeui/button/SeeButton.vue';
-import SeeModal from '../components/seeui/modal/SeeModal.vue';
-const isModalOpen = ref(false);
+import ContactCard from '@/components/ContactCard.vue';
+import DashboardCard from '@/components/DashboardCard.vue';
+import LetterPaper from '@/components/LetterPaper.vue';
+import PageContent from '@/components/PageContent.vue';
+import SpeechBubbles from '@/components/SpeechBubbles.vue';
+import Timeline from '@/components/Timeline.vue';
+import Link from '@/components/common/Link.vue';
+import RubyText from '@/components/common/RubyText.vue';
+import RubyTextInline from '@/components/common/RubyTextInline.vue';
+import Subtitle from '@/components/common/Subtitle.vue';
 </script>
