@@ -88,7 +88,7 @@ export const NUCLEUS_DETAILS: Record<Nucleus, NucleusSchema> = {
   uo:  { peak: 'u',  cursive: '~o', ipa: 'uo', },
   yo:  { peak: 'y',  cursive: '~o', ipa: 'yo', },
   oi:  { peak: 'o',  cursive: '~i', ipa: 'oi', },
-  oou: { peak: 'oo', cursive: '~y', ipa: 'ɒu', },
+  oou: { peak: 'oo', cursive: '~u', ipa: 'ɒu', },
   '':  { peak: 'ng', cursive: '~',  ipa: 'ŋ̍',  },  // 声化韵是特例
 } as const;
 
@@ -261,10 +261,10 @@ const _META_FINAL_DETAILS  = {
   // 松
   'ooy':   { glide: '',  nucleus: 'ooy', coda: '',   isLoose: true, tightVersion: ['eoy']  },
   'aing':  { glide: '',  nucleus: 'ai',  coda: 'ng', isLoose: true, tightVersion: ['eing'] },
-  'ooung': { glide: '',  nucleus: 'oo',  coda: 'ng', isLoose: true, tightVersion: ['oung'] },
+  'ooung': { glide: '',  nucleus: 'oou', coda: 'ng', isLoose: true, tightVersion: ['oung'] },
   'ooyng': { glide: '',  nucleus: 'ooy', coda: 'ng', isLoose: true, tightVersion: ['eoyng']},
   'aik':   { glide: '',  nucleus: 'ai',  coda: 'k',  isLoose: true, tightVersion: ['eik']  },
-  'oouk':  { glide: '',  nucleus: 'oo',  coda: 'k',  isLoose: true, tightVersion: ['ouk']  },
+  'oouk':  { glide: '',  nucleus: 'oou', coda: 'k',  isLoose: true, tightVersion: ['ouk']  },
   'ooyk':  { glide: '',  nucleus: 'ooy', coda: 'k',  isLoose: true, tightVersion: ['eoyk'] },
 
   // 声化韵
