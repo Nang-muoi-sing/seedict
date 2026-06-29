@@ -461,9 +461,13 @@ export const renderCursive = (syllable: Syllable): string => {
   const coda = finalDetail.nucleus === '' ? '' : finalDetail.coda;
 
   if (syllable.tone === '')
-    return `{${syllable.initial}${glide}${nucleusWithTone}${coda}}`;
+    return `{${syllable.initial}${glide}${nucleusWithTone}${coda}}`.normalize(
+      'NFD'
+    );
 
-  return `${syllable.initial}${glide}${nucleusWithTone}${coda}`;
+  return `${syllable.initial}${glide}${nucleusWithTone}${coda}`.normalize(
+    'NFD'
+  );
 };
 
 export const renderIPA = (syllable: Syllable) => {
@@ -479,7 +483,7 @@ export const renderIPA = (syllable: Syllable) => {
   return `${initial}${finalDetail.glide}${nucleus}${coda}${tone}`;
 };
 
-const reverse_cursive_finals = <S extends 'meta' | 'all'>(
+const reverseCursiveFinals = <S extends 'meta' | 'all'>(
   scope: S
 ): Record<
   string,
@@ -509,6 +513,14 @@ const reverse_cursive_finals = <S extends 'meta' | 'all'>(
         tone: tId,
       });
 
+      if (map[cursiveRhyme]) {
+        throw new Error(
+          `Duplicate cursive rhythm key: ${cursiveRhyme}, ` +
+            `existing=${map[cursiveRhyme].final}_${map[cursiveRhyme].tone}, ` +
+            `new=${fId}_${tId}`
+        );
+      }
+
       map[cursiveRhyme] = { final: fId, tone: tId };
     });
   });
@@ -516,8 +528,8 @@ const reverse_cursive_finals = <S extends 'meta' | 'all'>(
   return map as ReturnType;
 };
 
-export const CURSIVE_META_RHYTHM_LOOKUP = reverse_cursive_finals('meta');
-export const CURSIVE_RHYTHM_LOOKUP = reverse_cursive_finals('all');
+export const CURSIVE_META_RHYTHM_LOOKUP = reverseCursiveFinals('meta');
+export const CURSIVE_RHYTHM_LOOKUP = reverseCursiveFinals('all');
 
 const reverseIPAFinals = <S extends 'meta' | 'all'>(
   scope: S

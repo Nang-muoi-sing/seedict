@@ -260,7 +260,7 @@ const placeholders: Record<Scheme, string> = {
 };
 
 const inputText = computed(
-  () => inputArea.value?.data?.().normalize('NFC') || ''
+  () => inputArea.value?.data?.().normalize('NFD') || ''
 );
 
 const formatRaw = (raw: string | undefined) => {

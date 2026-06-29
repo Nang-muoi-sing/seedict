@@ -124,7 +124,7 @@ const parseCursiveSyllable = (
     return initialMatch ? (initialMatch[0] as Initial) : '';
   };
 
-  const text = input.trim().normalize('NFC');
+  const text = input.trim().normalize('NFD');
   if (text.length === 0) return [null, null, null];
   if (text.startsWith('{') && text.endsWith('}')) {
     const inner = text.slice(1, -1);
