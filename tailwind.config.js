@@ -13,7 +13,6 @@ export default {
           "Noto Sans",
           "Noto Sans CJK SC",
           "SeeFont",
-          "SeeFontEx",
           "Arial",
           "ui-sans-serif",
           "system-ui",
