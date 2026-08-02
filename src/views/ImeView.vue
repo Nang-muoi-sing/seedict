@@ -37,12 +37,12 @@
           </h2>
           <p class="max-w-3xl text-base leading-8 text-wheat-700">
             榕拼输入法支持 Windows、Mac、Linux 和 Android
-            平台。选择你的平台，按照安装步骤就能启用。
+            平台。选择你的平台，此刻开始！
           </p>
           <div class="grid gap-4 pt-4 md:grid-cols-2">
             <button
               type="button"
-              class="flex items-center gap-4 rounded-2xl border border-wheat-200 bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-rosybrown-200 hover:bg-white hover:shadow-md"
+              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
@@ -51,12 +51,12 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Windows</span>
-                <span class="text-sm text-wheat-700">免费下载</span>
+                <span class="text-sm text-wheat-700">下载</span>
               </span>
             </button>
             <button
               type="button"
-              class="flex items-center gap-4 rounded-2xl border border-wheat-200 bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-rosybrown-200 hover:bg-white hover:shadow-md"
+              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
@@ -65,12 +65,12 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">macOS</span>
-                <span class="text-sm text-wheat-700">免费下载</span>
+                <span class="text-sm text-wheat-700">下载</span>
               </span>
             </button>
             <button
               type="button"
-              class="flex items-center gap-4 rounded-2xl border border-wheat-200 bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-rosybrown-200 hover:bg-white hover:shadow-md"
+              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
@@ -79,12 +79,12 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Linux</span>
-                <span class="text-sm text-wheat-700">免费下载</span>
+                <span class="text-sm text-wheat-700">下载</span>
               </span>
             </button>
             <button
               type="button"
-              class="flex items-center gap-4 rounded-2xl border border-wheat-200 bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-rosybrown-200 hover:bg-white hover:shadow-md"
+              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
@@ -93,7 +93,7 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Android</span>
-                <span class="text-sm text-wheat-700">免费下载</span>
+                <span class="text-sm text-wheat-700">下载</span>
               </span>
             </button>
           </div>
@@ -105,12 +105,15 @@
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
             安装指南
           </h2>
+          <ImeInstallSection />
         </div>
       </section>
 
       <section class="bg-white py-12 md:py-16">
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
-          <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
+          <h2
+            class="mb-10 flex flex-row justify-center text-center text-4xl font-bold text-rosybrown-800"
+          >
             常见问题
           </h2>
           <div class="mx-auto w-full max-w-3xl">
@@ -128,6 +131,7 @@
 import AccordionList from '../components/common/AccordionList.vue';
 import Footer from '../components/common/Footer.vue';
 import ImeTypingDemo from '../components/ImeTypingDemo.vue';
+import ImeInstallSection from '../components/ImeInstallSection.vue';
 import NavBar from '../components/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
 
@@ -136,19 +140,23 @@ const faqAnswer =
 
 const faqItems = [
   {
-    title: '打出来是繁体字，怎么打出简体字？',
+    title: '我打出来的是繁体字，可以用来打简体字吗？',
     content: faqAnswer,
   },
   {
-    title: '我不知道字的榕拼，怎么知道怎么打？',
+    title: '我不知道想打的字对应的榕拼，应该怎么办？',
     content: faqAnswer,
   },
   {
-    title: '怎样切换不同的输入方案？',
+    title: '怎样切换不同的输入方案（汉字 / 榕拼 / 教罗）？',
     content: faqAnswer,
   },
   {
-    title: '遇到了困难？',
+    title: '我使用的是 iOS，可以使用榕拼输入法吗？',
+    content: faqAnswer,
+  },
+  {
+    title: '遇到了困难，哪里可以寻求帮助？',
     content: faqAnswer,
   },
 ];
