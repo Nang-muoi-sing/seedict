@@ -48,6 +48,11 @@ const routes = [
     component: () => import('../views/ToolView.vue'),
   },
   {
+    path: '/ime',
+    name: 'ime',
+    component: () => import('../views/ImeView.vue'),
+  },
+  {
     path: '/tool/phonetic-convert',
     name: 'phonetic-convert',
     component: () => import('../views/PhoneticConvertView.vue'),

@@ -1,9 +1,9 @@
 <template>
   <div class="bg-wheat-50">
-    <div class="bg-rosybrown-800 h-56 rounded-t-[48px] text-center">
+    <div class="bg-rosybrown-800 h-56 text-center">
       <div class="flex flex-col pt-20">
         <span class="text-sans text-rosybrown-50 mb-2"
-          >© 2026 米时典 SeeDict
+          >© 2025 - 2026 米时典 SeeDict
         </span>
         <div v-if="showBeian" class="text-rosybrown-400 text-sm mx-auto gap-x-5 gap-y-0.5 flex flex-col md:flex-row">
           <a href="beian.miit.gov.cn" target="_blank"

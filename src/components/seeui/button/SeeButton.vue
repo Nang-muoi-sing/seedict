@@ -85,10 +85,12 @@ const handleClick = (e: MouseEvent) => {
 };
 
 const variants = {
-  primary: 'bg-rosybrown-600 text-white hover:bg-rosybrown-700',
-  secondary: 'bg-wheat-100 text-rosybrown-700 hover:bg-wheat-200',
+  primary:
+    'bg-rosybrown-600 text-white visited:text-white hover:bg-rosybrown-700',
+  secondary:
+    'bg-wheat-100 text-rosybrown-700 visited:text-rosybrown-700 hover:bg-wheat-200',
   outline:
-    'border-2 border-rosybrown-200 text-rosybrown-700 hover:bg-rosybrown-100',
+    'border-2 border-rosybrown-200 text-rosybrown-700 visited:text-rosybrown-700 hover:bg-rosybrown-100',
 };
 
 const sizes = {
