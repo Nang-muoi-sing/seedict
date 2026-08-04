@@ -3,7 +3,7 @@
     <div class="group relative">
       <button
         type="button"
-        class="absolute left-0 top-1/2 flex h-5 w-5 -translate-x-6 -translate-y-1/2 items-center justify-center rounded-sm text-wheat-600 opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:text-rosybrown-700 focus:opacity-100 focus:outline-none"
+        class="absolute left-0 top-[0.2em] flex h-5 w-5 -translate-x-6 items-center justify-center rounded-sm text-wheat-600 opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:text-rosybrown-700 focus:opacity-100 focus:outline-none"
         @click="toggle"
       >
         <i-material-symbols-play-arrow-rounded
