@@ -2,11 +2,15 @@
   <div class="w-full max-w-4xl space-y-4">
     <CollapsibleTitle
       title-tag="h3"
-      title="没有使用过 RIME？试试全新安装！"
       :default-open="true"
       title-class="text-xl font-semibold text-rosybrown-800"
       content-class="ml-8 pt-3 text-base leading-8 text-wheat-700"
     >
+      <template #title>
+        没有使用过 RIME？试试
+        <SeeHandUnderline>全新安装</SeeHandUnderline>
+        ！
+      </template>
       <div class="space-y-4">
         <SeeTabs v-model="freshInstallPlatform" :tabs="platformTabs" />
 
@@ -104,10 +108,14 @@
 
     <CollapsibleTitle
       title-tag="h3"
-      title="已经在用 RIME 了？开始挂载输入法配方"
       title-class="text-xl font-semibold text-rosybrown-800"
       content-class="ml-8 pt-3 text-base leading-8 text-wheat-700"
     >
+      <template #title>
+        已经在用 RIME 了？开始
+        <SeeHandUnderline>挂载</SeeHandUnderline>
+        输入法配方
+      </template>
       <div class="space-y-4">
         <SeeTabs v-model="mountInstallPlatform" :tabs="platformTabs" />
 
@@ -260,6 +268,7 @@ import SeeTabs from './seeui/tabs/SeeTabs.vue';
 import SeeImage from './seeui/media/SeeImage.vue';
 import SeeCode from './seeui/code/SeeCode.vue';
 import SeeCodeBlock from './seeui/code/SeeCodeBlock.vue';
+import SeeHandUnderline from './seeui/decor/SeeHandUnderline.vue';
 import SeeKeycap from './seeui/keycap/SeeKeycap.vue';
 import Link from './common/Link.vue';
 import type { SeeTabItem } from './seeui/tabs/SeeTabs.vue';
