@@ -88,6 +88,8 @@ declare module 'vue' {
     SeeCode: typeof import('./src/components/seeui/code/SeeCode.vue')['default']
     SeeCodeBlock: typeof import('./src/components/seeui/code/SeeCodeBlock.vue')['default']
     SeeContextMenu: typeof import('./src/components/seeui/menu/SeeContextMenu.vue')['default']
+    SeeHandCircle: typeof import('./src/components/seeui/decor/SeeHandCircle.vue')['default']
+    SeeHandUnderline: typeof import('./src/components/seeui/decor/SeeHandUnderline.vue')['default']
     SeeIconButton: typeof import('./src/components/seeui/button/SeeIconButton.vue')['default']
     SeeImage: typeof import('./src/components/seeui/media/SeeImage.vue')['default']
     SeeKeycap: typeof import('./src/components/seeui/keycap/SeeKeycap.vue')['default']
