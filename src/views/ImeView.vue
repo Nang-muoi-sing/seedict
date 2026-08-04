@@ -3,7 +3,7 @@
     <NavBar :show-search-bar="false" />
 
     <main>
-      <section class="bg-wheat-50 py-8 md:py-12">
+      <section class="relative overflow-hidden bg-wheat-50 pb-24 pt-8 md:pb-28 md:pt-12">
         <div
           class="mx-auto grid w-[90vw] max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_24rem] md:items-center lg:gap-14"
         >
@@ -25,11 +25,12 @@
             />
           </div>
         </div>
+        <SeeWaveDivider color-class="text-white" variant="crest" />
       </section>
 
       <section
         id="platforms"
-        class="scroll-mt-6 bg-white py-12 md:scroll-mt-10 md:py-16"
+        class="relative overflow-hidden scroll-mt-6 bg-white pb-24 pt-12 md:scroll-mt-10 md:pb-28 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
@@ -102,11 +103,12 @@
             </button>
           </div>
         </div>
+        <SeeWaveDivider color-class="text-wheat-50" variant="drift" />
       </section>
 
       <section
         id="install-guide"
-        class="scroll-mt-6 bg-wheat-50 py-12 md:scroll-mt-10 md:py-16"
+        class="relative overflow-hidden scroll-mt-6 bg-wheat-50 pb-24 pt-12 md:scroll-mt-10 md:pb-28 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
@@ -114,9 +116,10 @@
           </h2>
           <ImeInstallSection :selected-platform="selectedInstallPlatform" />
         </div>
+        <SeeWaveDivider color-class="text-white" variant="swell" />
       </section>
 
-      <section class="bg-white py-12 md:py-16">
+      <section class="bg-white pb-12 pt-12 md:pb-16 md:pt-16">
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2
             class="mb-10 flex flex-row justify-center text-center text-4xl font-bold text-rosybrown-800"
@@ -140,6 +143,7 @@ import ImeInstallSection from '../components/ImeInstallSection.vue';
 import ImeTypingDemo from '../components/ImeTypingDemo.vue';
 import NavBar from '../components/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
+import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
 
 type PlatformId = 'windows' | 'macos' | 'linux' | 'android';
 

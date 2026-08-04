@@ -7,9 +7,7 @@
       content-class="ml-8 pt-3 text-base leading-8 text-wheat-700"
     >
       <template #title>
-        没有使用过 RIME？试试
-        <SeeHandUnderline>全新安装</SeeHandUnderline>
-        ！
+        没有使用过 RIME？试试<SeeHandUnderline>全新安装</SeeHandUnderline>！
       </template>
       <div class="space-y-4">
         <SeeTabs v-model="freshInstallPlatform" :tabs="platformTabs" />
@@ -112,9 +110,7 @@
       content-class="ml-8 pt-3 text-base leading-8 text-wheat-700"
     >
       <template #title>
-        已经在用 RIME 了？开始
-        <SeeHandUnderline>挂载</SeeHandUnderline>
-        输入法配方
+        已经在用 RIME 了？开始<SeeHandUnderline>挂载</SeeHandUnderline>输入法配方
       </template>
       <div class="space-y-4">
         <SeeTabs v-model="mountInstallPlatform" :tabs="platformTabs" />
