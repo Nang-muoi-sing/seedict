@@ -42,12 +42,13 @@
           <div class="grid gap-4 pt-4 md:grid-cols-2">
             <button
               type="button"
+              @click="handlePlatformSelect('windows', windowsDownloadUrl)"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
-                <i-material-symbols-desktop-windows-rounded />
+                <i-ri-windows-fill />
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Windows</span>
@@ -56,12 +57,13 @@
             </button>
             <button
               type="button"
+              @click="handlePlatformSelect('macos', macDownloadUrl)"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
-                <i-simple-icons-apple />
+                <i-ri-finder-fill />
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">macOS</span>
@@ -70,42 +72,47 @@
             </button>
             <button
               type="button"
+              @click="handlePlatformSelect('linux')"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
                 <i-simple-icons-linux />
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Linux</span>
-                <span class="text-sm text-wheat-700">下载</span>
+                <span class="text-sm text-wheat-700">查看安装</span>
               </span>
             </button>
             <button
               type="button"
+              @click="handlePlatformSelect('android')"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600 shadow-sm"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
                 <i-simple-icons-android />
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Android</span>
-                <span class="text-sm text-wheat-700">下载</span>
+                <span class="text-sm text-wheat-700">查看安装</span>
               </span>
             </button>
           </div>
         </div>
       </section>
 
-      <section class="bg-wheat-50 py-12 md:py-16">
+      <section
+        id="install-guide"
+        class="scroll-mt-6 bg-wheat-50 py-12 md:scroll-mt-10 md:py-16"
+      >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
             安装指南
           </h2>
-          <ImeInstallSection />
+          <ImeInstallSection :selected-platform="selectedInstallPlatform" />
         </div>
       </section>
 
@@ -126,12 +133,46 @@
 </template>
 
 <script setup lang="ts">
+import { nextTick, ref } from 'vue';
 import Footer from '../components/common/Footer.vue';
 import ImeFaq from '../components/ImeFaq.vue';
-import ImeTypingDemo from '../components/ImeTypingDemo.vue';
 import ImeInstallSection from '../components/ImeInstallSection.vue';
+import ImeTypingDemo from '../components/ImeTypingDemo.vue';
 import NavBar from '../components/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
+
+type PlatformId = 'windows' | 'macos' | 'linux' | 'android';
+
+const windowsDownloadUrl =
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-weasel-0.17.4.exe';
+const macDownloadUrl =
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+const selectedInstallPlatform = ref<PlatformId>('windows');
+
+const scrollToInstallGuide = async () => {
+  await nextTick();
+  document
+    .getElementById('install-guide')
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+const handlePlatformSelect = async (
+  platform: PlatformId,
+  downloadUrl?: string
+) => {
+  selectedInstallPlatform.value = platform;
+
+  await scrollToInstallGuide();
+
+  if (downloadUrl) {
+    const downloadLink = document.createElement('a');
+    downloadLink.href = downloadUrl;
+    downloadLink.rel = 'noopener noreferrer';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+  }
+};
 </script>
 
 <style scoped></style>

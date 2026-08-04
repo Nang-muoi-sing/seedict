@@ -250,7 +250,7 @@
 
 <script setup lang="ts">
 import { animate } from 'animejs';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import macImeSelectionImg from '../assets/ime/mac-ime-selection.png';
 import winUserFolderImg from '../assets/ime/win-user-folder.png';
 import macUserFolderImg from '../assets/ime/mac-user-folder.png';
@@ -262,8 +262,19 @@ import SeeCode from './seeui/code/SeeCode.vue';
 import SeeCodeBlock from './seeui/code/SeeCodeBlock.vue';
 import SeeKeycap from './seeui/keycap/SeeKeycap.vue';
 import Link from './common/Link.vue';
+import type { SeeTabItem } from './seeui/tabs/SeeTabs.vue';
 
-const platformTabs = [
+type PlatformId = 'windows' | 'macos' | 'linux' | 'android';
+
+interface Props {
+  selectedPlatform?: PlatformId;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  selectedPlatform: 'windows',
+});
+
+const platformTabs: SeeTabItem[] = [
   { id: 'windows', label: 'Windows' },
   { id: 'macos', label: 'macOS' },
   { id: 'linux', label: 'Linux' },
@@ -288,8 +299,16 @@ const androidCustomPatch = `schema_list:
   - schema: hokchew_yngping
 `;
 
-const freshInstallPlatform = ref('windows');
-const mountInstallPlatform = ref('windows');
+const freshInstallPlatform = ref<PlatformId>(props.selectedPlatform);
+const mountInstallPlatform = ref<PlatformId>(props.selectedPlatform);
+
+watch(
+  () => props.selectedPlatform,
+  (platform) => {
+    freshInstallPlatform.value = platform;
+    mountInstallPlatform.value = platform;
+  }
+);
 
 const animateTabPanelEnter = (el: Element, done: () => void) => {
   const panel = el as HTMLElement;
