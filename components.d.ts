@@ -60,6 +60,8 @@ declare module 'vue' {
     ImeInstallSection: typeof import('./src/components/ImeInstallSection.vue')['default']
     ImeTypingDemo: typeof import('./src/components/ImeTypingDemo.vue')['default']
     IMiSwitch: typeof import('~icons/mi/switch')['default']
+    IRiFinderFill: typeof import('~icons/ri/finder-fill')['default']
+    IRiWindowsFill: typeof import('~icons/ri/windows-fill')['default']
     ISimpleIconsAndroid: typeof import('~icons/simple-icons/android')['default']
     ISimpleIconsApple: typeof import('~icons/simple-icons/apple')['default']
     ISimpleIconsBilibili: typeof import('~icons/simple-icons/bilibili')['default']
