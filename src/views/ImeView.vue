@@ -116,9 +116,7 @@
           >
             常见问题
           </h2>
-          <div class="mx-auto w-full max-w-3xl">
-            <AccordionList :items="faqItems" :default-open-index="0" />
-          </div>
+          <ImeFaq />
         </div>
       </section>
     </main>
@@ -128,38 +126,12 @@
 </template>
 
 <script setup lang="ts">
-import AccordionList from '../components/common/AccordionList.vue';
 import Footer from '../components/common/Footer.vue';
+import ImeFaq from '../components/ImeFaq.vue';
 import ImeTypingDemo from '../components/ImeTypingDemo.vue';
 import ImeInstallSection from '../components/ImeInstallSection.vue';
 import NavBar from '../components/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
-
-const faqAnswer =
-  '永和九年，岁在癸丑，暮春之初，会于会稽山阴之兰亭，修禊事也。群贤毕至，少长咸集。此地有崇山峻岭，茂林修竹，又有清流激湍，映带左右。引以为流觞曲水，列坐其次。虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。是日也，天朗气清，惠风和畅。仰观宇宙之大，俯察品类之盛，所以游目骋怀，足以极视听之娱，信可乐也。';
-
-const faqItems = [
-  {
-    title: '我打出来的是繁体字，可以用来打简体字吗？',
-    content: faqAnswer,
-  },
-  {
-    title: '我不知道想打的字对应的榕拼，应该怎么办？',
-    content: faqAnswer,
-  },
-  {
-    title: '怎样切换不同的输入方案（汉字 / 榕拼 / 教罗）？',
-    content: faqAnswer,
-  },
-  {
-    title: '我使用的是 iOS，可以使用榕拼输入法吗？',
-    content: faqAnswer,
-  },
-  {
-    title: '遇到了困难，哪里可以寻求帮助？',
-    content: faqAnswer,
-  },
-];
 </script>
 
 <style scoped></style>

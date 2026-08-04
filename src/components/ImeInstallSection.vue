@@ -19,13 +19,7 @@
               下载安装包后双击打开，安装时可能会提示软件风险，确保安装包来自米时典官方，选择接受风险继续安装，根据提示完成安装过程。
             </li>
             <li>
-              将系统输入法改为「小狼毫输入法」，就能使用福州话打字了（默认为
-              <span class="inline-flex items-center gap-1 align-middle">
-                <SeeKeycap label="Ctrl" />
-                <span>+</span>
-                <SeeKeycap label="`" />
-              </span>
-              切换不同输入方案）。
+              将系统输入法改为「小狼毫输入法」，就能使用福州话打字了。
             </li>
           </ol>
         </div>
@@ -139,11 +133,7 @@
               ，该步骤可能比较耗时，耐心等待其完成。
             </li>
             <li>
-              切换到小狼毫输入法，可以使用福州话打字了！默认通过
-              <SeeKeycap label="ctrl" />
-              +
-              <SeeKeycap label="`" />
-              切换不同输入方案。
+              切换到小狼毫输入法，可以使用福州话打字了！
             </li>
           </ol>
         </div>

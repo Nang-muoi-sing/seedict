@@ -8,7 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AccordionList: typeof import('./src/components/common/AccordionList.vue')['default']
+    AccordionItem: typeof import('./src/components/common/AccordionItem.vue')['default']
     AppIcon: typeof import('./src/components/AppIcon.vue')['default']
     Badge: typeof import('./src/components/common/Badge.vue')['default']
     BannerTitle: typeof import('./src/components/BannerTitle.vue')['default']
@@ -56,6 +56,7 @@ declare module 'vue' {
     IMdiLinkVariant: typeof import('~icons/mdi/link-variant')['default']
     IMdiQqchat: typeof import('~icons/mdi/qqchat')['default']
     ImeDownloadStep: typeof import('./src/components/ImeDownloadStep.vue')['default']
+    ImeFaq: typeof import('./src/components/ImeFaq.vue')['default']
     ImeInstallSection: typeof import('./src/components/ImeInstallSection.vue')['default']
     ImeTypingDemo: typeof import('./src/components/ImeTypingDemo.vue')['default']
     IMiSwitch: typeof import('~icons/mi/switch')['default']
