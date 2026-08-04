@@ -1,0 +1,1 @@
+System.register(["./SearchBar-legacy-GzHnfJIS.js","./index-legacy-CSGfsHSv.js"],function(e,t){"use strict";var n,r,s,a;return{setters:[e=>{n=e._},e=>{r=e.b,s=e.c,a=e.A}],execute:function(){const t={class:"hover:text-wheat-700 underline underline-offset-4 transition-all",target:"_blank"};e("L",n({},[["render",function(e,n){return r(),s("a",t,[a(e.$slots,"default")])}]]))}}});
