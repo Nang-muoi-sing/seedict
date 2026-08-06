@@ -1,50 +1,100 @@
 <template>
   <div
+    ref="waveRoot"
     class="pointer-events-none absolute inset-x-0 overflow-hidden leading-none"
-    :class="[
-      align === 'bottom' ? '-bottom-px' : '-top-px',
-      flip ? 'rotate-180' : '',
-      colorClass,
-    ]"
+    :class="[align === 'bottom' ? '-bottom-px' : '-top-px', colorClass]"
     aria-hidden="true"
   >
-    <svg
-      class="block h-24 w-[144%] -translate-x-[16%] md:h-28"
-      viewBox="0 0 1440 220"
-      preserveAspectRatio="none"
-      fill="currentColor"
-    >
-      <path :d="wavePath" />
-    </svg>
+    <div ref="waveInner">
+      <svg
+        class="block h-24 flex-none md:h-28"
+        :style="{ width: `${waveWidth}px` }"
+        viewBox="0 0 1440 220"
+        preserveAspectRatio="none"
+        fill="currentColor"
+      >
+        <path :d="wavePath" />
+      </svg>
+      <svg
+        class="block h-24 flex-none md:h-28"
+        :style="{ width: `${waveWidth}px` }"
+        viewBox="0 0 1440 220"
+        preserveAspectRatio="none"
+        fill="currentColor"
+      >
+        <path :d="wavePath" />
+      </svg>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { utils } from 'animejs';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 interface Props {
   align?: 'top' | 'bottom';
   colorClass?: string;
   flip?: boolean;
-  variant?: 'crest' | 'drift' | 'swell';
+  offsetX?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   align: 'bottom',
   colorClass: 'text-white',
   flip: false,
-  variant: 'crest',
+  offsetX: 0,
+});
+const waveRoot = ref<HTMLElement | null>(null);
+const waveInner = ref<HTMLElement | null>(null);
+const waveWidth = ref(1440);
+let resizeObserver: ResizeObserver | null = null;
+
+const normalizeOffset = (offset: number, width: number) => {
+  if (width <= 0) return 0;
+
+  const wrapped = ((offset % width) + width) % width;
+  return -wrapped;
+};
+
+const updateWavePosition = () => {
+  if (!waveInner.value) return;
+
+  utils.set(waveInner.value, {
+    display: 'flex',
+    rotate: props.flip ? 180 : 0,
+    translateX: normalizeOffset(props.offsetX, waveWidth.value),
+  });
+};
+
+onMounted(() => {
+  if (waveRoot.value) {
+    const syncWidth = () => {
+      if (!waveRoot.value) return;
+      waveWidth.value = waveRoot.value.clientWidth;
+      updateWavePosition();
+    };
+
+    syncWidth();
+    resizeObserver = new ResizeObserver(syncWidth);
+    resizeObserver.observe(waveRoot.value);
+  } else {
+    updateWavePosition();
+  }
 });
 
-const wavePath = computed(() => {
-  if (props.variant === 'drift') {
-    return 'M0,98C96,148,198,201,316,186C426,172,490,109,598,88C703,67,803,87,895,138C994,193,1090,223,1193,201C1308,177,1390,105,1440,76L1440,220L0,220Z';
-  }
-
-  if (props.variant === 'swell') {
-    return 'M0,82C73,145,177,214,290,201C390,190,467,104,575,84C679,65,766,105,868,161C974,219,1083,230,1186,188C1290,145,1370,73,1440,58L1440,220L0,220Z';
-  }
-
-  return 'M0,68C87,133,177,186,292,174C395,163,467,88,574,78C689,67,785,129,888,170C987,210,1083,215,1182,187C1283,159,1367,96,1440,74L1440,220L0,220Z';
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect();
 });
+
+watch(
+  () => [props.offsetX, props.flip, waveWidth.value] as const,
+  updateWavePosition,
+  { immediate: true }
+);
+
+const wavePath = computed(
+  () =>
+    'M0,108C180,108,180,52,360,52C540,52,540,156,720,156C900,156,900,44,1080,44C1260,44,1260,108,1440,108L1440,220L0,220Z'
+);
 </script>

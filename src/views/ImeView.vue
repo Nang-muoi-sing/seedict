@@ -25,12 +25,15 @@
             />
           </div>
         </div>
-        <SeeWaveDivider color-class="text-white" variant="crest" />
+        <SeeWaveDivider
+          color-class="text-white"
+          :offset-x="waveOffsets.hero - 180"
+        />
       </section>
 
       <section
         id="platforms"
-        class="relative overflow-hidden scroll-mt-6 bg-white pb-24 pt-12 md:scroll-mt-10 md:pb-28 md:pt-16"
+        class="relative overflow-hidden scroll-mt-6 bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
@@ -41,8 +44,8 @@
             平台。选择你的平台，此刻开始！
           </p>
           <div class="grid gap-4 pt-4 md:grid-cols-2">
-            <button
-              type="button"
+            <a
+              href="#install-guide"
               @click="handlePlatformSelect('windows', windowsDownloadUrl)"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
@@ -55,9 +58,9 @@
                 <span class="text-base font-semibold">Windows</span>
                 <span class="text-sm text-wheat-700">下载</span>
               </span>
-            </button>
-            <button
-              type="button"
+            </a>
+            <a
+              href="#install-guide"
               @click="handlePlatformSelect('macos', macDownloadUrl)"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
@@ -70,9 +73,9 @@
                 <span class="text-base font-semibold">macOS</span>
                 <span class="text-sm text-wheat-700">下载</span>
               </span>
-            </button>
-            <button
-              type="button"
+            </a>
+            <a
+              href="#install-guide"
               @click="handlePlatformSelect('linux')"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
@@ -85,9 +88,9 @@
                 <span class="text-base font-semibold">Linux</span>
                 <span class="text-sm text-wheat-700">查看安装</span>
               </span>
-            </button>
-            <button
-              type="button"
+            </a>
+            <a
+              href="#install-guide"
               @click="handlePlatformSelect('android')"
               class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
@@ -100,15 +103,18 @@
                 <span class="text-base font-semibold">Android</span>
                 <span class="text-sm text-wheat-700">查看安装</span>
               </span>
-            </button>
+            </a>
           </div>
         </div>
-        <SeeWaveDivider color-class="text-wheat-50" variant="drift" />
+        <SeeWaveDivider
+          color-class="text-wheat-50"
+          :offset-x="waveOffsets.platform + 260"
+        />
       </section>
 
       <section
         id="install-guide"
-        class="relative overflow-hidden scroll-mt-6 bg-wheat-50 pb-24 pt-12 md:scroll-mt-10 md:pb-28 md:pt-16"
+        class="relative overflow-hidden scroll-mt-6 bg-wheat-50 pb-32 pt-12 md:scroll-mt-10 md:pb-60 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
@@ -116,7 +122,10 @@
           </h2>
           <ImeInstallSection :selected-platform="selectedInstallPlatform" />
         </div>
-        <SeeWaveDivider color-class="text-white" variant="swell" />
+        <SeeWaveDivider
+          color-class="text-white"
+          :offset-x="waveOffsets.guide - 340"
+        />
       </section>
 
       <section class="bg-white pb-12 pt-12 md:pb-16 md:pt-16">
@@ -136,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import Footer from '../components/common/Footer.vue';
 import ImeFaq from '../components/ImeFaq.vue';
 import ImeInstallSection from '../components/ImeInstallSection.vue';
@@ -152,21 +161,48 @@ const windowsDownloadUrl =
 const macDownloadUrl =
   'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
 const selectedInstallPlatform = ref<PlatformId>('windows');
+const waveOffsets = reactive({
+  hero: 0,
+  platform: 0,
+  guide: 0,
+});
+let scrollRafId: number | null = null;
 
-const scrollToInstallGuide = async () => {
-  await nextTick();
-  document
-    .getElementById('install-guide')
-    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+const updateWaveOffsets = () => {
+  scrollRafId = null;
+
+  const y = window.scrollY;
+  waveOffsets.hero = y * 0.8;
+  waveOffsets.platform = -y * 0.95;
+  waveOffsets.guide = y * 0.88;
 };
 
-const handlePlatformSelect = async (
+const handleScroll = () => {
+  if (scrollRafId !== null) {
+    return;
+  }
+
+  scrollRafId = window.requestAnimationFrame(updateWaveOffsets);
+};
+
+onMounted(() => {
+  updateWaveOffsets();
+  window.addEventListener('scroll', handleScroll, { passive: true });
+});
+
+onBeforeUnmount(() => {
+  if (scrollRafId !== null) {
+    window.cancelAnimationFrame(scrollRafId);
+  }
+
+  window.removeEventListener('scroll', handleScroll);
+});
+
+const handlePlatformSelect = (
   platform: PlatformId,
   downloadUrl?: string
 ) => {
   selectedInstallPlatform.value = platform;
-
-  await scrollToInstallGuide();
 
   if (downloadUrl) {
     const downloadLink = document.createElement('a');
