@@ -3,7 +3,7 @@
     <NavBar :show-search-bar="false" />
 
     <main>
-      <section class="relative overflow-hidden bg-wheat-50 pb-24 pt-8 md:pb-28 md:pt-12">
+      <section class="relative overflow-hidden bg-wheat-50 pb-24 pt-8 md:pb-36 md:pt-12">
         <div
           class="mx-auto grid w-[90vw] max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_24rem] md:items-center lg:gap-14"
         >
@@ -33,13 +33,17 @@
 
       <section
         id="platforms"
-        class="relative overflow-hidden scroll-mt-6 bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
+        ref="platformSection"
+        class="platform-reveal-section relative overflow-hidden scroll-mt-6 bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
-          <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
+          <h2
+            ref="platformTitle"
+            class="platform-reveal-title mb-5 flex flex-row text-4xl font-bold text-rosybrown-800"
+          >
             选择汝其平台
           </h2>
-          <p class="max-w-3xl text-base leading-8 text-wheat-700">
+          <p class="platform-reveal-content max-w-3xl text-base leading-8 text-wheat-700">
             榕拼输入法支持 Windows、Mac、Linux 和 Android
             平台。选择你的平台，此刻开始！
           </p>
@@ -47,7 +51,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('windows', windowsDownloadUrl)"
-              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -62,7 +66,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('macos', macDownloadUrl)"
-              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -77,7 +81,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('linux')"
-              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -92,7 +96,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('android')"
-              class="flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -128,10 +132,14 @@
         />
       </section>
 
-      <section class="bg-white pb-12 pt-12 md:pb-16 md:pt-16">
+      <section
+        ref="faqSection"
+        class="faq-reveal-section bg-white pb-12 pt-12 md:pb-16 md:pt-16"
+      >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2
-            class="mb-10 flex flex-row justify-center text-center text-4xl font-bold text-rosybrown-800"
+            ref="faqTitle"
+            class="faq-reveal-title mb-10 flex flex-row justify-center text-center text-4xl font-bold text-rosybrown-800"
           >
             常见问题
           </h2>
@@ -145,6 +153,7 @@
 </template>
 
 <script setup lang="ts">
+import { animate, stagger } from 'animejs';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import Footer from '../components/common/Footer.vue';
 import ImeFaq from '../components/ImeFaq.vue';
@@ -161,12 +170,18 @@ const windowsDownloadUrl =
 const macDownloadUrl =
   'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
 const selectedInstallPlatform = ref<PlatformId>('windows');
+const platformSection = ref<HTMLElement | null>(null);
+const platformTitle = ref<HTMLElement | null>(null);
+const faqSection = ref<HTMLElement | null>(null);
+const faqTitle = ref<HTMLElement | null>(null);
 const waveOffsets = reactive({
   hero: 0,
   platform: 0,
   guide: 0,
 });
 let scrollRafId: number | null = null;
+let platformRevealObserver: IntersectionObserver | null = null;
+let faqRevealObserver: IntersectionObserver | null = null;
 
 const updateWaveOffsets = () => {
   scrollRafId = null;
@@ -185,9 +200,135 @@ const handleScroll = () => {
   scrollRafId = window.requestAnimationFrame(updateWaveOffsets);
 };
 
+const revealPlatformSection = () => {
+  if (!platformTitle.value || !platformSection.value) {
+    return;
+  }
+
+  const contentElements = platformSection.value.querySelectorAll<HTMLElement>(
+    '.platform-reveal-content'
+  );
+  const cardElements = platformSection.value.querySelectorAll<HTMLElement>(
+    '.platform-reveal-card'
+  );
+  const clearRevealStyles = () => {
+    platformSection.value?.classList.add('platform-revealed');
+    platformTitle.value?.style.removeProperty('opacity');
+    platformTitle.value?.style.removeProperty('transform');
+    contentElements.forEach((element) => {
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+    });
+    cardElements.forEach((element) => {
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+    });
+  };
+
+  animate(platformTitle.value, {
+    opacity: [0, 1],
+    translateY: [-72, 0],
+    duration: 760,
+    easing: 'easeOutCubic',
+  });
+
+  animate(contentElements, {
+    opacity: [0, 1],
+    translateY: [72, 0],
+    duration: 680,
+    delay: stagger(90, { start: 120 }),
+    easing: 'easeOutCubic',
+  });
+
+  animate(cardElements, {
+    opacity: [0, 1],
+    translateY: [128, 0],
+    duration: 620,
+    delay: stagger(70, { start: 190 }),
+    easing: 'easeOutCubic',
+    onComplete: clearRevealStyles,
+  });
+};
+
+const revealFaqSection = () => {
+  if (!faqTitle.value || !faqSection.value) {
+    return;
+  }
+
+  const itemElements =
+    faqSection.value.querySelectorAll<HTMLElement>('.faq-reveal-item');
+  const clearRevealStyles = () => {
+    faqSection.value?.classList.add('faq-revealed');
+    faqTitle.value?.style.removeProperty('opacity');
+    faqTitle.value?.style.removeProperty('transform');
+    itemElements.forEach((element) => {
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+    });
+  };
+
+  animate(faqTitle.value, {
+    opacity: [0, 1],
+    translateY: [-72, 0],
+    duration: 760,
+    easing: 'easeOutCubic',
+  });
+
+  animate(itemElements, {
+    opacity: [0, 1],
+    translateY: [104, 0],
+    duration: 620,
+    delay: stagger(70, { start: 160 }),
+    easing: 'easeOutCubic',
+    onComplete: clearRevealStyles,
+  });
+};
+
 onMounted(() => {
   updateWaveOffsets();
   window.addEventListener('scroll', handleScroll, { passive: true });
+
+  if (!('IntersectionObserver' in window)) {
+    revealPlatformSection();
+    revealFaqSection();
+    return;
+  }
+
+  if (platformSection.value) {
+    platformRevealObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) {
+          return;
+        }
+
+        revealPlatformSection();
+        platformRevealObserver?.disconnect();
+        platformRevealObserver = null;
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+    platformRevealObserver.observe(platformSection.value);
+  }
+
+  if (faqSection.value) {
+    faqRevealObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) {
+          return;
+        }
+
+        revealFaqSection();
+        faqRevealObserver?.disconnect();
+        faqRevealObserver = null;
+      },
+      {
+        threshold: 0.32,
+      }
+    );
+    faqRevealObserver.observe(faqSection.value);
+  }
 });
 
 onBeforeUnmount(() => {
@@ -196,6 +337,8 @@ onBeforeUnmount(() => {
   }
 
   window.removeEventListener('scroll', handleScroll);
+  platformRevealObserver?.disconnect();
+  faqRevealObserver?.disconnect();
 });
 
 const handlePlatformSelect = (
@@ -215,4 +358,40 @@ const handlePlatformSelect = (
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.platform-reveal-section:not(.platform-revealed) .platform-reveal-title {
+  opacity: 0;
+  transform: translateY(-72px);
+}
+
+.platform-reveal-section:not(.platform-revealed) .platform-reveal-content {
+  opacity: 0;
+  transform: translateY(72px);
+}
+
+.platform-reveal-section:not(.platform-revealed) .platform-reveal-card {
+  opacity: 0;
+  transform: translateY(128px);
+}
+
+.platform-card {
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+.platform-reveal-section:not(.platform-revealed) .platform-card {
+  transition: none;
+}
+
+.faq-reveal-section:not(.faq-revealed) .faq-reveal-title {
+  opacity: 0;
+  transform: translateY(-72px);
+}
+
+.faq-reveal-section:not(.faq-revealed) :deep(.faq-reveal-item) {
+  opacity: 0;
+  transform: translateY(104px);
+}
+</style>
