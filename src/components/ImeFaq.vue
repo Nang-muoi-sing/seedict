@@ -1,6 +1,7 @@
 <template>
   <div class="mx-auto min-h-[30rem] w-full max-w-3xl space-y-3 md:min-h-[32rem]">
     <AccordionItem
+      class="faq-reveal-item"
       title="我打出来的是繁体字，可以用来打简体字吗？"
       :open="openItemId === 'simplified'"
       @toggle="toggleItem('simplified')"
@@ -9,6 +10,7 @@
     </AccordionItem>
 
     <AccordionItem
+      class="faq-reveal-item"
       title="我不知道想打的字对应的榕拼，应该怎么办？"
       :open="openItemId === 'pronunciation'"
       @toggle="toggleItem('pronunciation')"
@@ -17,6 +19,7 @@
     </AccordionItem>
 
     <AccordionItem
+      class="faq-reveal-item"
       title="怎样切换不同的输入方案（汉字 / 榕拼 / 教罗）？"
       :open="openItemId === 'scheme'"
       @toggle="toggleItem('scheme')"
@@ -31,6 +34,7 @@
     </AccordionItem>
 
     <AccordionItem
+      class="faq-reveal-item"
       title="我使用的是 iOS，可以使用榕拼输入法吗？"
       :open="openItemId === 'ios'"
       @toggle="toggleItem('ios')"
@@ -39,6 +43,7 @@
     </AccordionItem>
 
     <AccordionItem
+      class="faq-reveal-item"
       title="遇到了困难，哪里可以寻求帮助？"
       :open="openItemId === 'help'"
       @toggle="toggleItem('help')"
