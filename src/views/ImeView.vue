@@ -3,7 +3,9 @@
     <NavBar :show-search-bar="false" />
 
     <main>
-      <section class="relative overflow-hidden bg-wheat-50 pb-24 pt-8 md:pb-36 md:pt-12">
+      <section
+        class="relative overflow-hidden bg-wheat-50 pb-24 pt-8 md:pb-36 md:pt-12"
+      >
         <div
           class="mx-auto grid w-[90vw] max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_24rem] md:items-center lg:gap-14"
         >
@@ -34,7 +36,7 @@
       <section
         id="platforms"
         ref="platformSection"
-        class="platform-reveal-section relative overflow-hidden scroll-mt-6 bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
+        class="platform-reveal-section relative scroll-mt-6 overflow-hidden bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2
@@ -43,7 +45,9 @@
           >
             选择汝其平台
           </h2>
-          <p class="platform-reveal-content max-w-3xl text-base leading-8 text-wheat-700">
+          <p
+            class="platform-reveal-content max-w-3xl text-base leading-8 text-wheat-700"
+          >
             榕拼输入法支持 Windows、Mac、Linux 和 Android
             平台。选择你的平台，此刻开始！
           </p>
@@ -60,7 +64,7 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Windows</span>
-                <span class="text-sm text-wheat-700">下载</span>
+                <span class="text-sm text-wheat-700">开始下载</span>
               </span>
             </a>
             <a
@@ -75,7 +79,7 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">macOS</span>
-                <span class="text-sm text-wheat-700">下载</span>
+                <span class="text-sm text-wheat-700">开始下载</span>
               </span>
             </a>
             <a
@@ -118,7 +122,7 @@
 
       <section
         id="install-guide"
-        class="relative overflow-hidden scroll-mt-6 bg-wheat-50 pb-32 pt-12 md:scroll-mt-10 md:pb-60 md:pt-16"
+        class="relative scroll-mt-6 overflow-hidden bg-wheat-50 pb-32 pt-12 md:scroll-mt-10 md:pb-60 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
@@ -181,7 +185,15 @@ const waveOffsets = reactive({
 });
 let scrollRafId: number | null = null;
 let platformRevealObserver: IntersectionObserver | null = null;
-let faqRevealObserver: IntersectionObserver | null = null;
+let isFaqRevealed = false;
+
+const hasSectionTopReachedViewportRatio = (
+  element: HTMLElement,
+  viewportRatio: number
+) => {
+  const rect = element.getBoundingClientRect();
+  return rect.top <= window.innerHeight * viewportRatio;
+};
 
 const updateWaveOffsets = () => {
   scrollRafId = null;
@@ -190,6 +202,15 @@ const updateWaveOffsets = () => {
   waveOffsets.hero = y * 0.8;
   waveOffsets.platform = -y * 0.95;
   waveOffsets.guide = y * 0.88;
+
+  if (
+    !isFaqRevealed &&
+    faqSection.value &&
+    hasSectionTopReachedViewportRatio(faqSection.value, 0.5)
+  ) {
+    revealFaqSection();
+    isFaqRevealed = true;
+  }
 };
 
 const handleScroll = () => {
@@ -290,7 +311,6 @@ onMounted(() => {
 
   if (!('IntersectionObserver' in window)) {
     revealPlatformSection();
-    revealFaqSection();
     return;
   }
 
@@ -311,24 +331,6 @@ onMounted(() => {
     );
     platformRevealObserver.observe(platformSection.value);
   }
-
-  if (faqSection.value) {
-    faqRevealObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) {
-          return;
-        }
-
-        revealFaqSection();
-        faqRevealObserver?.disconnect();
-        faqRevealObserver = null;
-      },
-      {
-        threshold: 0.32,
-      }
-    );
-    faqRevealObserver.observe(faqSection.value);
-  }
 });
 
 onBeforeUnmount(() => {
@@ -338,13 +340,9 @@ onBeforeUnmount(() => {
 
   window.removeEventListener('scroll', handleScroll);
   platformRevealObserver?.disconnect();
-  faqRevealObserver?.disconnect();
 });
 
-const handlePlatformSelect = (
-  platform: PlatformId,
-  downloadUrl?: string
-) => {
+const handlePlatformSelect = (platform: PlatformId, downloadUrl?: string) => {
   selectedInstallPlatform.value = platform;
 
   if (downloadUrl) {
