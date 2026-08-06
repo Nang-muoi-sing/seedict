@@ -16,11 +16,11 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 const imeSegments = [
   {
-    typing: "yng53'ping55",
+    typing: "yng'ping",
     committed: '榕拼',
   },
   {
-    typing: "su5'ik5'huak5",
+    typing: "su'ik'huak",
     committed: '输入法',
   },
 ] as const;
