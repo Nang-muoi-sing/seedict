@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="group relative">
+    <div class="relative">
       <button
         type="button"
-        class="absolute left-0 top-[0.2em] flex h-5 w-5 -translate-x-6 items-center justify-center rounded-sm text-wheat-600 opacity-0 transition-opacity duration-150 group-hover:opacity-100 hover:text-rosybrown-700 focus:opacity-100 focus:outline-none"
+        class="absolute left-0 top-[0.2em] flex h-5 w-5 -translate-x-6 items-center justify-center rounded-sm text-wheat-600 transition-colors duration-150 hover:text-rosybrown-700 focus:outline-none"
         @click="toggle"
       >
         <i-material-symbols-play-arrow-rounded
@@ -20,8 +20,11 @@
     </div>
 
     <div v-if="isOpen" :class="contentClass">
+      <slot name="header" />
+      <slot name="persistent" :open="isOpen" />
       <slot />
     </div>
+    <slot v-else name="persistent" :open="isOpen" />
   </div>
 </template>
 
