@@ -4,10 +4,10 @@
 
     <main>
       <section
-        class="relative overflow-hidden bg-wheat-50 pb-24 pt-8 md:pb-36 md:pt-12"
+        class="relative overflow-hidden bg-wheat-50 pb-52 pt-8 md:pb-60 md:pt-12 2xl:pb-48"
       >
         <div
-          class="mx-auto grid w-[90vw] max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_24rem] md:items-center lg:gap-14"
+          class="mx-auto grid w-[90vw] max-w-6xl gap-10 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:items-center 2xl:gap-14"
         >
           <div class="space-y-6">
             <ImeTypingDemo />
@@ -20,10 +20,12 @@
             </div>
           </div>
 
-          <div class="flex min-h-72 items-center justify-center p-2 md:p-4">
+          <div
+            class="hidden min-h-72 items-center justify-center p-2 2xl:flex 2xl:p-4"
+          >
             <img
-              src="../assets/typing.gif"
-              class="max-h-72 w-full max-w-xs object-contain md:max-h-80 md:max-w-sm"
+              src="../assets/typing.png"
+              class="object-contain w-full max-w-sm max-h-80 md:max-h-96 md:max-w-md"
             />
           </div>
         </div>

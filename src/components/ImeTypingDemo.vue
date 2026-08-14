@@ -1,13 +1,19 @@
 <template>
-  <h2 class="mt-3 font-mono text-6xl font-bold text-rosybrown-700">
-    <span class="text-rosybrown-800">{{ committedText }}</span>
-    <span
-      v-if="composingText"
-      class="bg-wheat-100 px-0.5 pt-1.5 text-wheat-700"
-    >
-      {{ composingText }}
+  <h2
+    class="mt-3 grid min-h-[2.5em] items-end font-mono text-[clamp(3rem,8vw,3.75rem)] font-bold leading-[1.25] text-rosybrown-700"
+  >
+    <span class="min-w-0">
+      <span class="text-rosybrown-800">{{ committedText }}</span>
+      <span class="whitespace-nowrap">
+        <span
+          v-if="composingText"
+          class="bg-wheat-100 px-0.5 pt-1.5 text-wheat-700"
+        >
+          {{ composingText }}
+        </span>
+        <span class="ime-caret"></span>
+      </span>
     </span>
-    <span class="ime-caret"></span>
   </h2>
 </template>
 
