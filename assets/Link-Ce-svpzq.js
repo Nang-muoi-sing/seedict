@@ -1,1 +1,0 @@
-import{_ as t}from"./SearchBar-DCx4w20l.js";import{b as n,c as r,A as o}from"./index-C_Om-3ei.js";const s={},a={class:"hover:text-wheat-700 underline underline-offset-4 transition-all",target:"_blank"};function c(e,l){return n(),r("a",a,[o(e.$slots,"default")])}const f=t(s,[["render",c]]);export{f as L};
