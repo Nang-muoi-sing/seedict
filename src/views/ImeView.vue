@@ -7,7 +7,21 @@
         class="relative overflow-hidden bg-wheat-50 pb-52 pt-8 md:pb-60 md:pt-12 2xl:pb-48"
       >
         <div
-          class="mx-auto grid w-[90vw] max-w-6xl gap-10 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:items-center 2xl:gap-14"
+          class="pointer-events-none absolute inset-0 z-0 select-none"
+          aria-hidden="true"
+        >
+          <span
+            v-for="letter in heroParallaxLetters"
+            :key="letter.text"
+            class="parallax-letter"
+            :class="letter.class"
+            :style="getParallaxLetterStyle(letter)"
+          >
+            {{ letter.text }}
+          </span>
+        </div>
+        <div
+          class="relative z-10 mx-auto grid w-[90vw] max-w-6xl gap-10 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:items-center 2xl:gap-14"
         >
           <div class="space-y-6">
             <ImeTypingDemo />
@@ -21,7 +35,12 @@
                 href="#platforms"
                 style="color: white"
               />
-              <SeeButton label="学习榕拼" variant="secondary" size="lg" />
+              <SeeButton
+                label="学习榕拼"
+                variant="secondary"
+                size="lg"
+                :to="{ name: 'tutorial' }"
+              />
             </div>
           </div>
 
@@ -35,6 +54,7 @@
           </div>
         </div>
         <SeeWaveDivider
+          class="z-[1]"
           color-class="text-white"
           :offset-x="waveOffsets.hero - 180"
         />
@@ -43,9 +63,23 @@
       <section
         id="platforms"
         ref="platformSection"
-        class="platform-reveal-section relative scroll-mt-6 overflow-hidden bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
+        class="platform-reveal-section relative z-10 scroll-mt-6 overflow-visible bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
       >
-        <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
+        <div
+          class="pointer-events-none absolute inset-x-0 -top-32 bottom-0 z-[3] select-none overflow-hidden"
+          aria-hidden="true"
+        >
+          <span
+            v-for="letter in platformParallaxLetters"
+            :key="letter.text"
+            class="parallax-letter"
+            :class="letter.class"
+            :style="getParallaxLetterStyle(letter, 128)"
+          >
+            {{ letter.text }}
+          </span>
+        </div>
+        <div class="relative z-10 mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2
             ref="platformTitle"
             class="platform-reveal-title mb-5 flex flex-row text-4xl font-bold text-rosybrown-800"
@@ -122,6 +156,7 @@
           </div>
         </div>
         <SeeWaveDivider
+          class="z-[4]"
           color-class="text-wheat-50"
           :offset-x="waveOffsets.platform + 260"
         />
@@ -175,6 +210,16 @@ import SeeButton from '../components/seeui/button/SeeButton.vue';
 import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
 
 type PlatformId = 'windows' | 'macos' | 'linux' | 'android';
+interface ParallaxLetter {
+  text: string;
+  left: string;
+  top: string;
+  size: string;
+  opacity: number;
+  rotate: number;
+  speed: number;
+  class?: string;
+}
 
 const windowsDownloadUrl =
   'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-weasel-0.17.4.exe';
@@ -185,11 +230,216 @@ const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
 const faqSection = ref<HTMLElement | null>(null);
 const faqTitle = ref<HTMLElement | null>(null);
+const parallaxScrollY = ref(0);
 const waveOffsets = reactive({
   hero: 0,
   platform: 0,
   guide: 0,
 });
+const heroParallaxLetters: ParallaxLetter[] = [
+  {
+    text: '春',
+    left: '7%',
+    top: '18%',
+    size: '6.5rem',
+    opacity: 0.14,
+    rotate: -12,
+    speed: -0.06,
+    class: 'text-rosybrown-300',
+  },
+  {
+    text: '花',
+    left: '47%',
+    top: '8%',
+    size: '4.5rem',
+    opacity: 0.1,
+    rotate: 14,
+    speed: -0.1,
+    class: 'hidden text-wheat-600 md:block',
+  },
+  {
+    text: '香',
+    left: '78%',
+    top: '22%',
+    size: '7rem',
+    opacity: 0.12,
+    rotate: 9,
+    speed: -0.16,
+    class: 'hidden text-rosybrown-300 2xl:block',
+  },
+  {
+    text: '秋',
+    left: '17%',
+    top: '68%',
+    size: '4rem',
+    opacity: 0.12,
+    rotate: 10,
+    speed: 0.08,
+    class: 'text-wheat-700',
+  },
+  {
+    text: '山',
+    left: '67%',
+    top: '72%',
+    size: '5.5rem',
+    opacity: 0.1,
+    rotate: -18,
+    speed: 0.13,
+    class: 'hidden text-rosybrown-400 md:block',
+  },
+  {
+    text: '開',
+    left: '31%',
+    top: '34%',
+    size: '3rem',
+    opacity: 0.08,
+    rotate: -7,
+    speed: -0.12,
+    class: 'hidden text-wheat-700 sm:block',
+  },
+  {
+    text: '嘉',
+    left: '88%',
+    top: '48%',
+    size: '3.75rem',
+    opacity: 0.09,
+    rotate: 18,
+    speed: 0.09,
+    class: 'text-wheat-600',
+  },
+  {
+    text: '賓',
+    left: '5%',
+    top: '83%',
+    size: '3.25rem',
+    opacity: 0.08,
+    rotate: 22,
+    speed: 0.15,
+    class: 'hidden text-rosybrown-300 md:block',
+  },
+  {
+    text: '歡',
+    left: '55%',
+    top: '54%',
+    size: '3.5rem',
+    opacity: 0.07,
+    rotate: -20,
+    speed: 0.06,
+    class: 'hidden text-wheat-700 lg:block',
+  },
+  {
+    text: '歌',
+    left: '93%',
+    top: '9%',
+    size: '3rem',
+    opacity: 0.08,
+    rotate: -10,
+    speed: -0.18,
+    class: 'hidden text-rosybrown-300 xl:block',
+  },
+];
+const platformParallaxLetters: ParallaxLetter[] = [
+  {
+    text: '須',
+    left: '9%',
+    top: '18%',
+    size: '5.25rem',
+    opacity: 0.09,
+    rotate: 16,
+    speed: -0.08,
+    class: 'text-wheat-700',
+  },
+  {
+    text: '金',
+    left: '38%',
+    top: '70%',
+    size: '4rem',
+    opacity: 0.08,
+    rotate: -10,
+    speed: 0.1,
+    class: 'hidden text-rosybrown-300 md:block',
+  },
+  {
+    text: '盃',
+    left: '72%',
+    top: '12%',
+    size: '6.25rem',
+    opacity: 0.1,
+    rotate: -16,
+    speed: -0.13,
+    class: 'text-wheat-600',
+  },
+  {
+    text: '之',
+    left: '84%',
+    top: '64%',
+    size: '4.5rem',
+    opacity: 0.08,
+    rotate: 13,
+    speed: 0.12,
+    class: 'hidden text-rosybrown-400 sm:block',
+  },
+  {
+    text: '東',
+    left: '19%',
+    top: '47%',
+    size: '3.25rem',
+    opacity: 0.08,
+    rotate: -19,
+    speed: 0.11,
+    class: 'text-rosybrown-300',
+  },
+  {
+    text: '郊',
+    left: '55%',
+    top: '24%',
+    size: '3.5rem',
+    opacity: 0.08,
+    rotate: 11,
+    speed: -0.1,
+    class: 'hidden text-wheat-600 md:block',
+  },
+  {
+    text: '過',
+    left: '92%',
+    top: '34%',
+    size: '3.1rem',
+    opacity: 0.07,
+    rotate: -6,
+    speed: -0.16,
+    class: 'hidden text-rosybrown-300 lg:block',
+  },
+  {
+    text: '西',
+    left: '6%',
+    top: '74%',
+    size: '4.25rem',
+    opacity: 0.08,
+    rotate: 14,
+    speed: 0.14,
+    class: 'hidden text-wheat-700 sm:block',
+  },
+  {
+    text: '橋',
+    left: '63%',
+    top: '86%',
+    size: '3rem',
+    opacity: 0.07,
+    rotate: -14,
+    speed: 0.09,
+    class: 'hidden text-rosybrown-400 md:block',
+  },
+  {
+    text: '鶯',
+    left: '31%',
+    top: '9%',
+    size: '2.8rem',
+    opacity: 0.08,
+    rotate: 21,
+    speed: -0.14,
+    class: 'hidden text-wheat-600 xl:block',
+  },
+];
 let scrollRafId: number | null = null;
 let platformRevealObserver: IntersectionObserver | null = null;
 let isFaqRevealed = false;
@@ -206,6 +456,7 @@ const updateWaveOffsets = () => {
   scrollRafId = null;
 
   const y = window.scrollY;
+  parallaxScrollY.value = y;
   waveOffsets.hero = y * 0.8;
   waveOffsets.platform = -y * 0.95;
   waveOffsets.guide = y * 0.88;
@@ -219,6 +470,14 @@ const updateWaveOffsets = () => {
     isFaqRevealed = true;
   }
 };
+
+const getParallaxLetterStyle = (letter: ParallaxLetter, topOffset = 0) => ({
+  left: letter.left,
+  top: `calc(${letter.top} + ${topOffset}px)`,
+  fontSize: letter.size,
+  opacity: String(letter.opacity),
+  transform: `translate3d(0, ${parallaxScrollY.value * letter.speed}px, 0) rotate(${letter.rotate}deg)`,
+});
 
 const handleScroll = () => {
   if (scrollRafId !== null) {
@@ -364,6 +623,17 @@ const handlePlatformSelect = (platform: PlatformId, downloadUrl?: string) => {
 </script>
 
 <style scoped>
+.parallax-letter {
+  position: absolute;
+  display: block;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  transform-origin: center;
+  will-change: transform;
+}
+
 .platform-reveal-section:not(.platform-revealed) .platform-reveal-title {
   opacity: 0;
   transform: translateY(-72px);
