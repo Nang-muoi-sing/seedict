@@ -24,7 +24,7 @@
             class="hidden min-h-72 items-center justify-center p-2 2xl:flex 2xl:p-4"
           >
             <img
-              src="../assets/typing.png"
+              src="../assets/typing.webp"
               class="object-contain w-full max-w-sm max-h-80 md:max-h-96 md:max-w-md"
             />
           </div>
