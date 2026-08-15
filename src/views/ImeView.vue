@@ -14,7 +14,12 @@
             v-for="letter in heroParallaxLetters"
             :key="letter.text"
             class="parallax-letter"
-            :class="letter.class"
+            :class="[
+              letter.class,
+              letter.hideOnMobile
+                ? 'parallax-letter-mobile-hidden'
+                : 'parallax-letter-mobile-soft',
+            ]"
             :style="getParallaxLetterStyle(letter)"
           >
             {{ letter.text }}
@@ -25,7 +30,7 @@
         >
           <div class="space-y-6">
             <ImeTypingDemo />
-            <p class="max-w-2xl leading-8 text-wheat-600 md:text-4xl">
+            <p class="max-w-2xl leading-8 text-wheat-600 text-xl md:text-4xl">
               福州话拍字，尽去简单，快来试试！
             </p>
             <div class="flex flex-wrap gap-3">
@@ -73,7 +78,12 @@
             v-for="letter in platformParallaxLetters"
             :key="letter.text"
             class="parallax-letter"
-            :class="letter.class"
+            :class="[
+              letter.class,
+              letter.hideOnMobile
+                ? 'parallax-letter-mobile-hidden'
+                : 'parallax-letter-mobile-soft',
+            ]"
             :style="getParallaxLetterStyle(letter, 128)"
           >
             {{ letter.text }}
@@ -219,6 +229,7 @@ interface ParallaxLetter {
   rotate: number;
   speed: number;
   class?: string;
+  hideOnMobile?: boolean;
 }
 
 const windowsDownloadUrl =
@@ -256,6 +267,7 @@ const heroParallaxLetters: ParallaxLetter[] = [
     rotate: 14,
     speed: -0.1,
     class: 'hidden text-wheat-600 md:block',
+    hideOnMobile: true,
   },
   {
     text: '香',
@@ -296,6 +308,7 @@ const heroParallaxLetters: ParallaxLetter[] = [
     rotate: -7,
     speed: -0.12,
     class: 'hidden text-wheat-700 sm:block',
+    hideOnMobile: true,
   },
   {
     text: '嘉',
@@ -305,7 +318,7 @@ const heroParallaxLetters: ParallaxLetter[] = [
     opacity: 0.09,
     rotate: 18,
     speed: 0.09,
-    class: 'text-wheat-600',
+    class: 'hidden text-wheat-600 sm:block',
   },
   {
     text: '賓',
@@ -316,6 +329,7 @@ const heroParallaxLetters: ParallaxLetter[] = [
     rotate: 22,
     speed: 0.15,
     class: 'hidden text-rosybrown-300 md:block',
+    hideOnMobile: true,
   },
   {
     text: '歡',
@@ -326,6 +340,7 @@ const heroParallaxLetters: ParallaxLetter[] = [
     rotate: -20,
     speed: 0.06,
     class: 'hidden text-wheat-700 lg:block',
+    hideOnMobile: true,
   },
   {
     text: '歌',
@@ -336,6 +351,7 @@ const heroParallaxLetters: ParallaxLetter[] = [
     rotate: -10,
     speed: -0.18,
     class: 'hidden text-rosybrown-300 xl:block',
+    hideOnMobile: true,
   },
 ];
 const platformParallaxLetters: ParallaxLetter[] = [
@@ -387,7 +403,7 @@ const platformParallaxLetters: ParallaxLetter[] = [
     opacity: 0.08,
     rotate: -19,
     speed: 0.11,
-    class: 'text-rosybrown-300',
+    class: 'hidden text-rosybrown-300 sm:block',
   },
   {
     text: '郊',
@@ -474,8 +490,9 @@ const updateWaveOffsets = () => {
 const getParallaxLetterStyle = (letter: ParallaxLetter, topOffset = 0) => ({
   left: letter.left,
   top: `calc(${letter.top} + ${topOffset}px)`,
-  fontSize: letter.size,
-  opacity: String(letter.opacity),
+  '--letter-size': letter.size,
+  '--letter-base-opacity': String(letter.opacity),
+  '--letter-opacity': String(letter.opacity),
   transform: `translate3d(0, ${parallaxScrollY.value * letter.speed}px, 0) rotate(${letter.rotate}deg)`,
 });
 
@@ -626,12 +643,25 @@ const handlePlatformSelect = (platform: PlatformId, downloadUrl?: string) => {
 .parallax-letter {
   position: absolute;
   display: block;
+  font-size: var(--letter-size);
   font-weight: 800;
   line-height: 1;
   letter-spacing: 0;
+  opacity: var(--letter-opacity);
   text-transform: uppercase;
   transform-origin: center;
   will-change: transform;
+}
+
+@media (max-width: 639px) {
+  .parallax-letter-mobile-hidden {
+    display: none;
+  }
+
+  .parallax-letter-mobile-soft {
+    --letter-opacity: calc(var(--letter-base-opacity) * 0.6);
+    font-size: calc(var(--letter-size) * 0.75);
+  }
 }
 
 .platform-reveal-section:not(.platform-revealed) .platform-reveal-title {

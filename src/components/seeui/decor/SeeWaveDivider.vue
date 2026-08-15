@@ -7,7 +7,7 @@
   >
     <div ref="waveInner">
       <svg
-        class="block h-24 flex-none md:h-28"
+        class="block h-16 flex-none sm:h-20 md:h-28"
         :style="{ width: `${waveWidth}px` }"
         viewBox="0 0 1440 220"
         preserveAspectRatio="none"
@@ -16,7 +16,7 @@
         <path :d="wavePath" />
       </svg>
       <svg
-        class="block h-24 flex-none md:h-28"
+        class="block h-16 flex-none sm:h-20 md:h-28"
         :style="{ width: `${waveWidth}px` }"
         viewBox="0 0 1440 220"
         preserveAspectRatio="none"
@@ -48,6 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
 const waveRoot = ref<HTMLElement | null>(null);
 const waveInner = ref<HTMLElement | null>(null);
 const waveWidth = ref(1440);
+const minWaveWidth = 960;
 let resizeObserver: ResizeObserver | null = null;
 
 const normalizeOffset = (offset: number, width: number) => {
@@ -71,7 +72,7 @@ onMounted(() => {
   if (waveRoot.value) {
     const syncWidth = () => {
       if (!waveRoot.value) return;
-      waveWidth.value = waveRoot.value.clientWidth;
+      waveWidth.value = Math.max(waveRoot.value.clientWidth, minWaveWidth);
       updateWavePosition();
     };
 

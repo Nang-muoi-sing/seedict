@@ -1,6 +1,6 @@
 <template>
   <h2
-    class="mt-3 grid min-h-[2.5em] items-end font-mono text-[clamp(3rem,8vw,3.75rem)] font-bold leading-[1.25] text-rosybrown-700"
+    class="mt-3 grid min-h-[2.5em] items-end font-mono text-4xl font-bold leading-[1.25] text-rosybrown-700 md:text-6xl"
   >
     <span class="min-w-0">
       <span class="text-rosybrown-800">{{ committedText }}</span>

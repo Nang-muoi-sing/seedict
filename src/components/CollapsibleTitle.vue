@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="relative">
+    <div class="relative flex items-start gap-1 md:block">
       <button
         type="button"
-        class="absolute left-0 top-[0.2em] flex h-5 w-5 -translate-x-6 items-center justify-center rounded-sm text-wheat-600 transition-colors duration-150 hover:text-rosybrown-700 focus:outline-none"
+        class="mt-[0.2em] flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-wheat-600 transition-colors duration-150 hover:text-rosybrown-700 focus:outline-none md:absolute md:left-0 md:top-[0.2em] md:mt-0 md:-translate-x-6"
         @click="toggle"
       >
         <i-material-symbols-play-arrow-rounded
