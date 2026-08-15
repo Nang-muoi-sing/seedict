@@ -96,7 +96,7 @@ const variants = {
 const sizes = {
   sm: 'px-3 h-8 text-xs',
   md: 'px-5 h-10 text-sm',
-  lg: 'px-6 h-12 text-base',
+  lg: 'h-10 px-5 text-sm sm:h-12 sm:px-6 sm:text-base',
 };
 </script>
 

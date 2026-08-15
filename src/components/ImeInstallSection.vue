@@ -4,7 +4,7 @@
       title-tag="h3"
       :default-open="true"
       title-class="text-xl font-semibold text-rosybrown-800"
-      content-class="pt-3 ml-4 text-base leading-8 text-wheat-700"
+      content-class="pt-3 text-base leading-8 text-wheat-700 md:ml-4"
     >
       <template #title>
         没有使用过 RIME？试试<SeeHandUnderline>全新安装</SeeHandUnderline>！
@@ -121,7 +121,7 @@
     <CollapsibleTitle
       title-tag="h3"
       title-class="text-xl font-semibold text-rosybrown-800"
-      content-class="pt-3 ml-4 space-y-4 text-base leading-8 text-wheat-700"
+      content-class="pt-3 space-y-4 text-base leading-8 text-wheat-700 md:ml-4"
     >
       <template #title>
         已经在用 RIME
