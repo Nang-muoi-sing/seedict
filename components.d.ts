@@ -41,6 +41,7 @@ declare module 'vue' {
     IMaterialSymbolsHelpRounded: typeof import('~icons/material-symbols/help-rounded')['default']
     IMaterialSymbolsHistoryRounded: typeof import('~icons/material-symbols/history-rounded')['default']
     IMaterialSymbolsHomeRounded: typeof import('~icons/material-symbols/home-rounded')['default']
+    IMaterialSymbolsKeyboard: typeof import('~icons/material-symbols/keyboard')['default']
     IMaterialSymbolsKeyboardArrowDownRounded: typeof import('~icons/material-symbols/keyboard-arrow-down-rounded')['default']
     IMaterialSymbolsLanguageChinesePinyin: typeof import('~icons/material-symbols/language-chinese-pinyin')['default']
     IMaterialSymbolsMailRounded: typeof import('~icons/material-symbols/mail-rounded')['default']

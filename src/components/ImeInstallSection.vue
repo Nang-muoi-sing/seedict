@@ -31,8 +31,8 @@
               </p>
               <ol class="list-decimal space-y-2 pl-5">
                 <li>
-                  RIME 在 Windows 平台的名称为「小狼毫」，安装包根据 0.17.4
-                  版本构建
+                  RIME 在 Windows 平台的名称为「小狼毫」，榕拼输入法 Windows
+                  版基于小狼毫构建
                 </li>
                 <li>
                   在本网站下载好安装包后双击运行，并按照安装程序的指示进行安装
@@ -62,8 +62,8 @@
               </p>
               <ol class="list-decimal space-y-2 pl-5">
                 <li>
-                  RIME 在 macOS 平台的名称为「鼠须管」，安装包根据 1.1.2
-                  版本构建
+                  RIME 在 macOS 平台的名称为「鼠须管」，榕拼输入法 macOS
+                  版基于鼠须管构建
                 </li>
                 <li>
                   在本网站下载好安装包后双击运行，并按照安装程序的指示进行安装
@@ -102,7 +102,7 @@
                 <Link href="https://fcitx-im.org/wiki/Install_Fcitx_5"
                   >Fcitx 5</Link
                 >
-                输入法后按挂载方式配置。
+                输入法后按挂载方式配置
               </li>
             </ol>
 
@@ -110,7 +110,7 @@
               <li>
                 安装<Link href="https://github.com/osfans/trime"
                   >同文安卓輸入法平臺</Link
-                >后按挂载方式配置。
+                >后按挂载方式配置
               </li>
             </ol>
           </div>
