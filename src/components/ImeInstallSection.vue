@@ -23,13 +23,13 @@
           >
             <div v-if="freshInstallPlatform === 'windows'" class="space-y-3">
               <p
-                class="pl-3 text-sm leading-6 border-l-4 border-wheat-300 text-wheat-600"
+                class="border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
               >
                 <strong class="text-rosybrown-700">注：</strong>
                 安装过程中，Windows
                 可能会显示安全提示；请确认安装包来自米时典官方，再选择接受风险并继续安装
               </p>
-              <ol class="pl-5 space-y-2 list-decimal">
+              <ol class="list-decimal space-y-2 pl-5">
                 <li>
                   RIME 在 Windows 平台的名称为「小狼毫」，安装包根据 0.17.4
                   版本构建
@@ -45,10 +45,12 @@
 
             <div v-else-if="freshInstallPlatform === 'macos'" class="space-y-3">
               <p
-                class="pl-3 text-sm leading-6 border-l-4 border-wheat-300 text-wheat-600"
+                class="border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
               >
-                <strong class="text-rosybrown-700">注：</strong><strong>鼠须管要求 macOS 13  Ventura 或以上版本！</strong>
-                由于安装包未经 Apple 签名，macOS 可能会阻止安装；请确认安装包来自米时典官方，再打开
+                <strong class="text-rosybrown-700">注：</strong
+                ><strong>鼠须管要求 macOS 13 Ventura 或以上版本！</strong>
+                由于安装包未经 Apple 签名，macOS
+                可能会阻止安装；请确认安装包来自米时典官方，再打开
                 <SeeKeycap label="系统设置" />
                 >
                 <SeeKeycap label="隐私与安全性" />
@@ -58,7 +60,7 @@
                 <SeeKeycap label="仍要打开" />
                 ，使用密码或 Touch ID 确认后再次运行安装包
               </p>
-              <ol class="pl-5 space-y-2 list-decimal">
+              <ol class="list-decimal space-y-2 pl-5">
                 <li>
                   RIME 在 macOS 平台的名称为「鼠须管」，安装包根据 1.1.2
                   版本构建
@@ -84,12 +86,12 @@
                   安装完成后，将系统输入法切换为鼠须管，即可使用福州话打字
                 </li>
               </ol>
-              <SeeImage :src="macImeSelectionImg" class="max-w-xl mx-auto" />
+              <SeeImage :src="macImeSelectionImg" class="mx-auto max-w-xl" />
             </div>
 
             <ol
               v-else-if="freshInstallPlatform === 'linux'"
-              class="pl-5 space-y-2 list-decimal"
+              class="list-decimal space-y-2 pl-5"
             >
               <li>
                 安装
@@ -104,7 +106,7 @@
               </li>
             </ol>
 
-            <ol v-else class="pl-5 space-y-2 list-decimal">
+            <ol v-else class="list-decimal space-y-2 pl-5">
               <li>
                 安装<Link href="https://github.com/osfans/trime"
                   >同文安卓輸入法平臺</Link
@@ -128,16 +130,6 @@
       <template #header>
         <SeeTabs v-model="mountInstallPlatform" :tabs="platformTabs" />
       </template>
-      <template #persistent="{ open }">
-        <p
-          class="pl-3 text-sm leading-6 border-l-4 border-wheat-300 text-wheat-600"
-          :class="{ 'ml-4 mt-3': !open }"
-        >
-          <strong class="text-rosybrown-700">注：</strong>
-          米时典会不定期更新词库，请适时按照挂载配方中的方式下载配方文件，更新本地榕拼输入法的词库
-        </p>
-      </template>
-
       <Transition
         mode="out-in"
         @enter="animateTabPanelEnter"
@@ -151,7 +143,7 @@
 
           <ol
             v-if="mountInstallPlatform === 'windows'"
-            class="pl-5 space-y-2 list-decimal"
+            class="list-decimal space-y-2 pl-5"
           >
             <li>
               点击小狼毫输入法的托盘图标，选择
@@ -173,7 +165,7 @@
 
           <ol
             v-else-if="mountInstallPlatform === 'macos'"
-            class="pl-5 space-y-2 list-decimal"
+            class="list-decimal space-y-2 pl-5"
           >
             <li>
               点击菜单栏中的鼠须管图标，选择
@@ -197,7 +189,7 @@
 
           <ol
             v-else-if="mountInstallPlatform === 'linux'"
-            class="pl-5 space-y-2 list-decimal"
+            class="list-decimal space-y-2 pl-5"
           >
             <li>
               根据相应发行版的桌面框架选择并安装
@@ -232,7 +224,7 @@
             </li>
           </ol>
 
-          <ol v-else class="pl-5 space-y-2 list-decimal">
+          <ol v-else class="list-decimal space-y-2 pl-5">
             <li>
               安卓端同文输入法的默认用户目录位于
               <SeeCode code="/storage/emulated/0/rime" />
@@ -271,12 +263,12 @@
             <SeeImage
               v-if="mountInstallPlatform === 'windows'"
               :src="winUserFolderImg"
-              class="max-w-xl mx-auto"
+              class="mx-auto max-w-xl"
             />
             <SeeImage
               v-else-if="mountInstallPlatform === 'macos'"
               :src="macUserFolderImg"
-              class="max-w-xs mx-auto"
+              class="mx-auto max-w-xs"
             />
           </div>
         </div>

@@ -11,11 +11,16 @@
         >
           <div class="space-y-6">
             <ImeTypingDemo />
-            <p class="max-w-2xl text-base leading-8 text-wheat-700 md:text-lg">
-              福州方言文字不再陌生，母语常伴身旁；即刻下载<SeeHandUnderline>榕拼输入法</SeeHandUnderline>，我们一起落 “键” 生花
+            <p class="max-w-2xl leading-8 text-wheat-600 md:text-4xl">
+              福州话拍字，尽去简单，快来试试！
             </p>
             <div class="flex flex-wrap gap-3">
-              <SeeButton label="免费下载" size="lg" href="#platforms" style="color: white;" />
+              <SeeButton
+                label="免费下载"
+                size="lg"
+                href="#platforms"
+                style="color: white"
+              />
               <SeeButton label="学习榕拼" variant="secondary" size="lg" />
             </div>
           </div>
@@ -25,7 +30,7 @@
           >
             <img
               src="../assets/typing.webp"
-              class="object-contain w-full max-w-sm max-h-80 md:max-h-96 md:max-w-md"
+              class="max-h-80 w-full max-w-sm object-contain md:max-h-96 md:max-w-md"
             />
           </div>
         </div>
@@ -38,20 +43,20 @@
       <section
         id="platforms"
         ref="platformSection"
-        class="relative pt-12 pb-32 overflow-hidden bg-white platform-reveal-section scroll-mt-6 md:scroll-mt-10 md:pb-52 md:pt-16"
+        class="platform-reveal-section relative scroll-mt-6 overflow-hidden bg-white pb-32 pt-12 md:scroll-mt-10 md:pb-52 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2
             ref="platformTitle"
-            class="flex flex-row mb-5 text-4xl font-bold platform-reveal-title text-rosybrown-800"
+            class="platform-reveal-title mb-5 flex flex-row text-4xl font-bold text-rosybrown-800"
           >
             选择汝其平台
           </h2>
           <p
-            class="max-w-3xl text-base leading-8 platform-reveal-content text-wheat-700"
+            class="platform-reveal-content max-w-3xl text-base leading-8 text-wheat-700"
           >
-            榕拼输入法支持 Windows、Mac、Linux 和 Android
-            平台。选择你的平台，此刻开始！
+            榕拼输入法现下时支持 Windows、Mac、Linux 共 Android
+            平台。选择汝其平台，此刻开始！
           </p>
           <div class="grid gap-4 pt-4 md:grid-cols-2">
             <a
@@ -60,7 +65,7 @@
               class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex items-center justify-center w-12 h-12 text-2xl bg-white shrink-0 rounded-xl text-rosybrown-600"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
                 <i-ri-windows-fill />
               </span>
@@ -75,7 +80,7 @@
               class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex items-center justify-center w-12 h-12 text-2xl bg-white shrink-0 rounded-xl text-rosybrown-600"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
                 <i-ri-finder-fill />
               </span>
@@ -90,7 +95,7 @@
               class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex items-center justify-center w-12 h-12 text-2xl bg-white shrink-0 rounded-xl text-rosybrown-600"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
                 <i-simple-icons-linux />
               </span>
@@ -105,7 +110,7 @@
               class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
             >
               <span
-                class="flex items-center justify-center w-12 h-12 text-2xl bg-white shrink-0 rounded-xl text-rosybrown-600"
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
                 <i-simple-icons-android />
               </span>
@@ -124,10 +129,10 @@
 
       <section
         id="install-guide"
-        class="relative pt-12 pb-32 overflow-hidden scroll-mt-6 bg-wheat-50 md:scroll-mt-10 md:pb-60 md:pt-16"
+        class="relative scroll-mt-6 overflow-hidden bg-wheat-50 pb-32 pt-12 md:scroll-mt-10 md:pb-60 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
-          <h2 class="flex flex-row mb-5 text-4xl font-bold text-rosybrown-800">
+          <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
             安装指南
           </h2>
           <ImeInstallSection :selected-platform="selectedInstallPlatform" />
@@ -140,20 +145,15 @@
 
       <section
         ref="faqSection"
-        class="pt-12 pb-12 bg-white faq-reveal-section md:pb-16 md:pt-16"
+        class="faq-reveal-section bg-white pb-12 pt-12 md:pb-16 md:pt-16"
       >
         <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
           <h2
             ref="faqTitle"
-            class="flex flex-row justify-center mb-10 text-4xl font-bold text-center faq-reveal-title text-rosybrown-800"
+            class="faq-reveal-title mb-10 flex flex-row justify-center text-center text-4xl font-bold text-rosybrown-800"
           >
             常见问题
           </h2>
-          <p class="text-center text-base leading-8 text-wheat-700">
-            无论遇到什么问题，都欢迎通过
-            <Link href="">飞书表单</Link>
-            向我们反馈
-          </p>
           <ImeFaq />
         </div>
       </section>
@@ -167,7 +167,6 @@
 import { animate, stagger } from 'animejs';
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import Footer from '../components/common/Footer.vue';
-import Link from '../components/common/Link.vue';
 import ImeFaq from '../components/ImeFaq.vue';
 import ImeInstallSection from '../components/ImeInstallSection.vue';
 import ImeTypingDemo from '../components/ImeTypingDemo.vue';
