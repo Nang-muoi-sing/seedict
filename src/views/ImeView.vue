@@ -30,8 +30,8 @@
         >
           <div class="space-y-6">
             <ImeTypingDemo />
-            <p class="max-w-2xl leading-8 text-wheat-600 text-xl md:text-4xl">
-              福州话拍字，尽去简单，快来试试！
+            <p class="max-w-2xl text-xl leading-8 text-wheat-600 md:text-4xl">
+              福州话拍字，尽去简单，快来试看！
             </p>
             <div class="flex flex-wrap gap-3">
               <SeeButton
@@ -54,7 +54,7 @@
           >
             <img
               src="../assets/typing.webp"
-              class="max-h-80 w-full max-w-sm object-contain md:max-h-96 md:max-w-md"
+              class="max-h-80 w-full max-w-sm object-contain md:max-h-96 md:max-w-md select-none"
             />
           </div>
         </div>
@@ -99,14 +99,14 @@
           <p
             class="platform-reveal-content max-w-3xl text-base leading-8 text-wheat-700"
           >
-            榕拼输入法现下时支持 Windows、Mac、Linux 共 Android
+            榕拼输入法这久支持 Windows、Mac、Linux 共 Android
             平台。选择汝其平台，此刻开始！
           </p>
           <div class="grid gap-4 pt-4 md:grid-cols-2">
             <a
               href="#install-guide"
               @click="handlePlatformSelect('windows', windowsDownloadUrl)"
-              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -121,7 +121,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('macos', macDownloadUrl)"
-              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -136,7 +136,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('linux')"
-              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -151,7 +151,7 @@
             <a
               href="#install-guide"
               @click="handlePlatformSelect('android')"
-              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 shadow-sm hover:-translate-y-0.5 hover:bg-wheat-100 hover:shadow-md"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
@@ -164,6 +164,11 @@
               </span>
             </a>
           </div>
+          <p
+            class="border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
+          >
+            最近更新于 2026.08.15，备用下载链接
+          </p>
         </div>
         <SeeWaveDivider
           class="z-[4]"

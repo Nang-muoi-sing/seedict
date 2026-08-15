@@ -91,6 +91,16 @@
           >
             <RouterLink
               class="inline-flex w-full items-center"
+              :to="{ name: 'ime' }"
+            >
+              <i-material-symbols-keyboard class="mr-1" />输入法</RouterLink
+            >
+          </div>
+          <div
+            class="rounded-xs m-1 w-full content-center px-3 py-1.5 align-middle font-bold text-rosybrown-600 transition-all ease-in-out hover:bg-wheat-100 hover:text-rosybrown-800"
+          >
+            <RouterLink
+              class="inline-flex w-full items-center"
               :to="{ name: 'about' }"
             >
               <i-material-symbols-crowdsource class="mr-1" />关于</RouterLink
@@ -170,7 +180,7 @@ const closeSidebar = () => {
       translateX: 100,
       duration: 300,
       easing: 'easeOutQuad',
-      onComplete: () =>  {
+      onComplete: () => {
         isSidebarOpen.value = false;
         isAnimating.value = false;
       },
