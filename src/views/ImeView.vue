@@ -167,7 +167,9 @@
           <p
             class="platform-reveal-note border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
           >
-            最近更新于 2026.08.15，<Link href="">备用下载链接</Link>
+            最近更新于 2026.08.15，<Link href="https://tseing.ysepan.com/"
+              >备用下载链接</Link
+            >（访问密码：seedict）
           </p>
         </div>
         <SeeWaveDivider
@@ -330,9 +332,9 @@ interface FeatureItem {
 }
 
 const windowsDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-weasel-0.17.4.exe';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.2.0/rime-hokchew-weasel-0.17.4.exe';
 const macDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.2.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
 const selectedInstallPlatform = ref<PlatformId>('windows');
 const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
