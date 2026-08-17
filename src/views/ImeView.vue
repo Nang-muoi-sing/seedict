@@ -54,7 +54,7 @@
           >
             <img
               src="../assets/typing.webp"
-              class="max-h-80 w-full max-w-sm object-contain md:max-h-96 md:max-w-md select-none"
+              class="max-h-80 w-full max-w-sm select-none object-contain md:max-h-96 md:max-w-md"
             />
           </div>
         </div>
@@ -165,9 +165,9 @@
             </a>
           </div>
           <p
-            class="border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
+            class="platform-reveal-note border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
           >
-            最近更新于 2026.08.15，备用下载链接
+            最近更新于 2026.08.15，<Link href="">备用下载链接</Link>
           </p>
         </div>
         <SeeWaveDivider
@@ -186,6 +186,14 @@
             安装指南
           </h2>
           <ImeInstallSection :selected-platform="selectedInstallPlatform" />
+          <p
+            class="mt-4 border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
+          >
+            安装成功后可以查看<Link
+              href="https://jcnf40n3hvft.feishu.cn/wiki/IkmfwN6VLiwAYEkxaqDcOe4DnC3"
+              >使用教程</Link
+            >详细了解榕拼输入法的具体功能与使用方法
+          </p>
         </div>
         <SeeWaveDivider
           color-class="text-white"
@@ -520,6 +528,9 @@ const revealPlatformSection = () => {
   const cardElements = platformSection.value.querySelectorAll<HTMLElement>(
     '.platform-reveal-card'
   );
+  const noteElements = platformSection.value.querySelectorAll<HTMLElement>(
+    '.platform-reveal-note'
+  );
   const clearRevealStyles = () => {
     platformSection.value?.classList.add('platform-revealed');
     platformTitle.value?.style.removeProperty('opacity');
@@ -529,6 +540,10 @@ const revealPlatformSection = () => {
       element.style.removeProperty('transform');
     });
     cardElements.forEach((element) => {
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+    });
+    noteElements.forEach((element) => {
       element.style.removeProperty('opacity');
       element.style.removeProperty('transform');
     });
@@ -554,6 +569,14 @@ const revealPlatformSection = () => {
     translateY: [128, 0],
     duration: 620,
     delay: stagger(70, { start: 190 }),
+    easing: 'easeOutCubic',
+  });
+
+  animate(noteElements, {
+    opacity: [0, 1],
+    translateY: [56, 0],
+    duration: 560,
+    delay: 520,
     easing: 'easeOutCubic',
     onComplete: clearRevealStyles,
   });
@@ -682,6 +705,11 @@ const handlePlatformSelect = (platform: PlatformId, downloadUrl?: string) => {
 .platform-reveal-section:not(.platform-revealed) .platform-reveal-card {
   opacity: 0;
   transform: translateY(128px);
+}
+
+.platform-reveal-section:not(.platform-revealed) .platform-reveal-note {
+  opacity: 0;
+  transform: translateY(56px);
 }
 
 .platform-card {
