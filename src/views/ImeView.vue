@@ -177,29 +177,103 @@
         />
       </section>
 
-      <section
-        id="install-guide"
-        class="relative scroll-mt-6 overflow-hidden bg-wheat-50 pb-32 pt-12 md:scroll-mt-10 md:pb-60 md:pt-16"
-      >
-        <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
-          <h2 class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
-            安装指南
-          </h2>
-          <ImeInstallSection :selected-platform="selectedInstallPlatform" />
-          <p
-            class="mt-4 border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
+      <div class="bg-wheat-50">
+        <section
+          ref="featureShowcase"
+          class="feature-showcase scroll-mt-6 pb-8 pt-12 md:scroll-mt-10 md:pb-12 md:pt-20"
+        >
+          <div
+            class="mx-auto w-[90vw] max-w-5xl"
+            @mouseenter="stopFeatureSlideshow"
+            @mouseleave="startFeatureSlideshow"
           >
-            安装成功后可以查看<Link
-              href="https://jcnf40n3hvft.feishu.cn/wiki/IkmfwN6VLiwAYEkxaqDcOe4DnC3"
-              >使用教程</Link
-            >详细了解榕拼输入法的具体功能与使用方法
-          </p>
-        </div>
-        <SeeWaveDivider
-          color-class="text-white"
-          :offset-x="waveOffsets.guide - 340"
-        />
-      </section>
+            <Transition name="feature-slide" mode="out-in">
+              <div
+                :key="`${activeFeature.title}-${activeFeatureImageSide}`"
+                class="feature-showcase-item"
+                :data-direction="activeFeature.direction"
+              >
+                <div
+                  class="mx-auto grid min-h-[25rem] w-full max-w-4xl items-center gap-5 md:min-h-[20rem] md:grid-cols-2 md:gap-8"
+                  :class="{
+                    'md:[&>.feature-copy]:order-1 md:[&>.feature-shot]:order-2':
+                      activeFeatureImageSide === 'right',
+                    'md:-translate-x-8 lg:-translate-x-10':
+                      activeFeatureImageSide === 'left',
+                    'md:translate-x-8 lg:translate-x-10':
+                      activeFeatureImageSide === 'right',
+                  }"
+                >
+                  <div
+                    class="feature-shot flex w-full max-w-xs items-center justify-center justify-self-center md:max-w-sm"
+                  >
+                    <img
+                      :src="activeFeature.image"
+                      :alt="activeFeature.title"
+                      class="max-h-[15rem] w-full rounded-lg object-contain md:max-h-[18rem]"
+                      draggable="false"
+                    />
+                  </div>
+                  <div
+                    class="feature-copy max-w-md space-y-3 justify-self-center"
+                  >
+                    <h3
+                      class="text-2xl font-bold text-rosybrown-800 md:text-3xl"
+                    >
+                      {{ activeFeature.title }}
+                    </h3>
+                    <p class="max-w-xl text-base leading-8 text-wheat-700">
+                      {{ activeFeature.description }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+
+            <div class="mt-6 flex items-center justify-center">
+              <div class="flex items-center gap-2">
+                <button
+                  v-for="(feature, index) in featureItems"
+                  :key="feature.title"
+                  type="button"
+                  class="feature-dot"
+                  :class="{
+                    'feature-dot-active': index === activeFeatureIndex,
+                  }"
+                  :aria-label="`显示${feature.title}`"
+                  :aria-current="index === activeFeatureIndex"
+                  @click="selectFeature(index)"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="install-guide"
+          class="relative scroll-mt-6 overflow-hidden bg-wheat-50 pb-32 pt-12 md:scroll-mt-10 md:pb-60 md:pt-16"
+        >
+          <div class="mx-auto w-[90vw] max-w-6xl space-y-4">
+            <h2
+              class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800"
+            >
+              安装指南
+            </h2>
+            <ImeInstallSection :selected-platform="selectedInstallPlatform" />
+            <p
+              class="mt-4 border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
+            >
+              安装成功后可以查看<Link
+                href="https://jcnf40n3hvft.feishu.cn/wiki/IkmfwN6VLiwAYEkxaqDcOe4DnC3"
+                >使用教程</Link
+              >详细了解榕拼输入法的具体功能与使用方法
+            </p>
+          </div>
+          <SeeWaveDivider
+            color-class="text-white"
+            :offset-x="waveOffsets.guide - 340"
+          />
+        </section>
+      </div>
 
       <section
         ref="faqSection"
@@ -223,11 +297,14 @@
 
 <script setup lang="ts">
 import { animate, stagger } from 'animejs';
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import Footer from '../components/common/Footer.vue';
 import ImeFaq from '../components/ImeFaq.vue';
 import ImeInstallSection from '../components/ImeInstallSection.vue';
 import ImeTypingDemo from '../components/ImeTypingDemo.vue';
+import imeFuzzyTypingImg from '../assets/ime/ime-fuzzy-typing.webp';
+import imeT2SImg from '../assets/ime/ime-t2s.webp';
+import imeLookupImg from '../assets/ime/ime-lookup.webp';
 import NavBar from '../components/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
 import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
@@ -244,6 +321,13 @@ interface ParallaxLetter {
   class?: string;
   hideOnMobile?: boolean;
 }
+interface FeatureItem {
+  title: string;
+  description: string;
+  image: string;
+  direction: 'left' | 'right';
+  imageSide: 'left' | 'right';
+}
 
 const windowsDownloadUrl =
   'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.1.0/rime-hokchew-weasel-0.17.4.exe';
@@ -252,6 +336,9 @@ const macDownloadUrl =
 const selectedInstallPlatform = ref<PlatformId>('windows');
 const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
+const featureShowcase = ref<HTMLElement | null>(null);
+const activeFeatureIndex = ref(0);
+const activeFeatureImageSide = ref<FeatureItem['imageSide']>('left');
 const faqSection = ref<HTMLElement | null>(null);
 const faqTitle = ref<HTMLElement | null>(null);
 const parallaxScrollY = ref(0);
@@ -260,6 +347,31 @@ const waveOffsets = reactive({
   platform: 0,
   guide: 0,
 });
+const featureItems: FeatureItem[] = [
+  {
+    title: '兼容简繁汉字输出',
+    description: '支持切换简体与繁体汉字输出，按使用习惯选用所需字形',
+    image: imeT2SImg,
+    direction: 'left',
+    imageSide: 'left',
+  },
+  {
+    title: '榕拼模糊音打字',
+    description: '支持榕拼模糊音输入，即使不熟悉声韵母也能轻松上手',
+    image: imeFuzzyTypingImg,
+    direction: 'right',
+    imageSide: 'right',
+  },
+  {
+    title: '普通话拼音反查',
+    description:
+      '遇到陌生字词，直接使用普通话拼音反查对应榕拼，在打字过程中也能学习与巩固生字读音',
+    image: imeLookupImg,
+    direction: 'left',
+    imageSide: 'left',
+  },
+];
+const activeFeature = computed(() => featureItems[activeFeatureIndex.value]);
 const heroParallaxLetters: ParallaxLetter[] = [
   {
     text: '春',
@@ -471,6 +583,9 @@ const platformParallaxLetters: ParallaxLetter[] = [
 ];
 let scrollRafId: number | null = null;
 let platformRevealObserver: IntersectionObserver | null = null;
+let featureRevealObserver: IntersectionObserver | null = null;
+let featureSlideshowIntervalId: number | null = null;
+let isFeatureSlideshowPaused = false;
 let isFaqRevealed = false;
 
 const hasSectionTopReachedViewportRatio = (
@@ -515,6 +630,59 @@ const handleScroll = () => {
   }
 
   scrollRafId = window.requestAnimationFrame(updateWaveOffsets);
+};
+
+const stopFeatureSlideshow = () => {
+  isFeatureSlideshowPaused = true;
+
+  if (featureSlideshowIntervalId === null) {
+    return;
+  }
+
+  window.clearInterval(featureSlideshowIntervalId);
+  featureSlideshowIntervalId = null;
+};
+
+const startFeatureSlideshow = () => {
+  isFeatureSlideshowPaused = false;
+
+  if (featureSlideshowIntervalId !== null || featureItems.length <= 1) {
+    return;
+  }
+
+  featureSlideshowIntervalId = window.setInterval(() => {
+    activeFeatureIndex.value =
+      (activeFeatureIndex.value + 1) % featureItems.length;
+    toggleFeatureImageSide();
+  }, 15000);
+};
+
+const restartFeatureSlideshow = () => {
+  if (isFeatureSlideshowPaused) {
+    return;
+  }
+
+  if (featureSlideshowIntervalId !== null) {
+    window.clearInterval(featureSlideshowIntervalId);
+    featureSlideshowIntervalId = null;
+  }
+
+  startFeatureSlideshow();
+};
+
+const selectFeature = (index: number) => {
+  if (index === activeFeatureIndex.value) {
+    return;
+  }
+
+  activeFeatureIndex.value = index;
+  toggleFeatureImageSide();
+  restartFeatureSlideshow();
+};
+
+const toggleFeatureImageSide = () => {
+  activeFeatureImageSide.value =
+    activeFeatureImageSide.value === 'left' ? 'right' : 'left';
 };
 
 const revealPlatformSection = () => {
@@ -582,6 +750,43 @@ const revealPlatformSection = () => {
   });
 };
 
+const revealFeatureShowcase = () => {
+  if (!featureShowcase.value) {
+    return;
+  }
+
+  const featureElements = featureShowcase.value.querySelectorAll<HTMLElement>(
+    '.feature-showcase-item'
+  );
+  const clearRevealStyles = () => {
+    featureShowcase.value?.classList.add('feature-showcase-revealed');
+    featureElements.forEach((element) => {
+      element.style.removeProperty('opacity');
+      element.style.removeProperty('transform');
+    });
+  };
+
+  const isSmallScreen = window.matchMedia('(max-width: 767px)').matches;
+  featureElements.forEach((element, index) => {
+    const fromX = isSmallScreen
+      ? 0
+      : element.dataset.direction === 'right'
+        ? 112
+        : -112;
+
+    animate(element, {
+      opacity: [0, 1],
+      translateX: [fromX, 0],
+      translateY: [isSmallScreen ? 64 : 0, 0],
+      duration: 720,
+      delay: index * 120,
+      easing: 'easeOutCubic',
+      onComplete:
+        index === featureElements.length - 1 ? clearRevealStyles : undefined,
+    });
+  });
+};
+
 const revealFaqSection = () => {
   if (!faqTitle.value || !faqSection.value) {
     return;
@@ -618,10 +823,12 @@ const revealFaqSection = () => {
 
 onMounted(() => {
   updateWaveOffsets();
+  startFeatureSlideshow();
   window.addEventListener('scroll', handleScroll, { passive: true });
 
   if (!('IntersectionObserver' in window)) {
     revealPlatformSection();
+    revealFeatureShowcase();
     return;
   }
 
@@ -642,6 +849,24 @@ onMounted(() => {
     );
     platformRevealObserver.observe(platformSection.value);
   }
+
+  if (featureShowcase.value) {
+    featureRevealObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) {
+          return;
+        }
+
+        revealFeatureShowcase();
+        featureRevealObserver?.disconnect();
+        featureRevealObserver = null;
+      },
+      {
+        threshold: 0.18,
+      }
+    );
+    featureRevealObserver.observe(featureShowcase.value);
+  }
 });
 
 onBeforeUnmount(() => {
@@ -651,6 +876,10 @@ onBeforeUnmount(() => {
 
   window.removeEventListener('scroll', handleScroll);
   platformRevealObserver?.disconnect();
+  featureRevealObserver?.disconnect();
+  if (featureSlideshowIntervalId !== null) {
+    window.clearInterval(featureSlideshowIntervalId);
+  }
 });
 
 const handlePlatformSelect = (platform: PlatformId, downloadUrl?: string) => {
@@ -710,6 +939,48 @@ const handlePlatformSelect = (platform: PlatformId, downloadUrl?: string) => {
 .platform-reveal-section:not(.platform-revealed) .platform-reveal-note {
   opacity: 0;
   transform: translateY(56px);
+}
+
+.feature-showcase:not(.feature-showcase-revealed) .feature-showcase-item {
+  opacity: 0;
+}
+
+.feature-slide-enter-active,
+.feature-slide-leave-active {
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.feature-slide-enter-from {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+.feature-slide-leave-to {
+  opacity: 0;
+  transform: translateX(24px);
+}
+
+.feature-dot:focus-visible {
+  outline: 2px solid theme('colors.rosybrown.500');
+  outline-offset: 3px;
+}
+
+.feature-dot {
+  height: 0.625rem;
+  width: 0.625rem;
+  border-radius: 9999px;
+  background: theme('colors.wheat.300');
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    width 160ms ease;
+}
+
+.feature-dot-active {
+  width: 1.75rem;
+  background: theme('colors.rosybrown.600');
 }
 
 .platform-card {
