@@ -28,6 +28,8 @@ declare module 'vue' {
     ILucideToolCase: typeof import('~icons/lucide/tool-case')['default']
     IMaterialSymbolsAccessibilityNew: typeof import('~icons/material-symbols/accessibility-new')['default']
     IMaterialSymbolsAddRounded: typeof import('~icons/material-symbols/add-rounded')['default']
+    IMaterialSymbolsArrowBackIosNewRounded: typeof import('~icons/material-symbols/arrow-back-ios-new-rounded')['default']
+    IMaterialSymbolsArrowForwardIosRounded: typeof import('~icons/material-symbols/arrow-forward-ios-rounded')['default']
     IMaterialSymbolsBook2Rounded: typeof import('~icons/material-symbols/book2-rounded')['default']
     IMaterialSymbolsCheckCircleRounded: typeof import('~icons/material-symbols/check-circle-rounded')['default']
     IMaterialSymbolsCheckRounded: typeof import('~icons/material-symbols/check-rounded')['default']
