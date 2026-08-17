@@ -26,7 +26,7 @@
           </span>
         </div>
         <div
-          class="relative z-10 mx-auto grid w-[90vw] max-w-6xl gap-10 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:items-center 2xl:gap-14"
+          class="relative z-10 mx-auto grid w-[90vw] max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center lg:gap-8 xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-14"
         >
           <div class="space-y-6">
             <ImeTypingDemo />
@@ -50,11 +50,11 @@
           </div>
 
           <div
-            class="hidden min-h-72 items-center justify-center p-2 2xl:flex 2xl:p-4"
+            class="hidden min-h-72 items-center justify-center p-2 lg:flex 2xl:p-4"
           >
             <img
               src="../assets/typing.webp"
-              class="max-h-80 w-full max-w-sm select-none object-contain md:max-h-96 md:max-w-md"
+              class="max-h-72 w-full max-w-[18rem] select-none object-contain lg:max-h-80 lg:max-w-sm xl:max-h-96 xl:max-w-md"
             />
           </div>
         </div>
