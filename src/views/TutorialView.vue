@@ -1,11 +1,11 @@
 <template>
   <PageContent :show-search-bar="false">
     <LetterPaper>
-      <div class="text-rosybrown-800 mb-5 flex flex-row text-4xl font-bold">
+      <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
         <RubyText :text="'入门'" :yngping="'ik5 muong53'"></RubyText>
       </div>
 
-      <div class="text-wheat-600 space-y-2">
+      <div class="space-y-2 text-wheat-600">
         <p>读者您好！</p>
         <p>
           在使用《米时典》查询词汇时，您或许会留意到每个汉字上方都标注着拼音。这些拼音是什么？它们怎么读？为解答这些问题，我们的编辑团队编写了本教程，希望能够作为入门手册，帮助您学习和拼读榕拼。
@@ -18,10 +18,10 @@
         </ul>
       </div>
     </LetterPaper>
-    <h3 class="text-wheat-600 mt-5 mb-3 text-lg font-bold before:content-['■']">
+    <h3 class="mb-3 mt-5 text-lg font-bold text-wheat-600 before:content-['■']">
       若您有一定的语言学基础，请直接阅读：
     </h3>
-    <ul class="text-wheat-600 space-y-1.5">
+    <ul class="space-y-1.5 text-wheat-600">
       <li class="flex items-center gap-2">
         <i-mdi-link-variant /><Link
           href="https://jcnf40n3hvft.feishu.cn/wiki/QJ9WwaEHvihROKkEJ6uc2kzsnCc"
@@ -35,10 +35,10 @@
         >
       </li>
     </ul>
-    <h3 class="text-wheat-600 mt-5 mb-3 text-lg font-bold before:content-['■']">
+    <h3 class="mb-3 mt-5 text-lg font-bold text-wheat-600 before:content-['■']">
       若您没有语言学基础，请按以下顺序阅读：
     </h3>
-    <ul class="text-wheat-600 space-y-1.5">
+    <ul class="space-y-1.5 text-wheat-600">
       <li class="flex items-center gap-2">
         <i-mdi-link-variant /><Link
           href="https://jcnf40n3hvft.feishu.cn/wiki/K8RfwLGzuiC9eskLKAqcrNrnnde"
@@ -72,18 +72,18 @@
     </ul>
 
     <div class="flex"></div>
-    <Subtitle text="相关链接" class="mt-8 mb-2"></Subtitle>
-    <ul class="text-wheat-600 space-y-1.5">
+    <Subtitle text="相关链接" class="mb-2 mt-8"></Subtitle>
+    <ul class="space-y-1.5 text-wheat-600">
       <li class="flex items-center gap-2">
         <i-mdi-link-variant /><Link
-          href="https://github.com/Nang-muoi-sing/Input-method"
-          >榕拼输入法 Nang-muoi-sing/Input-method | GitHub</Link
+          href="https://github.com/Nang-muoi-sing/rime-hokchew"
+          >榕拼输入法 Nang-muoi-sing/rime-hokchew | GitHub</Link
         >
       </li>
     </ul>
 
-    <Subtitle text="修订纪要" class="mt-8 mb-2"></Subtitle>
-    <ul class="text-wheat-600 list-disc space-y-1.5 px-5">
+    <Subtitle text="修订纪要" class="mb-2 mt-8"></Subtitle>
+    <ul class="list-disc space-y-1.5 px-5 text-wheat-600">
       <li>2024 年 11 月 30 日编撰《榕拼教程》第一版，作者子善</li>
     </ul>
   </PageContent>
