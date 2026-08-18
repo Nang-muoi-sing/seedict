@@ -26,7 +26,7 @@ const imeSegments = [
     committed: '榕拼',
   },
   {
-    typing: "su'ik'huak",
+    typing: "sy'ik'huak",
     committed: '输入法',
   },
 ] as const;
