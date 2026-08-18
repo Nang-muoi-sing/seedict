@@ -47,7 +47,7 @@
       @toggle="toggleItem('scheme')"
     >
       <ol class="list-decimal pl-4">
-        <li>通过 RIME 的任务栏托盘打开设置菜单，切换到目标的输入法案。</li>
+        <li>通过 RIME 的任务栏托盘打开设置菜单，切换到目标的输入方案。</li>
         <li>
           通过
           <SeeKeycap label="ctrl" />
