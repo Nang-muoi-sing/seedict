@@ -1,13 +1,15 @@
 <template>
   <h2
-    class="mt-3 grid min-h-[2.5em] items-end font-mono text-4xl font-bold leading-[1.25] text-rosybrown-700 md:text-6xl"
+    class="mt-3 flex min-h-[2.5em] items-end text-4xl font-bold leading-none text-rosybrown-700 md:text-6xl"
   >
-    <span class="min-w-0">
-      <span class="text-rosybrown-800">{{ committedText }}</span>
-      <span class="whitespace-nowrap">
+    <span class="flex min-h-[1.25em] min-w-0 items-end">
+      <span class="font-sans leading-[1.25] text-rosybrown-800">{{
+        committedText
+      }}</span>
+      <span class="inline-flex h-[1.25em] items-end whitespace-nowrap">
         <span
           v-if="composingText"
-          class="bg-wheat-100 px-0.5 pt-1.5 text-wheat-700"
+          class="inline-flex h-full items-center bg-wheat-100 px-0.5 font-mono leading-none text-wheat-700"
         >
           {{ composingText }}
         </span>
