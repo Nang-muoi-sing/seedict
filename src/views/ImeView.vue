@@ -332,9 +332,9 @@ interface FeatureItem {
 }
 
 const windowsDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.2.0/rime-hokchew-weasel-0.17.4.exe';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-weasel-0.17.4.exe';
 const macDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.2.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
 const selectedInstallPlatform = ref<PlatformId>('windows');
 const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
