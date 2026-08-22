@@ -1,0 +1,1 @@
+System.register(["./index-legacy-ir507tH4.js"],function(t,e){"use strict";var r,s,n,o;return{setters:[t=>{r=t.a,s=t.b,n=t.c,o=t.t}],execute:function(){const e=["id"];t("_",r({__name:"Subtitle",props:{text:{}},setup(t){const r=t;return(t,c)=>(s(),n("h2",{id:r.text,class:"border-rosybrown-800 text-rosybrown-800 w-fit border-t-[6px] p-1 text-xl font-bold"},o(r.text),9,e))}}))}}});
