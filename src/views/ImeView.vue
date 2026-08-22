@@ -41,10 +41,10 @@
                 style="color: white"
               />
               <SeeButton
-                label="学习榕拼"
+                label="使用教程"
                 variant="secondary"
                 size="lg"
-                :to="{ name: 'tutorial' }"
+                href="https://jcnf40n3hvft.feishu.cn/wiki/IkmfwN6VLiwAYEkxaqDcOe4DnC3"
               />
             </div>
           </div>
