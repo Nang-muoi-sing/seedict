@@ -1,14 +1,16 @@
 <template>
-  <div class="bg-wheat-50 relative min-h-screen z-10 overflow-hidden">
-    <div class="flex justify-center px-4 pt-8 pb-8 md:justify-end md:px-16 md:pb-0">
-      <NavPanel class="relative z-30 w-xs"></NavPanel>
+  <div class="relative z-10 min-h-screen overflow-hidden bg-wheat-50">
+    <div
+      class="relative z-50 flex justify-center px-4 pb-8 pt-8 md:justify-end md:px-16 md:pb-0"
+    >
+      <NavPanel class="relative w-xs"></NavPanel>
     </div>
     <div
       class="relative mx-auto mt-5 flex w-fit flex-col items-center space-y-8 text-center"
     >
       <RouterLink
         :to="{ name: 'home' }"
-        class="z-30 block pl-10"
+        class="relative z-30 block pl-10"
         :style="{
           transform: `translateY(-${Math.min(scrollY * 1, 200)}px)`,
           opacity: Math.max(0, 1 - scrollY / 500),
@@ -16,11 +18,9 @@
       >
         <img src="../assets/logo-see.svg" />
       </RouterLink>
-      <SearchBar
-        class="relative w-xs sm:w-sm md:w-md"
-      ></SearchBar>
+      <SearchBar class="relative w-xs sm:w-sm md:w-md"></SearchBar>
     </div>
-     <WordsDeck></WordsDeck>
+    <WordsDeck></WordsDeck>
   </div>
   <Footer class="relative"></Footer>
 </template>
@@ -48,7 +48,7 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  document.title = "米时典 SeeDict | 福州话词典"
+  document.title = '米时典 SeeDict | 福州话词典';
   window.addEventListener('scroll', handleScroll);
 });
 
