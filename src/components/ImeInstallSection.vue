@@ -107,10 +107,46 @@
             </ol>
 
             <ol v-else class="list-decimal space-y-2 pl-5">
+              <li>在本网站下载好安装包后点击运行，并按照安装指示完成安装</li>
               <li>
-                安装<Link href="https://github.com/osfans/trime"
-                  >同文安卓輸入法平臺</Link
-                >后按挂载方式配置
+                点击安装后出现的「同文输入法」，按应用提示给予权限并启用输入法
+              </li>
+              <li>
+                回到应用界面，选择
+                <SeeKeycap label="方案" />，
+                点击右上角的编辑按钮，关闭全部自带的输入方案，再点击界面右下角的添加按钮，勾选「榕拼输入法」并点击
+                <SeeKeycap label="确认" />，就可以使用输入法打字了
+                <div class="mt-3 grid gap-3 sm:grid-cols-2 sm:items-start">
+                  <SeeImage
+                    :src="androidImeSelectionImg"
+                    class="mx-auto w-full max-w-64"
+                  />
+                  <SeeImage
+                    :src="androidImeTypingImg"
+                    class="mx-auto w-full max-w-64"
+                  />
+                </div>
+              </li>
+
+              <li>
+                （可选）同文输入法内置的键盘样式不太容易使用，推荐<Link
+                  href="https://tseing.ysepan.com/"
+                  >下载</Link
+                >安卓主题 <SeeCode code="lightbulb.zip" /> 并解压至用户目录（访问密码：seedict） 。
+                安卓端同文输入法的默认用户目录位于
+                <SeeCode code="/storage/emulated/0/rime" />
+                （常常显示为
+                <SeeCode code="内部存储/rime" />
+                或
+                <SeeCode code="手机存储/rime" />
+                ）
+              </li>
+              <li>
+                （可选）接着打开应用界面，
+                <SeeKeycap label="键盘样式" /> > <SeeKeycap label="主题" /> >
+                <SeeKeycap
+                  label="日光灯（lightbulb）"
+                />，套用该主题后能够在输入法中显示生僻汉字
               </li>
             </ol>
           </div>
@@ -281,6 +317,8 @@
 import { animate } from 'animejs';
 import { ref, watch } from 'vue';
 import macImeSelectionImg from '../assets/ime/mac-ime-selection.png';
+import androidImeSelectionImg from '../assets/ime/android-ime-selection.jpg';
+import androidImeTypingImg from '../assets/ime/android-ime-typing.jpg';
 import winUserFolderImg from '../assets/ime/win-user-folder.png';
 import macUserFolderImg from '../assets/ime/mac-user-folder.png';
 import CollapsibleTitle from './CollapsibleTitle.vue';
