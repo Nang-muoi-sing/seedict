@@ -150,7 +150,7 @@
             </a>
             <a
               href="#install-guide"
-              @click="handlePlatformSelect('android')"
+              @click="handlePlatformSelect('android', androidDownloadUrl)"
               class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
             >
               <span
@@ -167,7 +167,7 @@
           <p
             class="platform-reveal-note border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
           >
-            最近更新于 2026.08.15，<Link href="https://tseing.ysepan.com/"
+            最近更新于 2026.08.24，<Link href="https://tseing.ysepan.com/"
               >备用下载链接</Link
             >（访问密码：seedict）
           </p>
@@ -335,6 +335,8 @@ const windowsDownloadUrl =
   'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-weasel-0.17.4.exe';
 const macDownloadUrl =
   'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+const androidDownloadUrl =
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-trime-3.3.11-arm64-v8a.apk';
 const selectedInstallPlatform = ref<PlatformId>('windows');
 const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
