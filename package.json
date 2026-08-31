@@ -28,6 +28,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.4",
     "@eslint/create-config": "^1.10.0",
+    "@iconify-json/ant-design": "^1.2.9",
     "@iconify-json/ic": "^1.2.4",
     "@iconify-json/icon-park-outline": "^1.2.4",
     "@iconify-json/line-md": "^1.2.11",

@@ -43,6 +43,23 @@
               </ol>
             </div>
 
+            <ol
+              v-else-if="freshInstallPlatform === 'linux'"
+              class="list-decimal space-y-2 pl-5"
+            >
+              <li>
+                安装
+                <Link href="https://github.com/ibus/ibus/wiki/Install"
+                  >IBus</Link
+                >
+                或
+                <Link href="https://fcitx-im.org/wiki/Install_Fcitx_5"
+                  >Fcitx 5</Link
+                >
+                输入法后按 Linux 挂载方式配置
+              </li>
+            </ol>
+
             <div v-else-if="freshInstallPlatform === 'macos'" class="space-y-3">
               <p
                 class="border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
@@ -90,23 +107,21 @@
             </div>
 
             <ol
-              v-else-if="freshInstallPlatform === 'linux'"
+              v-else-if="freshInstallPlatform === 'ios'"
               class="list-decimal space-y-2 pl-5"
             >
               <li>
-                安装
-                <Link href="https://github.com/ibus/ibus/wiki/Install"
-                  >IBus</Link
-                >
-                或
-                <Link href="https://fcitx-im.org/wiki/Install_Fcitx_5"
-                  >Fcitx 5</Link
-                >
-                输入法后按挂载方式配置
+                在 App Store 中安装<Link
+                  href="https://apps.apple.com/cn/app/%E4%BB%93%E8%BE%93%E5%85%A5%E6%B3%95/id6446617683"
+                  >仓输入法</Link
+                >后按 iOS 挂载方式配置
               </li>
             </ol>
 
-            <ol v-else class="list-decimal space-y-2 pl-5">
+            <ol
+              v-else-if="freshInstallPlatform === 'android'"
+              class="list-decimal space-y-2 pl-5"
+            >
               <li>在本网站下载好安装包后点击运行，并按照安装指示完成安装</li>
               <li>
                 点击安装后出现的「同文输入法」，按应用提示给予权限并启用输入法
@@ -132,7 +147,9 @@
                 （可选）同文输入法内置的键盘样式不太容易使用，推荐<Link
                   href="https://tseing.ysepan.com/"
                   >下载</Link
-                >安卓主题 <SeeCode code="lightbulb.zip" /> 并解压至用户目录（访问密码：seedict） 。
+                >安卓主题
+                <SeeCode code="lightbulb.zip" />
+                并解压至用户目录（访问密码：seedict） 。
                 安卓端同文输入法的默认用户目录位于
                 <SeeCode code="/storage/emulated/0/rime" />
                 （常常显示为
@@ -148,6 +165,9 @@
                   label="日光灯（lightbulb）"
                 />，套用该主题后能够在输入法中显示生僻汉字
               </li>
+            </ol>
+            <ol v-else class="list-decimal space-y-2 pl-5">
+              <li>在应用商店中安装超越输入法后按 HarmonyOS 挂载方式配置</li>
             </ol>
           </div>
         </Transition>
@@ -175,7 +195,14 @@
           :key="mountInstallPlatform"
           class="space-y-3 text-base leading-8 text-wheat-700"
         >
-          <ImeDownloadStep />
+          <ImeDownloadStep
+            v-if="
+              mountInstallPlatform === 'windows' ||
+              mountInstallPlatform === 'linux' ||
+              mountInstallPlatform === 'macos' ||
+              mountInstallPlatform === 'android'
+            "
+          />
 
           <ol
             v-if="mountInstallPlatform === 'windows'"
@@ -197,30 +224,6 @@
               ，并等待部署完成
             </li>
             <li>将系统输入法切换为「小狼毫输入法」，即可使用福州话打字</li>
-          </ol>
-
-          <ol
-            v-else-if="mountInstallPlatform === 'macos'"
-            class="list-decimal space-y-2 pl-5"
-          >
-            <li>
-              点击菜单栏中的鼠须管图标，选择
-              <SeeKeycap label="用户设定" />
-              可打开 RIME 用户配置文件夹
-            </li>
-            <li>将下载的配方文件复制到该文件夹</li>
-            <li>
-              再次点击菜单栏中的鼠须管图标选择
-              <SeeKeycap label="重新部署" />
-              ，或按下
-              <SeeKeycap label="ctrl" />
-              +
-              <SeeKeycap label="option" />
-              +
-              <SeeKeycap label="`" />
-              ，并等待部署完成
-            </li>
-            <li>将系统输入法切换为「鼠须管」，即可使用福州话打字</li>
           </ol>
 
           <ol
@@ -260,7 +263,66 @@
             </li>
           </ol>
 
-          <ol v-else class="list-decimal space-y-2 pl-5">
+          <ol
+            v-else-if="mountInstallPlatform === 'macos'"
+            class="list-decimal space-y-2 pl-5"
+          >
+            <li>
+              点击菜单栏中的鼠须管图标，选择
+              <SeeKeycap label="用户设定" />
+              可打开 RIME 用户配置文件夹
+            </li>
+            <li>将下载的配方文件复制到该文件夹</li>
+            <li>
+              再次点击菜单栏中的鼠须管图标选择
+              <SeeKeycap label="重新部署" />
+              ，或按下
+              <SeeKeycap label="ctrl" />
+              +
+              <SeeKeycap label="option" />
+              +
+              <SeeKeycap label="`" />
+              ，并等待部署完成
+            </li>
+            <li>将系统输入法切换为「鼠须管」，即可使用福州话打字</li>
+          </ol>
+
+          <ol
+            v-else-if="mountInstallPlatform === 'ios'"
+            class="list-decimal space-y-2 pl-5"
+          >
+            <li>
+              在配方文件
+              <SeeCode code="rime-hokchew.zip" />
+              下载成功后，进入「仓输入法」应用界面
+            </li>
+            <li>
+              选择 <SeeKeycap label="输入方案设置" />，选择右上角
+              <SeeKeycap label="+" />，导入配方文件
+              <SeeCode code="rime-hokchew.zip" /> 并勾选需要启用的榕拼输入法
+            </li>
+            <li>
+              回到「仓输入法」应用主界面，选择
+              <SeeKeycap label="重新部署" />，执行后即可使用
+            </li>
+            <li>
+              若没有找到启用的输入法，可能需要在 <SeeKeycap label="设置" /> >
+              <SeeKeycap label="通用" /> > <SeeKeycap label="键盘" /> >
+              <SeeKeycap label="键盘" /> 中启用「仓输入法」
+            </li>
+            <li>
+              （可选）在「仓输入法」键盘设置中，选择
+              <SeeKeycap label="候选栏设置" />，打开
+              <SeeKeycap
+                label="显示候选 Comment"
+              />，可以在候选词旁显示正确的榕拼
+            </li>
+          </ol>
+
+          <ol
+            v-else-if="mountInstallPlatform === 'android'"
+            class="list-decimal space-y-2 pl-5"
+          >
             <li>
               安卓端同文输入法的默认用户目录位于
               <SeeCode code="/storage/emulated/0/rime" />
@@ -286,6 +348,24 @@
               >
               <SeeKeycap label="启用方案" />
               ，勾选需要的福州话输入方案，即可使用福州话打字
+            </li>
+          </ol>
+
+          <ol v-else class="list-decimal space-y-2 pl-5">
+            <li>
+              在配方文件
+              <SeeCode code="bim-hokchew.zip" />
+              下载成功后，进入「超越输入法」应用界面
+            </li>
+            <li>
+              选择 <SeeKeycap label="导入" />，导入配方文件
+              <SeeCode code="bim-hokchew.zip" />
+              并勾选需要启用的榕拼输入法，执行部署后启用「超越输入法」，即可使用福州话打字
+            </li>
+            <li>
+              （可选）在键盘上方工具栏点击首个输入法图标，打开
+              <SeeKeycap label="设置" /> >
+              <SeeKeycap label="逐码显示" />，可以在候选词旁显示正确的榕拼
             </li>
           </ol>
 
@@ -332,7 +412,7 @@ import SeeKeycap from './seeui/keycap/SeeKeycap.vue';
 import Link from './common/Link.vue';
 import type { SeeTabItem } from './seeui/tabs/SeeTabs.vue';
 
-type PlatformId = 'windows' | 'macos' | 'linux' | 'android';
+type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'harmony';
 
 interface Props {
   selectedPlatform?: PlatformId;
@@ -344,9 +424,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const platformTabs: SeeTabItem[] = [
   { id: 'windows', label: 'Windows' },
-  { id: 'macos', label: 'macOS' },
   { id: 'linux', label: 'Linux' },
+  { id: 'macos', label: 'macOS' },
+  { id: 'ios', label: 'iOS' },
   { id: 'android', label: 'Android' },
+  { id: 'harmony', label: 'HarmonyOS' },
 ];
 
 const ibusInstallCommand = `git clone -b release https://github.com/Nang-muoi-sing/rime-hokchew.git
