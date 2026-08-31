@@ -99,8 +99,7 @@
           <p
             class="platform-reveal-content max-w-3xl text-base leading-8 text-wheat-700"
           >
-            榕拼输入法这久支持 Windows、Mac、Linux 共 Android
-            平台。选择汝其平台，此刻开始！
+            榕拼输入法这盘支持电脑共移动全部平台。选择汝其平台，此刻开始！
           </p>
           <div class="grid gap-4 pt-4 md:grid-cols-2">
             <a
@@ -115,7 +114,22 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Windows</span>
-                <span class="text-sm text-wheat-700">开始下载</span>
+                <span class="text-sm text-wheat-700">下载安装包</span>
+              </span>
+            </a>
+            <a
+              href="#install-guide"
+              @click="handlePlatformSelect('linux', linuxDownloadUrl)"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
+            >
+              <span
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
+              >
+                <i-simple-icons-linux />
+              </span>
+              <span class="flex flex-col">
+                <span class="text-base font-semibold">Linux</span>
+                <span class="text-sm text-wheat-700">下载安装配方</span>
               </span>
             </a>
             <a
@@ -130,22 +144,22 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">macOS</span>
-                <span class="text-sm text-wheat-700">开始下载</span>
+                <span class="text-sm text-wheat-700">下载安装包</span>
               </span>
             </a>
             <a
               href="#install-guide"
-              @click="handlePlatformSelect('linux')"
+              @click="handlePlatformSelect('ios', iosDownloadUrl)"
               class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
             >
               <span
                 class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
               >
-                <i-simple-icons-linux />
+                <i-ri-apple-fill />
               </span>
               <span class="flex flex-col">
-                <span class="text-base font-semibold">Linux</span>
-                <span class="text-sm text-wheat-700">查看安装</span>
+                <span class="text-base font-semibold">iOS</span>
+                <span class="text-sm text-wheat-700">下载安装配方</span>
               </span>
             </a>
             <a
@@ -160,14 +174,29 @@
               </span>
               <span class="flex flex-col">
                 <span class="text-base font-semibold">Android</span>
-                <span class="text-sm text-wheat-700">查看安装</span>
+                <span class="text-sm text-wheat-700">下载安装包</span>
+              </span>
+            </a>
+            <a
+              href="#install-guide"
+              @click="handlePlatformSelect('harmony', harmonyDownloadUrl)"
+              class="platform-card platform-reveal-card flex items-center gap-4 rounded-2xl bg-wheat-50 px-5 py-4 text-left text-rosybrown-800 hover:-translate-y-0.5 hover:bg-wheat-100"
+            >
+              <span
+                class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl text-rosybrown-600"
+              >
+                <i-ant-design-harmony-o-s-outlined />
+              </span>
+              <span class="flex flex-col">
+                <span class="text-base font-semibold">HarmonyOS</span>
+                <span class="text-sm text-wheat-700">下载安装配方</span>
               </span>
             </a>
           </div>
           <p
             class="platform-reveal-note border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
           >
-            最近更新于 2026.08.24，<Link href="https://tseing.ysepan.com/"
+            最近更新于 2026.08.31，<Link href="https://tseing.ysepan.com/"
               >备用下载链接</Link
             >（访问密码：seedict）
           </p>
@@ -311,7 +340,7 @@ import NavBar from '../components/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
 import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
 
-type PlatformId = 'windows' | 'macos' | 'linux' | 'android';
+type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'harmony';
 interface ParallaxLetter {
   text: string;
   left: string;
@@ -332,11 +361,17 @@ interface FeatureItem {
 }
 
 const windowsDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-weasel-0.17.4.exe';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew-weasel-0.17.4.exe';
+const linuxDownloadUrl =
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew.zip';
 const macDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+const iosDownloadUrl =
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew.zip';
 const androidDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.3.0/rime-hokchew-trime-3.3.11-arm64-v8a.apk';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew-trime-3.3.11-arm64-v8a.apk';
+const harmonyDownloadUrl =
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/bim-hokchew.zip';
 const selectedInstallPlatform = ref<PlatformId>('windows');
 const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
