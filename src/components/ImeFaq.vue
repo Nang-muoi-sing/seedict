@@ -60,19 +60,6 @@
 
     <AccordionItem
       class="faq-reveal-item"
-      title="我使用的是 iOS，可以使用榕拼输入法吗？"
-      :open="openItemId === 'ios'"
-      @toggle="toggleItem('ios')"
-    >
-      <p>
-        iOS 暂无开箱即用的榕拼输入法。由于榕拼输入法基于 Rime， 可以尝试通过 iOS
-        上支持 Rime 的输入法应用（如「仓输入法」），
-        以导入或挂载词表的方式使用榕拼词库。
-      </p>
-    </AccordionItem>
-
-    <AccordionItem
-      class="faq-reveal-item"
       title="输入法的词库会更新吗？我要怎么更新输入法？"
       :open="openItemId === 'update'"
       @toggle="toggleItem('update')"
