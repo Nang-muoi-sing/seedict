@@ -17,7 +17,7 @@
       </span>
 
       <rp>(</rp>
-      <rt class="relative top-[0.5em] text-rosybrown-700">
+      <rt class="relative text-rosybrown-700">
         <template v-if="shouldPadRuby(item)">
           &thinsp;{{ item.ruby }}&thinsp;
         </template>

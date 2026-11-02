@@ -31,7 +31,7 @@
     <div class="ml-2 bg-wheat-100 px-10 py-3 text-sm text-wheat-600 xl:hidden">
       *「
       <RubyTextInline :text="'平话'" :yngping="'bang21 ua242'"></RubyTextInline>
-      」是闽东一带人们对于自己母语的称呼，意思是「听得懂」的语言。
+      」是福州、宁德一带人们对于母语的称呼，意思是「听得懂」的语言。
     </div>
 
     <div class="relative hidden xl:block">

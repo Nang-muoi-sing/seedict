@@ -1,7 +1,7 @@
 <template>
   <PageContent :show-search-bar="false">
     <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
-      <RubyText :text="'工具'" :yngping="'gung53 geoy242'"></RubyText>
+      <RubyText :text="'工具'" :yngping="'geoyng53 geoy242'"></RubyText>
     </div>
     <div
       class="mb-32 flex h-96 w-full flex-wrap content-start justify-start gap-5 rounded-3xl bg-white px-6 py-4"
