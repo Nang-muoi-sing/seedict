@@ -26,17 +26,13 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 import Footer from '../components/common/Footer.vue';
 import NavPanel from '../components/NavPanel.vue';
 import SearchBar from '../components/SearchBar.vue';
 import WordsDeck from '../components/WordsDeck.vue';
-import { useSearchModeStore } from '../store/searchModeStore';
 
-const route = useRoute();
-const searchModeStore = useSearchModeStore();
 const scrollY = ref(0);
 const searchBarFixed = ref(false);
 const navPanelFixed = ref(false);
@@ -55,14 +51,4 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
 });
-
-watch(
-  () => route.name,
-  (name) => {
-    if (name === 'semantic-home') {
-      searchModeStore.setMode('semantic');
-    }
-  },
-  { immediate: true }
-);
 </script>

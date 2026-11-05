@@ -20,24 +20,24 @@
       aria-label="搜索模式"
     >
       <button
-        v-for="option in modeOptions"
-        :key="option.mode"
+        v-for="optionMode in searchModeOrder"
+        :key="optionMode"
         type="button"
         class="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-wheat-50"
         role="menuitemradio"
-        :aria-checked="searchModeStore.mode === option.mode"
-        @click.stop="selectMode(option.mode)"
+        :aria-checked="mode === optionMode"
+        @click.stop="selectMode(optionMode)"
       >
         <span class="min-w-0 flex-1">
           <span class="block text-sm font-semibold text-rosybrown-800">
-            {{ option.label }}
+            {{ searchModes[optionMode].label }}
           </span>
           <span class="block text-xs text-wheat-500">
-            {{ option.description }}
+            {{ searchModes[optionMode].description }}
           </span>
         </span>
         <i-material-symbols-check-rounded
-          v-if="searchModeStore.mode === option.mode"
+          v-if="mode === optionMode"
           width="18"
           height="18"
           class="shrink-0 text-rosybrown-700"
@@ -50,7 +50,10 @@
 <script setup lang="ts">
 import { vOnClickOutside } from '@vueuse/components';
 import { computed } from 'vue';
-import { type SearchMode, useSearchModeStore } from '../store/searchModeStore';
+
+import { useSearchMode } from '@/search/useSearchMode';
+import { useSearchNavigation } from '@/search/useSearchNavigation';
+import { searchModes, searchModeOrder, type searchMode } from '@/search/mode';
 
 interface Props {
   open?: boolean;
@@ -64,30 +67,12 @@ const emit = defineEmits<{
   'update:open': [value: boolean];
 }>();
 
-const searchModeStore = useSearchModeStore();
+const mode = useSearchMode();
+const { switchMode } = useSearchNavigation();
 
-const modeOptions: Array<{
-  mode: SearchMode;
-  label: string;
-  description: string;
-}> = [
-  {
-    mode: 'fuzzy',
-    label: '按字词查',
-    description: '由关键字匹配查询词汇',
-  },
-  {
-    mode: 'semantic',
-    label: '按意思查',
-    description: '由内容的语义查询词汇',
-  },
-];
+const currentModeLabel = computed(() => searchModes[mode.value].shortLabel);
 
 const isOpen = computed(() => props.open);
-
-const currentModeLabel = computed(() =>
-  searchModeStore.mode === 'semantic' ? '语义' : '字词'
-);
 
 const closeMenu = () => {
   emit('update:open', false);
@@ -97,8 +82,8 @@ const toggleMenu = () => {
   emit('update:open', !props.open);
 };
 
-const selectMode = (mode: SearchMode) => {
-  searchModeStore.setMode(mode);
+const selectMode = (nextMode: SearchMode) => {
+  switchMode(nextMode);
   closeMenu();
 };
 </script>

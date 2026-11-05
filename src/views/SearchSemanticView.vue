@@ -113,11 +113,10 @@ import { apiV2Url } from '../utils/api';
 import { sourceMap } from '../utils/mapping';
 import type { SearchResponse } from '../utils/typing';
 import FormatText from '../components/common/FormatText.vue';
-import { buildSearchRoute, useSearchModeStore } from '../store/searchModeStore';
+import { useSearchNavigation } from '@/search/useSearchNavigation';
 
 const route = useRoute();
 const router = useRouter();
-const searchModeStore = useSearchModeStore();
 
 const loading = ref(false);
 const loadingMore = ref(false);
@@ -127,8 +126,10 @@ const allResults = ref<any[]>([]);
 const nextCursor = ref<string | null>(null);
 const hasMore = ref(false);
 
+const { search } = useSearchNavigation();
+
 const handleSearchSubmit = (query: string) => {
-  router.push(buildSearchRoute(searchModeStore.mode, query));
+  search(query);
 };
 
 // 排蜀下 (cross-encoder rerank) — on-demand button. Hybrid recall (BM25 +
@@ -325,7 +326,6 @@ const loadMore = async () => {
 watch(
   () => route.query.q,
   (newQ) => {
-    searchModeStore.setMode('semantic');
     if (typeof newQ === 'string') {
       state.value.q = newQ;
       updateTitle();

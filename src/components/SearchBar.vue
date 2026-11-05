@@ -43,7 +43,6 @@
         type="submit"
         class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors"
         :class="submitButtonClass"
-        :disabled="!searchQuery"
       >
         <i-material-symbols-search-rounded width="20" height="20" />
       </button>
@@ -102,15 +101,12 @@
 import { vOnClickOutside } from '@vueuse/components';
 import { useDebounceFn } from '@vueuse/core';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import RotatingPlaceholder from './RotatingPlaceholder.vue';
 import SearchModePicker from './SearchModePicker.vue';
-import {
-  buildSearchRoute,
-  type SearchMode,
-  useSearchModeStore,
-} from '../store/searchModeStore';
 import { Trie } from '../utils/trie';
+import { useSearchMode } from '@/search/useSearchMode';
+import { useSearchNavigation } from '@/search/useSearchNavigation';
+import { searchModes } from '@/search/mode';
 
 interface Props {
   autoNavigate?: boolean;
@@ -124,8 +120,6 @@ const emit = defineEmits<{
   submit: [query: string];
 }>();
 
-const router = useRouter();
-const searchModeStore = useSearchModeStore();
 const searchQuery = ref('');
 const currentPlaceholderText = ref('');
 const filteredHistory = ref<string[]>([]);
@@ -136,52 +130,11 @@ const isInputFocused = ref(false);
 const selectedIndex = ref(-1);
 const isMouseHovering = ref(false);
 
-const placeholderCandidates: Record<SearchMode, string[]> = {
-  fuzzy: [
-    '天光',
-    'huk ziu',
-    '小时候',
-    '蓝尾星',
-    '讲大话',
-    '伓',
-    '有时间',
-    '会使',
-    '半晡',
-    'sieh55 da53',
-    '起动',
-    'ny33',
-    '失眠',
-    '拜托',
-    '快活',
-    '我各侬',
-    '中秋节',
-    '对手',
-    '挂号信',
-    '厝边',
-  ],
-  semantic: [
-    '红色的水果',
-    '到处乱跑的人',
-    '无法处理的复杂状况',
-    '临行前的嘱咐',
-    '东西找不到了',
-    '明明知道却装不知道',
-    '中秋节',
-    '倒了大霉',
-    '愉悦舒畅的心情',
-    '秋高气爽',
-    '顺利办成',
-    '突然想起很久以前的事',
-    '这下麻烦了',
-    '事情的尾声',
-    '勤俭持家',
-    '天快黑但还没黑',
-    '得心应手',
-    '人多声音嘈杂',
-    '夜长梦多',
-    '一时想不起来',
-  ],
-};
+const mode = useSearchMode();
+const { search } = useSearchNavigation();
+const currentPlaceholders = computed(
+  () => searchModes[mode.value].placeholders
+);
 
 let queryCache = '';
 
@@ -227,7 +180,7 @@ const handleSubmit = () => {
   emit('submit', query);
 
   if (props.autoNavigate) {
-    router.push(buildSearchRoute(searchModeStore.mode, query));
+    search(query);
   }
 
   queueMicrotask(() => {
@@ -282,10 +235,6 @@ const clearHistory = () => {
   selectedIndex.value = -1;
   isMouseHovering.value = false;
 };
-
-const currentPlaceholders = computed(
-  () => placeholderCandidates[searchModeStore.mode]
-);
 
 const submitButtonClass = computed(() =>
   searchQuery.value

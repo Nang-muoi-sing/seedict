@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-wheat-50 h-full min-h-[100vh] w-full">
+  <div class="h-full min-h-[100vh] w-full bg-wheat-50">
     <NavBar
       :show-search-bar="props.showSearchBar"
       :on-search-submit="handleSearchSubmit"
@@ -19,13 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useSearchNavigation } from '@/search/useSearchNavigation';
 import NavBar from './NavBar.vue';
 import Footer from './common/Footer.vue';
-import {
-  buildSearchRoute,
-  useSearchModeStore,
-} from '../store/searchModeStore';
 
 interface Props {
   showSearchBar?: boolean;
@@ -37,8 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   onSearchSubmit: undefined,
 });
 
-const router = useRouter();
-const searchModeStore = useSearchModeStore();
+const { search } = useSearchNavigation();
 
 const handleSearchSubmit = (query: string) => {
   if (props.onSearchSubmit) {
@@ -46,6 +41,6 @@ const handleSearchSubmit = (query: string) => {
     return;
   }
 
-  router.push(buildSearchRoute(searchModeStore.mode, query));
+  search(query);
 };
 </script>
