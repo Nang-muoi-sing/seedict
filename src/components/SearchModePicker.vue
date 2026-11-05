@@ -15,7 +15,7 @@
 
     <div
       v-if="isOpen"
-      class="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-2xl border border-rosybrown-200 bg-white shadow-sm"
+      class="absolute right-0 top-full z-50 mt-2 w-36 overflow-hidden rounded-2xl border border-rosybrown-200 bg-white shadow-sm"
       role="menu"
       aria-label="搜索模式"
     >
