@@ -1,6 +1,10 @@
-import { createWebHistory, createRouter } from 'vue-router';
+import {
+  createWebHistory,
+  createRouter,
+  type RouteRecordRaw,
+} from 'vue-router';
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',

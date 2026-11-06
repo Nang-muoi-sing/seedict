@@ -32,9 +32,6 @@
           <span class="block text-sm font-semibold text-rosybrown-800">
             {{ searchModes[optionMode].label }}
           </span>
-          <span class="block text-xs text-wheat-500">
-            {{ searchModes[optionMode].description }}
-          </span>
         </span>
         <i-material-symbols-check-rounded
           v-if="mode === optionMode"
@@ -53,7 +50,7 @@ import { computed } from 'vue';
 
 import { useSearchMode } from '@/search/useSearchMode';
 import { useSearchNavigation } from '@/search/useSearchNavigation';
-import { searchModes, searchModeOrder, type searchMode } from '@/search/mode';
+import { searchModes, searchModeOrder, type SearchMode } from '@/search/mode';
 
 interface Props {
   open?: boolean;
