@@ -31,12 +31,12 @@ const routes = [
     component: () => import('../views/SearchSemanticView.vue'),
     meta: { searchMode: 'semantic' },
   },
-  // {
-  //   path: '/search/yngping',
-  //   name: 'semantic-search',
-  //   alias: ['/yngping/search'],
-  //   component: () => import('../views/SearchSemanticView.vue'),
-  // },
+  {
+    path: '/search/yngping',
+    name: 'yngping-search',
+    component: () => import('../views/SearchYngpingView.vue'),
+    meta: { searchMode: 'yngping' },
+  },
   {
     path: '/word',
     name: 'word',
