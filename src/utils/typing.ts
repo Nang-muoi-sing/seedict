@@ -1,22 +1,3 @@
-interface SearchResult {
-  w: string;
-  text: string;
-  pron: string;
-  brief: string;
-  refs: string[];
-}
-
-export interface SearchResponse {
-  status: number;
-  data: {
-    q: string;
-    queries: string[];
-    results: SearchResult[];
-    nextCursor: string;
-    hasMore: boolean;
-  };
-}
-
 interface Glyph {
   glyph: string;
   category: string;
