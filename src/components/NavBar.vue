@@ -3,14 +3,12 @@
     <nav
       class="items-top flex flex-row justify-between gap-5 px-4 py-2 sm:px-16 sm:py-8"
     >
-      <RouterLink :to="{ name: 'home' }" class="min-w-35 z-30 hidden md:block">
+      <RouterLink :to="homeRoute" class="min-w-35 z-30 hidden md:block">
         <img src="../assets/logo.svg" />
       </RouterLink>
       <SearchBar
         v-if="props.showSearchBar"
         class="w-xs sm:w-sm md:w-md"
-        :auto-navigate="false"
-        @submit="props.onSearchSubmit"
       ></SearchBar>
       <div v-else class="w-xs sm:w-sm md:w-md"></div>
       <NavPanel class="z-30 hidden w-xs lg:flex"></NavPanel>
@@ -113,22 +111,23 @@
 </template>
 
 <script setup lang="ts">
-import { animate } from 'animejs';
-import { onMounted, ref } from 'vue';
 import NavPanel from './NavPanel.vue';
 import SearchBar from './SearchBar.vue';
 
+import { animate } from 'animejs';
+import { onMounted, ref } from 'vue';
+
+import { useSearchNavigation } from '@/search/useSearchNavigation';
+
 interface Props {
   showSearchBar?: boolean;
-  onSearchSubmit?: (query: string) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showSearchBar: true,
-  onSearchSubmit: (query: string) => {
-    void query;
-  },
 });
+
+const { homeRoute } = useSearchNavigation();
 
 const isSidebarOpen = ref(false);
 const isAnimating = ref(false);

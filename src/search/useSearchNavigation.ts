@@ -1,4 +1,6 @@
-import { useRoute, useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+
 import { useSearchMode } from './useSearchMode';
 import { type SearchMode } from './mode';
 import { usePreferencesStore } from '@/store/preferencesStore';
@@ -15,41 +17,26 @@ const searchRouteByMode = {
   semantic: 'semantic-search',
 } as const satisfies Record<SearchMode, string>;
 
-const homeRoutes = new Set<string>(Object.values(homeRouteByMode));
-const searchRoutes = new Set<string>(Object.values(searchRouteByMode));
-
 export function useSearchNavigation() {
-  const route = useRoute();
   const router = useRouter();
-  const preferences = usePreferencesStore();
   const mode = useSearchMode();
+  const preferences = usePreferencesStore();
 
-  const search = (query: string) => {
+  const homeRoute = computed(() => ({
+    name: homeRouteByMode[mode.value],
+  }));
+
+  const search = (query: string, nextMode: SearchMode) => {
+    preferences.setMode(nextMode);
+
     return router.push({
-      name: searchRouteByMode[mode.value],
+      name: searchRouteByMode[nextMode],
       query: { q: query },
     });
   };
 
-  const switchMode = (nextMode: SearchMode) => {
-    preferences.setMode(nextMode);
-
-    if (homeRoutes.has(route.name as string)) {
-      return router.push({
-        name: homeRouteByMode[nextMode],
-      });
-    }
-
-    if (searchRoutes.has(route.name as string)) {
-      return router.push({
-        name: searchRouteByMode[nextMode],
-        query: { q: route.query.q },
-      });
-    }
-  };
-
   return {
+    homeRoute,
     search,
-    switchMode,
   };
 }

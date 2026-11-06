@@ -1,9 +1,6 @@
 <template>
   <div class="h-full min-h-[100vh] w-full bg-wheat-50">
-    <NavBar
-      :show-search-bar="props.showSearchBar"
-      :on-search-submit="handleSearchSubmit"
-    ></NavBar>
+    <NavBar :show-search-bar="props.showSearchBar"></NavBar>
     <div
       class="items-center py-5"
       style="min-height: calc(100vh - 130px - 0.25rem * 56)"
@@ -19,28 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { useSearchNavigation } from '@/search/useSearchNavigation';
 import NavBar from './NavBar.vue';
 import Footer from './common/Footer.vue';
 
 interface Props {
   showSearchBar?: boolean;
-  onSearchSubmit?: (query: string) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   showSearchBar: true,
-  onSearchSubmit: undefined,
 });
-
-const { search } = useSearchNavigation();
-
-const handleSearchSubmit = (query: string) => {
-  if (props.onSearchSubmit) {
-    props.onSearchSubmit(query);
-    return;
-  }
-
-  search(query);
-};
 </script>

@@ -32,7 +32,7 @@
           @keydown.enter.prevent="handleKeyEnter"
         />
       </div>
-      <SearchModePicker v-model:open="isModeMenuOpen" />
+      <SearchModePicker v-model="selectedMode" v-model:open="isModeMenuOpen" />
       <button
         type="submit"
         class="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-wheat-100 text-rosybrown-800"
@@ -92,32 +92,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
+import RotatingPlaceholder from './RotatingPlaceholder.vue';
+import SearchModePicker from './SearchModePicker.vue';
+
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue';
 
 import { vOnClickOutside } from '@vueuse/components';
 import { useDebounceFn } from '@vueuse/core';
 
-import { searchModes } from '@/search/mode';
+import { searchModes, type SearchMode } from '@/search/mode';
 import { useSearchHistory } from '@/search/useSearchHistory';
 import { useSearchMode } from '@/search/useSearchMode';
 import { useSearchNavigation } from '@/search/useSearchNavigation';
 
-import RotatingPlaceholder from './RotatingPlaceholder.vue';
-import SearchModePicker from './SearchModePicker.vue';
-
-interface Props {
-  autoNavigate?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  autoNavigate: true,
-});
-
-const emit = defineEmits<{
-  submit: [query: string];
-}>();
-
-const mode = useSearchMode();
 const { search } = useSearchNavigation();
 
 const {
@@ -127,6 +121,9 @@ const {
   remove: removeHistory,
   clear: clearSearchHistory,
 } = useSearchHistory();
+
+const currentMode = useSearchMode();
+const selectedMode = ref<SearchMode>(currentMode.value);
 
 const searchQuery = ref('');
 const currentPlaceholderText = ref('');
@@ -142,7 +139,7 @@ const queryBeforePreview = ref<string | null>(null);
 const historyList = useTemplateRef<HTMLUListElement>('historyList');
 
 const currentPlaceholders = computed(
-  () => searchModes[mode.value].placeholders
+  () => searchModes[selectedMode.value].placeholders
 );
 
 const toggleInputFocusStyle = computed(() => {
@@ -231,18 +228,9 @@ const handleSubmit = () => {
   const query = searchQuery.value || currentPlaceholderText.value;
   if (!query) return;
 
-  if (!searchQuery.value) {
-    searchQuery.value = query;
-  }
-
   closeInteractiveUi();
-  searchQuery.value = '';
 
-  emit('submit', query);
-
-  if (props.autoNavigate) {
-    search(query);
-  }
+  void search(query, selectedMode.value);
 
   queueMicrotask(() => {
     addHistory(query);
@@ -331,6 +319,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', closeHistory);
+});
+
+watch(currentMode, (mode) => {
+  selectedMode.value = mode;
 });
 </script>
 

@@ -48,8 +48,8 @@ const { loading, loadingMore, queries, results, hasMore, search, loadMore } =
 
 const updateTitle = () => {
   document.title = route.query.q
-    ? `${route.query.q} - 榕拼检索`
-    : '米时典 SeeDict - 榕拼检索';
+    ? `${route.query.q} - 检索`
+    : '米时典 SeeDict - 检索';
 };
 
 watch(

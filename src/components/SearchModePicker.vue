@@ -45,14 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { vOnClickOutside } from '@vueuse/components';
 import { computed } from 'vue';
+import { vOnClickOutside } from '@vueuse/components';
 
-import { useSearchMode } from '@/search/useSearchMode';
-import { useSearchNavigation } from '@/search/useSearchNavigation';
 import { searchModes, searchModeOrder, type SearchMode } from '@/search/mode';
 
 interface Props {
+  modelValue: SearchMode;
   open?: boolean;
 }
 
@@ -61,15 +60,14 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
+  'update:modelValue': [value: SearchMode];
   'update:open': [value: boolean];
 }>();
 
-const mode = useSearchMode();
-const { switchMode } = useSearchNavigation();
+const mode = computed(() => props.modelValue);
+const isOpen = computed(() => props.open);
 
 const currentModeLabel = computed(() => searchModes[mode.value].shortLabel);
-
-const isOpen = computed(() => props.open);
 
 const closeMenu = () => {
   emit('update:open', false);
@@ -80,7 +78,7 @@ const toggleMenu = () => {
 };
 
 const selectMode = (nextMode: SearchMode) => {
-  switchMode(nextMode);
+  emit('update:modelValue', nextMode);
   closeMenu();
 };
 </script>
