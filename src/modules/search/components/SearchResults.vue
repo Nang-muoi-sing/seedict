@@ -99,7 +99,7 @@ import FormatText from '@/components/common/FormatText.vue';
 import RubyText from '@/components/common/RubyText.vue';
 import SearchSkeleton from './SearchSkeleton.vue';
 
-import type { SearchResult } from '@/search/types';
+import type { SearchResult } from '@/modules/search/types';
 
 defineProps<{
   loading: boolean;

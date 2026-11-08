@@ -48,7 +48,7 @@
 import { computed } from 'vue';
 import { vOnClickOutside } from '@vueuse/components';
 
-import { searchModes, searchModeOrder, type SearchMode } from '@/search/mode';
+import { searchModes, searchModeOrder, type SearchMode } from '@/modules/search/mode';
 
 interface Props {
   modelValue: SearchMode;

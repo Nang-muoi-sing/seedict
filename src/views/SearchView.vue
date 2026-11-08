@@ -1,5 +1,5 @@
 <template>
-  <PageContent>
+  <DefaultLayout>
     <SearchResults
       :loading="loading"
       :loading-more="loadingMore"
@@ -8,21 +8,22 @@
       :has-more="hasMore"
       @load-more="loadMore"
     />
-  </PageContent>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
-import SearchResults from '@/search/components/SearchResults.vue';
+import SearchResults from '@/modules/search/components/SearchResults.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { apiV1Url } from '@/utils/api';
-import type { SearchResponse } from '@/search/types';
+import type { SearchResponse } from '@/modules/search/types';
 import {
   type SearchPageLoader,
   useSearchResults,
-} from '@/search/useSearchResults';
+} from '@/modules/search/useSearchResults';
 
 const loadPage: SearchPageLoader = async ({ query, cursor, signal }) => {
   const response = await fetch(

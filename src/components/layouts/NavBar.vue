@@ -112,13 +112,13 @@
 
 <script setup lang="ts">
 import NavPanel from './NavPanel.vue';
-import SearchBar from '@/search/components/SearchBar.vue';
+import SearchBar from '@/modules/search/components/SearchBar.vue';
 import logoImg from '@/assets/logo.svg';
 
 import { animate } from 'animejs';
 import { onMounted, ref } from 'vue';
 
-import { useSearchNavigation } from '@/search/useSearchNavigation';
+import { useSearchNavigation } from '@/modules/search/useSearchNavigation';
 
 interface Props {
   showSearchBar?: boolean;

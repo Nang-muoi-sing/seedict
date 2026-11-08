@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { SearchMode } from '@/search/mode';
+import type { SearchMode } from '@/modules/search/mode';
 
 const STORAGE_KEY = 'seedict.searchPreference';
 

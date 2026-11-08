@@ -328,16 +328,16 @@
 
 <script setup lang="ts">
 import Footer from '@/components/layouts/Footer.vue';
-import FaqSection from '@/ime/components/FaqSection.vue';
-import InstallSection from '@/ime/components/InstallSection.vue';
-import TypingDemo from '@/ime/components/TypingDemo.vue';
 import NavBar from '@/components/layouts/NavBar.vue';
-import SeeButton from '../components/seeui/button/SeeButton.vue';
-import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
+import SeeButton from '@/components/seeui/button/SeeButton.vue';
+import SeeWaveDivider from '@/components/seeui/decor/SeeWaveDivider.vue';
 
-import imeFuzzyTypingImg from '../assets/ime/ime-fuzzy-typing.webp';
-import imeT2SImg from '../assets/ime/ime-t2s.webp';
-import imeLookupImg from '../assets/ime/ime-lookup.webp';
+import FaqSection from '@/modules/ime/components/FaqSection.vue';
+import InstallSection from '@/modules/ime/components/InstallSection.vue';
+import TypingDemo from '@/modules/ime/components/TypingDemo.vue';
+import imeFuzzyTypingImg from '@/assets/ime/ime-fuzzy-typing.webp';
+import imeT2SImg from '@/assets/ime/ime-t2s.webp';
+import imeLookupImg from '@/assets/ime/ime-lookup.webp';
 
 import { animate, stagger } from 'animejs';
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';

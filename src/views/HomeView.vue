@@ -30,7 +30,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 import Footer from '@/components/layouts/Footer.vue';
 import NavPanel from '@/components/layouts/NavPanel.vue';
-import SearchBar from '@/search/components/SearchBar.vue';
+import SearchBar from '@/modules/search/components/SearchBar.vue';
 import WordsDeck from '../components/WordsDeck.vue';
 
 const scrollY = ref(0);

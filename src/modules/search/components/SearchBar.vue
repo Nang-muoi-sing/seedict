@@ -107,10 +107,10 @@ import {
 import { vOnClickOutside } from '@vueuse/components';
 import { useDebounceFn } from '@vueuse/core';
 
-import { searchModes, type SearchMode } from '@/search/mode';
-import { useSearchHistory } from '@/search/useSearchHistory';
-import { useSearchMode } from '@/search/useSearchMode';
-import { useSearchNavigation } from '@/search/useSearchNavigation';
+import { searchModes, type SearchMode } from '@/modules/search/mode';
+import { useSearchHistory } from '@/modules/search/useSearchHistory';
+import { useSearchMode } from '@/modules/search/useSearchMode';
+import { useSearchNavigation } from '@/modules/search/useSearchNavigation';
 
 const { search } = useSearchNavigation();
 

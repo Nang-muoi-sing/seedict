@@ -1,6 +1,6 @@
 import 'vue-router';
 
-import type { SearchMode } from '@/search/mode';
+import type { SearchMode } from '@/modules/search/mode';
 
 declare module 'vue-router' {
   interface RouteMeta {

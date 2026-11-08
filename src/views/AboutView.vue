@@ -101,13 +101,14 @@
 
 <script setup lang="ts">
 import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
-import ContactCard from '@/about/components/ContactCard.vue';
-import DashboardCard from '@/about/components/DashboardCard.vue';
-import LetterPaper from '@/about/components/LetterPaper.vue';
-import SpeechBubbles from '@/about/components/SpeechBubbles.vue';
-import Timeline from '@/about/components/Timeline.vue';
 import Link from '@/components/common/Link.vue';
 import RubyText from '@/components/common/RubyText.vue';
 import RubyTextInline from '@/components/common/RubyTextInline.vue';
 import Subtitle from '@/components/common/Subtitle.vue';
+
+import ContactCard from '@/modules/about/components/ContactCard.vue';
+import DashboardCard from '@/modules/about/components/DashboardCard.vue';
+import LetterPaper from '@/modules/about/components/LetterPaper.vue';
+import SpeechBubbles from '@/modules/about/components/SpeechBubbles.vue';
+import Timeline from '@/modules/about/components/Timeline.vue';
 </script>

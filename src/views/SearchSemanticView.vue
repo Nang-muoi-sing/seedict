@@ -1,5 +1,5 @@
 <template>
-  <PageContent>
+  <DefaultLayout>
     <SearchResults
       :loading="loading"
       :loading-more="loadingMore"
@@ -32,20 +32,21 @@
         </button>
       </template>
     </SearchResults>
-  </PageContent>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
-import SearchResults from '@/search/components/SearchResults.vue';
+import SearchResults from '@/modules/search/components/SearchResults.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 
 import { computed, onScopeDispose, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import type { SearchResult, SearchResponse } from '@/search/types';
+import type { SearchResult, SearchResponse } from '@/modules/search/types';
 import {
   type SearchPageLoader,
   useSearchResults,
-} from '@/search/useSearchResults';
+} from '@/modules/search/useSearchResults';
 import { apiV2Url } from '@/utils/api';
 
 const route = useRoute();
