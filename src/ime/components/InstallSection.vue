@@ -394,23 +394,25 @@
 </template>
 
 <script setup lang="ts">
+import CollapsibleTitle from './CollapsibleTitle.vue';
+import ImeDownloadStep from './DownloadStep.vue';
+import SeeTabs from '@/components/seeui/tabs/SeeTabs.vue';
+import SeeImage from '@/components/seeui/media/SeeImage.vue';
+import SeeCode from '@/components/seeui/code/SeeCode.vue';
+import SeeCodeBlock from '@/components/seeui/code/SeeCodeBlock.vue';
+import SeeHandUnderline from '@/components/seeui/decor/SeeHandUnderline.vue';
+import SeeKeycap from '@/components/seeui/keycap/SeeKeycap.vue';
+import Link from '@/components/common/Link.vue';
+import type { SeeTabItem } from '@/components/seeui/tabs/SeeTabs.vue';
+
+import macImeSelectionImg from '@/assets/ime/mac-ime-selection.png';
+import androidImeSelectionImg from '@/assets/ime/android-ime-selection.jpg';
+import androidImeTypingImg from '@/assets/ime/android-ime-typing.jpg';
+import winUserFolderImg from '@/assets/ime/win-user-folder.png';
+import macUserFolderImg from '@/assets/ime/mac-user-folder.png';
+
 import { animate } from 'animejs';
 import { ref, watch } from 'vue';
-import macImeSelectionImg from '../assets/ime/mac-ime-selection.png';
-import androidImeSelectionImg from '../assets/ime/android-ime-selection.jpg';
-import androidImeTypingImg from '../assets/ime/android-ime-typing.jpg';
-import winUserFolderImg from '../assets/ime/win-user-folder.png';
-import macUserFolderImg from '../assets/ime/mac-user-folder.png';
-import CollapsibleTitle from './CollapsibleTitle.vue';
-import ImeDownloadStep from './ImeDownloadStep.vue';
-import SeeTabs from './seeui/tabs/SeeTabs.vue';
-import SeeImage from './seeui/media/SeeImage.vue';
-import SeeCode from './seeui/code/SeeCode.vue';
-import SeeCodeBlock from './seeui/code/SeeCodeBlock.vue';
-import SeeHandUnderline from './seeui/decor/SeeHandUnderline.vue';
-import SeeKeycap from './seeui/keycap/SeeKeycap.vue';
-import Link from './common/Link.vue';
-import type { SeeTabItem } from './seeui/tabs/SeeTabs.vue';
 
 type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'harmony';
 

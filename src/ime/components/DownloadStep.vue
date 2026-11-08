@@ -30,11 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import githubOverviewImg from '../assets/ime/github-overview.png';
-import Link from './common/Link.vue';
-import SeeKeycap from './seeui/keycap/SeeKeycap.vue';
-import SeeCode from './seeui/code/SeeCode.vue';
-import SeeImage from './seeui/media/SeeImage.vue';
+import Link from '@/components/common/Link.vue';
+import SeeKeycap from '@/components/seeui/keycap/SeeKeycap.vue';
+import SeeCode from '@/components/seeui/code/SeeCode.vue';
+import SeeImage from '@/components/seeui/media/SeeImage.vue';
+
+import githubOverviewImg from '@/assets/ime/github-overview.png';
 </script>
 
 <style scoped>

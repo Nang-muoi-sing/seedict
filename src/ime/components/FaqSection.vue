@@ -139,9 +139,9 @@
 </template>
 
 <script setup lang="ts">
+import SeeKeycap from '@/components/seeui/keycap/SeeKeycap.vue';
+import AccordionItem from '@/components/common/AccordionItem.vue';
 import { ref } from 'vue';
-import AccordionItem from './common/AccordionItem.vue';
-import SeeKeycap from './seeui/keycap/SeeKeycap.vue';
 
 const openItemId = ref<string | null>('simplified');
 

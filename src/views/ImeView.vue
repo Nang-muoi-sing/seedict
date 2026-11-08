@@ -29,7 +29,7 @@
           class="relative z-10 mx-auto grid w-[90vw] max-w-6xl gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center lg:gap-8 xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:gap-14"
         >
           <div class="space-y-6">
-            <ImeTypingDemo />
+            <TypingDemo />
             <p class="max-w-2xl text-xl leading-8 text-wheat-600 md:text-4xl">
               福州话拍字，尽去简单，快来试看！
             </p>
@@ -289,7 +289,7 @@
             >
               安装指南
             </h2>
-            <ImeInstallSection :selected-platform="selectedInstallPlatform" />
+            <InstallSection :selected-platform="selectedInstallPlatform" />
             <p
               class="mt-4 border-l-4 border-wheat-300 pl-3 text-sm leading-6 text-wheat-600"
             >
@@ -317,7 +317,7 @@
           >
             常见问题
           </h2>
-          <ImeFaq />
+          <FaqSection />
         </div>
       </section>
     </main>
@@ -327,18 +327,20 @@
 </template>
 
 <script setup lang="ts">
-import { animate, stagger } from 'animejs';
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import Footer from '@/components/layouts/Footer.vue';
-import ImeFaq from '../components/ImeFaq.vue';
-import ImeInstallSection from '../components/ImeInstallSection.vue';
-import ImeTypingDemo from '../components/ImeTypingDemo.vue';
-import imeFuzzyTypingImg from '../assets/ime/ime-fuzzy-typing.webp';
-import imeT2SImg from '../assets/ime/ime-t2s.webp';
-import imeLookupImg from '../assets/ime/ime-lookup.webp';
+import FaqSection from '@/ime/components/FaqSection.vue';
+import InstallSection from '@/ime/components/InstallSection.vue';
+import TypingDemo from '@/ime/components/TypingDemo.vue';
 import NavBar from '@/components/layouts/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
 import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
+
+import imeFuzzyTypingImg from '../assets/ime/ime-fuzzy-typing.webp';
+import imeT2SImg from '../assets/ime/ime-t2s.webp';
+import imeLookupImg from '../assets/ime/ime-lookup.webp';
+
+import { animate, stagger } from 'animejs';
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 
 type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'harmony';
 interface ParallaxLetter {
