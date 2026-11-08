@@ -55,6 +55,6 @@
 </template>
 
 <script setup lang="ts">
-import RubyTextInline from './common/RubyTextInline.vue';
-import SpeechBubble from './common/SpeechBubble.vue';
+import RubyTextInline from '@/components/common/RubyTextInline.vue';
+import SpeechBubble from '@/components/common/SpeechBubble.vue';
 </script>

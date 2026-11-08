@@ -100,12 +100,12 @@
 </template>
 
 <script setup lang="ts">
-import ContactCard from '@/components/ContactCard.vue';
-import DashboardCard from '@/components/DashboardCard.vue';
-import LetterPaper from '@/components/LetterPaper.vue';
 import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
-import SpeechBubbles from '@/components/SpeechBubbles.vue';
-import Timeline from '@/components/Timeline.vue';
+import ContactCard from '@/about/components/ContactCard.vue';
+import DashboardCard from '@/about/components/DashboardCard.vue';
+import LetterPaper from '@/about/components/LetterPaper.vue';
+import SpeechBubbles from '@/about/components/SpeechBubbles.vue';
+import Timeline from '@/about/components/Timeline.vue';
 import Link from '@/components/common/Link.vue';
 import RubyText from '@/components/common/RubyText.vue';
 import RubyTextInline from '@/components/common/RubyTextInline.vue';
