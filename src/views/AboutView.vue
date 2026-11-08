@@ -1,5 +1,5 @@
 <template>
-  <PageContent :show-search-bar="false">
+  <DefaultLayout :show-search-bar="false">
     <div class="h-fill flex">
       <LetterPaper>
         <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
@@ -96,14 +96,14 @@
       <li>特别感谢 Hector 大黑对文献数位化的贡献</li>
       <li>最后感谢所有关心、热心与支持平话保育事业的人们</li>
     </ul>
-  </PageContent>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
 import ContactCard from '@/components/ContactCard.vue';
 import DashboardCard from '@/components/DashboardCard.vue';
 import LetterPaper from '@/components/LetterPaper.vue';
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 import SpeechBubbles from '@/components/SpeechBubbles.vue';
 import Timeline from '@/components/Timeline.vue';
 import Link from '@/components/common/Link.vue';

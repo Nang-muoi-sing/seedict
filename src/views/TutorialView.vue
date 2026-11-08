@@ -1,5 +1,5 @@
 <template>
-  <PageContent :show-search-bar="false">
+  <DefaultLayout :show-search-bar="false">
     <LetterPaper>
       <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
         <RubyText :text="'入门'" :yngping="'ik5 muong53'"></RubyText>
@@ -86,11 +86,11 @@
     <ul class="list-disc space-y-1.5 px-5 text-wheat-600">
       <li>2024 年 11 月 30 日编撰《榕拼教程》第一版，作者子善</li>
     </ul>
-  </PageContent>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 import Link from '../components/common/Link.vue';
 import Subtitle from '../components/common/Subtitle.vue';
 </script>

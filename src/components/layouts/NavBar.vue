@@ -4,7 +4,7 @@
       class="items-top flex flex-row justify-between gap-5 px-4 py-2 sm:px-16 sm:py-8"
     >
       <RouterLink :to="homeRoute" class="min-w-35 z-30 hidden md:block">
-        <img src="../assets/logo.svg" />
+        <img :src="logoImg" />
       </RouterLink>
       <SearchBar
         v-if="props.showSearchBar"
@@ -44,7 +44,7 @@
         <div
           class="flex w-full flex-col items-center justify-center px-2 py-4 font-sans text-lg"
         >
-          <img class="mb-8" src="../assets/logo.svg" draggable="false" />
+          <img class="mb-8" :src="logoImg" draggable="false" />
           <div
             class="rounded-xs m-1 w-full content-center px-3 py-1.5 align-middle font-bold text-rosybrown-600 transition-all ease-in-out hover:bg-wheat-100 hover:text-rosybrown-800"
           >
@@ -113,6 +113,7 @@
 <script setup lang="ts">
 import NavPanel from './NavPanel.vue';
 import SearchBar from '@/search/components/SearchBar.vue';
+import logoImg from '@/assets/logo.svg';
 
 import { animate } from 'animejs';
 import { onMounted, ref } from 'vue';

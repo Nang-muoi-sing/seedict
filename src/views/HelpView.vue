@@ -1,7 +1,7 @@
 <template>
-  <PageContent> </PageContent>
+  <DefaultLayout> </DefaultLayout>
 </template>
 
 <script setup lang="ts">
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 </script>

@@ -28,8 +28,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-import Footer from '../components/common/Footer.vue';
-import NavPanel from '../components/NavPanel.vue';
+import Footer from '@/components/layouts/Footer.vue';
+import NavPanel from '@/components/layouts/NavPanel.vue';
 import SearchBar from '@/search/components/SearchBar.vue';
 import WordsDeck from '../components/WordsDeck.vue';
 

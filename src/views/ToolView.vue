@@ -1,5 +1,5 @@
 <template>
-  <PageContent :show-search-bar="false">
+  <DefaultLayout :show-search-bar="false">
     <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
       <RubyText :text="'工具'" :yngping="'geoyng53 geoy242'"></RubyText>
     </div>
@@ -14,10 +14,10 @@
         ><AppIcon :name="'称呼计算'"><i-icon-park-outline-family /></AppIcon
       ></RouterLink>
     </div>
-  </PageContent>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 import AppIcon from '../components/AppIcon.vue';
 </script>

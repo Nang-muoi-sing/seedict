@@ -1,5 +1,5 @@
 <template>
-  <PageContent :show-search-bar="false">
+  <DefaultLayout :show-search-bar="false">
     <div>
       <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
         <RubyText
@@ -216,7 +216,7 @@
         >向我们反馈</a
       >
     </div>
-  </PageContent>
+  </DefaultLayout>
   <SeeTooltip> </SeeTooltip>
 </template>
 
@@ -227,7 +227,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Badge from '../components/common/Badge.vue';
 import RubyText from '../components/common/RubyText.vue';
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 import SeeTooltip from '../components/seeui/tooltip/SeeTooltip.vue';
 import { getFuzhouTerms } from '../utils/relationshipMapping';
 

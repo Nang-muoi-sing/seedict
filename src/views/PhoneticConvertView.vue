@@ -1,5 +1,5 @@
 <template>
-  <PageContent :show-search-bar="false">
+  <DefaultLayout :show-search-bar="false">
     <div>
       <div class="mb-5 flex flex-row text-4xl font-bold text-rosybrown-800">
         <RubyText
@@ -185,7 +185,7 @@
         </div>
       </div>
     </div>
-  </PageContent>
+  </DefaultLayout>
   <SeeContextMenu ref="contextMenu" />
   <SeeTooltip />
 </template>
@@ -193,7 +193,7 @@
 <script setup lang="ts">
 import { debounce } from 'lodash-es';
 import { computed, ref, shallowRef, watch } from 'vue';
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
 import SeeContextMenu from '../components/seeui/menu/SeeContextMenu.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';

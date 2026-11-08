@@ -329,14 +329,14 @@
 <script setup lang="ts">
 import { animate, stagger } from 'animejs';
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
-import Footer from '../components/common/Footer.vue';
+import Footer from '@/components/layouts/Footer.vue';
 import ImeFaq from '../components/ImeFaq.vue';
 import ImeInstallSection from '../components/ImeInstallSection.vue';
 import ImeTypingDemo from '../components/ImeTypingDemo.vue';
 import imeFuzzyTypingImg from '../assets/ime/ime-fuzzy-typing.webp';
 import imeT2SImg from '../assets/ime/ime-t2s.webp';
 import imeLookupImg from '../assets/ime/ime-lookup.webp';
-import NavBar from '../components/NavBar.vue';
+import NavBar from '@/components/layouts/NavBar.vue';
 import SeeButton from '../components/seeui/button/SeeButton.vue';
 import SeeWaveDivider from '../components/seeui/decor/SeeWaveDivider.vue';
 

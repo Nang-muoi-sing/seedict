@@ -3,7 +3,7 @@
     v-show="!loading"
     class="left-[2%] top-[170px] hidden xl:block 2xl:left-24"
   ></SideBar>
-  <PageContent>
+  <DefaultLayout>
     <!-- {{ wordResponse }} -->
     <WordSkeleton v-if="loading"></WordSkeleton>
     <template v-else>
@@ -218,7 +218,7 @@
         </div>
       </template></template
     >
-  </PageContent>
+  </DefaultLayout>
 </template>
 
 <script lang="ts" setup>
@@ -228,7 +228,7 @@ import Badge from '../components/common/Badge.vue';
 import Explanations from '../components/common/ExplanationList.vue';
 import SeeSymbol from '../components/common/SeeSymbol.vue';
 import Subtitle from '../components/common/Subtitle.vue';
-import PageContent from '@/components/layout/PageContent.vue';
+import DefaultLayout from '@/components/layouts/DefaultLayout.vue';
 import SideBar from '../components/SideBar.vue';
 import WordCikLingCard from '../components/WordCikLingCard.vue';
 import WordFengBlock from '../components/WordFengCard.vue';
