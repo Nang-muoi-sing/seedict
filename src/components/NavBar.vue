@@ -112,7 +112,7 @@
 
 <script setup lang="ts">
 import NavPanel from './NavPanel.vue';
-import SearchBar from './SearchBar.vue';
+import SearchBar from '@/search/components/SearchBar.vue';
 
 import { animate } from 'animejs';
 import { onMounted, ref } from 'vue';

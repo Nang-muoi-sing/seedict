@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import NavBar from './NavBar.vue';
-import Footer from './common/Footer.vue';
+import NavBar from '../NavBar.vue';
+import Footer from '../common/Footer.vue';
 
 interface Props {
   showSearchBar?: boolean;

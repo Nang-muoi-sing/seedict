@@ -193,7 +193,7 @@
 <script setup lang="ts">
 import { debounce } from 'lodash-es';
 import { computed, ref, shallowRef, watch } from 'vue';
-import PageContent from '../components/PageContent.vue';
+import PageContent from '@/components/layout/PageContent.vue';
 import SeeIconButton from '../components/seeui/button/SeeIconButton.vue';
 import SeeContextMenu from '../components/seeui/menu/SeeContextMenu.vue';
 import SeeSwitchCard from '../components/seeui/switch/SeeSwitchCard.vue';

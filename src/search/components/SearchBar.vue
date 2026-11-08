@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import RotatingPlaceholder from './RotatingPlaceholder.vue';
+import RotatingPlaceholder from '@/components/RotatingPlaceholder.vue';
 import SearchModePicker from './SearchModePicker.vue';
 
 import {

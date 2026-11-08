@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import PageContent from '../components/PageContent.vue';
+import PageContent from '@/components/layout/PageContent.vue';
 import Link from '../components/common/Link.vue';
 import Subtitle from '../components/common/Subtitle.vue';
 </script>

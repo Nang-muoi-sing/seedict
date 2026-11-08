@@ -18,6 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import PageContent from '../components/PageContent.vue';
+import PageContent from '@/components/layout/PageContent.vue';
 import AppIcon from '../components/AppIcon.vue';
 </script>

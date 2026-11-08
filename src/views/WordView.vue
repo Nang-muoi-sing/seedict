@@ -228,7 +228,7 @@ import Badge from '../components/common/Badge.vue';
 import Explanations from '../components/common/ExplanationList.vue';
 import SeeSymbol from '../components/common/SeeSymbol.vue';
 import Subtitle from '../components/common/Subtitle.vue';
-import PageContent from '../components/PageContent.vue';
+import PageContent from '@/components/layout/PageContent.vue';
 import SideBar from '../components/SideBar.vue';
 import WordCikLingCard from '../components/WordCikLingCard.vue';
 import WordFengBlock from '../components/WordFengCard.vue';
