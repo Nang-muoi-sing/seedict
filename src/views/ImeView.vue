@@ -361,17 +361,17 @@ interface FeatureItem {
 }
 
 const windowsDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew-weasel-0.17.4.exe';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.5.0/rime-hokchew-weasel-0.17.4.exe';
 const linuxDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew.zip';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.5.0/rime-hokchew.zip';
 const macDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.5.0/rime-hokchew-squirrel-1.1.2-unsigned.pkg';
 const iosDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew.zip';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.5.0/rime-hokchew.zip';
 const androidDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/rime-hokchew-trime-3.3.11-arm64-v8a.apk';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.5.0/rime-hokchew-trime-3.3.11-arm64-v8a.apk';
 const harmonyDownloadUrl =
-  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.4.0/bim-hokchew.zip';
+  'https://github.com/Nang-muoi-sing/rime-hokchew/releases/download/v0.5.0/bim-hokchew.zip';
 const selectedInstallPlatform = ref<PlatformId>('windows');
 const platformSection = ref<HTMLElement | null>(null);
 const platformTitle = ref<HTMLElement | null>(null);
