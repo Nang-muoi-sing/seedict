@@ -94,6 +94,11 @@
       <li>感谢大秀为《米时典》提供的精心美术设计与支持</li>
       <li>感谢所有参与文本数位化工作志愿者的无私奉献</li>
       <li>特别感谢 Hector 大黑对文献数位化的贡献</li>
+      <li>
+        感谢
+        <Link href="https://fuzhounese.org/">福州话 fuzhounese.org</Link>
+        与我们协作共享数据
+      </li>
       <li>最后感谢所有关心、热心与支持平话保育事业的人们</li>
     </ul>
   </PageContent>
